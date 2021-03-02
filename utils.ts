@@ -42,31 +42,17 @@ export const callApi = async (payload: {
   let result = {
     code: 500,
     status: false,
-    message: '',
     data: null,
   };
-  const { method, api, body, enableLoading, msg } = payload;
-  if (enableLoading) {
-  }
+  const { method, api, body } = payload;
   try {
     const response = await mapApi[method](api, body);
     const data = response.data;
     result = {
       code: data.code,
       status: data.status,
-      message: data.message,
       data: data.data,
     };
-    // if (data.code !== 200) createToast('Sorry. Something went wrong. Please try again.', ERROR);
-    // else msg && createToast(data.message.text, data.message.status, data.message.duration * 1000);
-  } catch (error) {
-    if (error.response && error.response.status === 403) {
-      // if (!api.includes('signout')) sessionStore.dispatch(sessionExpire);
-    } else {
-      // result = { code: 500, text: msg };
-      // msg && createToast(msg, ERROR);
-    }
-  }
-  // if (enableLoading) loadingStore.dispatch(loadingSuccess);
+  } catch (error) {}
   return result;
 };
