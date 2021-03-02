@@ -1,77 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { View, Animated, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Text, Loading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { loginAction } from '../../store';
+import { loginAction, registerAction } from '../../store';
+import { rsa } from '../../config';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const LOGIN = 0;
 const REGISTER = 1;
 
-interface Props {}
+const generateKey = () => {
+  const bits = 1024;
+  const exponent = '10001';
+  rsa.generate(bits, exponent);
+  const publicKey = rsa.getPublicString();
+  const privateKey = rsa.getPrivateString();
+  return { publicKey, privateKey };
+};
 
-const Auth: React.FC<Props> = (props) => {
+const setPublicKey = (publicKey: any) => {
+  rsa.setPublicString(publicKey);
+};
+
+const setPrivateKey = (privateKey: any) => {
+  rsa.setPrivateString(privateKey);
+};
+
+const Auth: React.FC = () => {
   const [state, setState] = useState(LOGIN);
   const [isLoading, setIsLoading] = useState(false);
-  const [hLogin, setHLogin] = useState(new Animated.Value(0));
-  const [hRegister, setHRegister] = useState(new Animated.Value(0));
-  const [sizeCircle, setSizeCircle] = useState(new Animated.Value(0));
+  const [hRegister] = useState(new Animated.Value(0));
+  const [sizeCircle] = useState(new Animated.Value(0));
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
 
   const dispatch = useDispatch();
-  const token = useSelector((state: any) => state.user);
 
   const login = async () => {
-    if (!username || !password) {
-      Alert.alert('Không được để trống trường nào');
-      return;
+    const privateKey = await AsyncStorage.getItem('private');
+    if (privateKey) {
+      setPrivateKey(privateKey);
+      console.log(rsa.decrypt(username));
     }
-    setIsLoading(true);
-    try {
-      await dispatch(loginAction({ username, password }));
-    } catch (err) {
-      Alert.alert(err.message);
-      setIsLoading(false);
-    }
+    // if (!username || !password) {
+    //   Alert.alert('Không được để trống trường nào');
+    //   return;
+    // }
+    // setIsLoading(true);
+    // await dispatch(loginAction({ username, password }));
+    // setIsLoading(false);
   };
 
   const register = async () => {
-    if (!username || !password) {
-      Alert.alert('Không được để trống trường nào');
-      return;
-    }
-    if (repassword != password) {
-      Alert.alert('Mật khẩu không khớp');
-      return;
-    }
-    setIsLoading(true);
-    try {
-      Alert.alert('Đăng ký thành công');
-      setState(LOGIN);
-    } catch (err) {
-      Alert.alert(err.message);
-    }
-    setIsLoading(false);
+    const { publicKey, privateKey } = generateKey();
+    await AsyncStorage.setItem('private', privateKey);
+    console.log(rsa.encrypt('abc'));
+
+    // if (!username || !password) {
+    //   Alert.alert('Không được để trống trường nào');
+    //   return;
+    // }
+    // if (repassword != password) {
+    //   Alert.alert('Mật khẩu không khớp');
+    //   return;
+    // }
+    // setIsLoading(true);
+    // await dispatch(registerAction({ username, password }));
+    // setIsLoading(false);
+  };
+
+  const timingHRegister: any = {
+    toValue: state === LOGIN ? 0 : 60,
+    duration: 300,
+  };
+  const timingSizeCircle: any = {
+    toValue: state === LOGIN ? 0 : 1,
+    duration: 300,
   };
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(hLogin, {
-        toValue: 1,
-        duration: 300,
-      }),
-      Animated.timing(hRegister, {
-        toValue: state == REGISTER ? 100 : 0,
-        duration: 300,
-      }),
-      Animated.timing(sizeCircle, {
-        toValue: state != LOGIN ? 1 : 0,
-        duration: 300,
-      }),
+      Animated.timing(hRegister, timingHRegister),
+      Animated.timing(sizeCircle, timingSizeCircle),
     ]).start();
   }, [state]);
 
@@ -85,17 +99,7 @@ const Auth: React.FC<Props> = (props) => {
     outputRange: [5, 50],
   });
 
-  const hLogin1 = hLogin.interpolate({
-    inputRange: [0, 1],
-    outputRange: [100, 0],
-  });
-
-  const hEmail = hLogin.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 50],
-  });
-
-  const btnText = state == LOGIN ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ';
+  const btnText = state === LOGIN ? 'ĐĂNG NHẬP' : 'TẠO KHÓA';
 
   return (
     <LinearGradient
@@ -104,8 +108,8 @@ const Auth: React.FC<Props> = (props) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}>
       <Loading isLoading={isLoading} />
-      <Text style={{ color: '#0823C4', fontSize: 36, marginRight: 30 }}>Happy</Text>
-      <Text style={{ color: '#8833B4', fontSize: 36, marginBottom: 50, marginLeft: 30 }}>Cooking</Text>
+      <Text style={{ color: '#0823C4', fontSize: 36, marginRight: 30 }}>Secure</Text>
+      <Text style={{ color: '#8833B4', fontSize: 36, marginBottom: 50, marginLeft: 30 }}>Chat</Text>
       <View style={styles.buttons}>
         <View style={{ marginRight: '10%', alignItems: 'center' }}>
           <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
@@ -126,8 +130,8 @@ const Auth: React.FC<Props> = (props) => {
           </View>
         </View>
         <View style={{ marginLeft: '10%', alignItems: 'center' }}>
-          <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(1 - state)}>
-            <Text style={{ fontSize: 18, color: state == LOGIN ? '#777' : '#444' }}>Đăng ký</Text>
+          <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(REGISTER)}>
+            <Text style={{ fontSize: 18, color: state == LOGIN ? '#777' : '#444' }}>Tạo khóa</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -175,6 +179,7 @@ const Auth: React.FC<Props> = (props) => {
         </Animated.View>
         <TouchableOpacity
           activeOpacity={0.7}
+          onPress={state === LOGIN ? login : register}
           style={{
             alignSelf: 'center',
             backgroundColor: '#E7938C',
@@ -198,23 +203,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E0E5EE',
+    backgroundColor: '#e0e5ee',
   },
   buttons: {
     flexDirection: 'row',
   },
   form: {
     width: '90%',
-    backgroundColor: '#FFF',
+    backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingTop: 30,
     paddingBottom: 20,
     borderRadius: 10,
   },
   formInput: {
-    borderBottomColor: '#DDD',
+    borderBottomColor: '#ddd',
     borderBottomWidth: 2,
-    backgroundColor: '#FFF',
+    backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,

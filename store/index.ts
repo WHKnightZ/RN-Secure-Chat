@@ -1,3 +1,3 @@
-export { loginAction, logoutAction } from './auth/actions';
+export { loginAction, registerAction } from './auth/actions';
 
 export { store } from './store';

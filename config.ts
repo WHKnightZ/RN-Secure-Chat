@@ -9,3 +9,7 @@ export const rest = {
   login: () => '/api/v1/auth/login',
   getListChats: (page: number) => `/api/v1/users/chats?page=${page}&page_size=10`,
 };
+
+const RSAKey = require('react-native-rsa');
+
+export const rsa = new RSAKey();
