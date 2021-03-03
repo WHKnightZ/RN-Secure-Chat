@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Animated, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Animated, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { Text, Loading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -74,12 +74,14 @@ const Auth: React.FC = () => {
   };
 
   const timingHRegister: any = {
-    toValue: state === LOGIN ? 0 : 60,
+    toValue: state === LOGIN ? 0 : 44,
     duration: 300,
+    useNativeDriver: true,
   };
   const timingSizeCircle: any = {
     toValue: state === LOGIN ? 0 : 1,
     duration: 300,
+    useNativeDriver: true,
   };
 
   useEffect(() => {
@@ -102,14 +104,10 @@ const Auth: React.FC = () => {
   const btnText = state === LOGIN ? 'ĐĂNG NHẬP' : 'TẠO KHÓA';
 
   return (
-    <LinearGradient
-      colors={['#2CFFFF', '#EE5CEE']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
-      <Loading isLoading={isLoading} />
-      <Text style={{ color: '#0823C4', fontSize: 36, marginRight: 30 }}>Secure</Text>
-      <Text style={{ color: '#8833B4', fontSize: 36, marginBottom: 50, marginLeft: 30 }}>Chat</Text>
+    <ImageBackground source={require('./background.png')} style={styles.container}>
+      {/* <Loading isLoading={isLoading} /> */}
+      <Text style={{ color: '#0823C4', fontSize: 36, marginTop: 200, marginRight: 30 }}>Secure</Text>
+      <Text style={{ color: '#8833B4', fontSize: 36, marginBottom: 180, marginLeft: 30 }}>Chat</Text>
       <View style={styles.buttons}>
         <View style={{ marginRight: '10%', alignItems: 'center' }}>
           <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
@@ -194,14 +192,14 @@ const Auth: React.FC = () => {
         </TouchableOpacity>
       </View>
       <Text style={{ marginTop: 20, color: '#555' }}>Quên mật khẩu?</Text>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    resizeMode: 'cover',
     alignItems: 'center',
     backgroundColor: '#e0e5ee',
   },
