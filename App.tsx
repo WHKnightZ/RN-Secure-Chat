@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
-import { callApi } from './utils';
-import { baseAPI, rest } from './config';
+import { baseAPI } from './config';
 import axios from 'axios';
 import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Auth from './screens/auth/Auth';
 import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
+import { loginAction } from './store';
 
 axios.defaults.baseURL = baseAPI;
 
@@ -21,12 +22,32 @@ const fetchFonts = () => {
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const [init, setInit] = useState(true);
 
-  if (!fontLoaded) {
+  const auth = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const tryLogin = async () => {
+      const userString: any = await AsyncStorage.getItem('user');
+      if (!userString) {
+        setInit(false);
+        return;
+      }
+      const user = JSON.parse(userString);
+      await dispatch(loginAction(user));
+      setInit(false);
+    };
+
+    tryLogin();
+  }, []);
+
+  if (!fontLoaded || init) {
     return <AppLoading onError={() => {}} startAsync={fetchFonts} onFinish={() => setFontLoaded(true)} />;
   }
 
-  return <Auth />;
+  if (!auth.access_token) return <Auth />;
+
   return (
     <View style={styles.container}>
       <BottomNavigator />

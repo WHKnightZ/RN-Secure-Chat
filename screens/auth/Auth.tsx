@@ -1,32 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Animated, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
+import {
+  View,
+  Animated,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ImageBackground,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { Text, Loading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { loginAction, registerAction } from '../../store';
-import { rsa } from '../../config';
-import AsyncStorage from '@react-native-community/async-storage';
+import { colors } from '../../constants';
 
 const LOGIN = 0;
 const REGISTER = 1;
-
-const generateKey = () => {
-  const bits = 1024;
-  const exponent = '10001';
-  rsa.generate(bits, exponent);
-  const publicKey = rsa.getPublicString();
-  const privateKey = rsa.getPrivateString();
-  return { publicKey, privateKey };
-};
-
-const setPublicKey = (publicKey: any) => {
-  rsa.setPublicString(publicKey);
-};
-
-const setPrivateKey = (privateKey: any) => {
-  rsa.setPrivateString(privateKey);
-};
 
 const Auth: React.FC = () => {
   const [state, setState] = useState(LOGIN);
@@ -41,47 +30,38 @@ const Auth: React.FC = () => {
   const dispatch = useDispatch();
 
   const login = async () => {
-    const privateKey = await AsyncStorage.getItem('private');
-    if (privateKey) {
-      setPrivateKey(privateKey);
-      console.log(rsa.decrypt(username));
+    if (!username || !password) {
+      Alert.alert('Không được để trống trường nào');
+      return;
     }
-    // if (!username || !password) {
-    //   Alert.alert('Không được để trống trường nào');
-    //   return;
-    // }
-    // setIsLoading(true);
-    // await dispatch(loginAction({ username, password }));
-    // setIsLoading(false);
+    setIsLoading(true);
+    await dispatch(loginAction({ username, password }));
+    setIsLoading(false);
   };
 
   const register = async () => {
-    const { publicKey, privateKey } = generateKey();
-    await AsyncStorage.setItem('private', privateKey);
-    console.log(rsa.encrypt('abc'));
-
-    // if (!username || !password) {
-    //   Alert.alert('Không được để trống trường nào');
-    //   return;
-    // }
-    // if (repassword != password) {
-    //   Alert.alert('Mật khẩu không khớp');
-    //   return;
-    // }
-    // setIsLoading(true);
-    // await dispatch(registerAction({ username, password }));
-    // setIsLoading(false);
+    if (!username || !password) {
+      Alert.alert('Không được để trống trường nào');
+      return;
+    }
+    if (repassword != password) {
+      Alert.alert('Mật khẩu không khớp');
+      return;
+    }
+    setIsLoading(true);
+    await dispatch(registerAction({ username, password }));
+    setIsLoading(false);
   };
 
   const timingHRegister: any = {
-    toValue: state === LOGIN ? 0 : 44,
+    toValue: state === LOGIN ? 0 : 50,
     duration: 300,
-    useNativeDriver: true,
+    useNativeDriver: false,
   };
   const timingSizeCircle: any = {
     toValue: state === LOGIN ? 0 : 1,
     duration: 300,
-    useNativeDriver: true,
+    useNativeDriver: false,
   };
 
   useEffect(() => {
@@ -105,93 +85,95 @@ const Auth: React.FC = () => {
 
   return (
     <ImageBackground source={require('./background.png')} style={styles.container}>
-      {/* <Loading isLoading={isLoading} /> */}
-      <Text style={{ color: '#0823C4', fontSize: 36, marginTop: 200, marginRight: 30 }}>Secure</Text>
-      <Text style={{ color: '#8833B4', fontSize: 36, marginBottom: 180, marginLeft: 30 }}>Chat</Text>
-      <View style={styles.buttons}>
-        <View style={{ marginRight: '10%', alignItems: 'center' }}>
-          <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
-            <Text style={{ fontSize: 18, color: state == LOGIN ? '#444' : '#777' }}>Đăng nhập</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'absolute',
-              marginTop: 35,
-            }}>
-            <Animated.View
-              style={{ borderRadius: 50, width: sizeCircleL, height: sizeCircleL, backgroundColor: '#FFF' }}
-            />
+      <Loading isLoading={isLoading} />
+      <Text style={{ color: colors.white, fontSize: 52, marginTop: 180, marginRight: 30 }}>Secure</Text>
+      <Text style={{ color: colors.white, fontSize: 48, marginBottom: 80, marginLeft: 30 }}>Chat</Text>
+      <KeyboardAvoidingView style={styles.center} behavior="height">
+        <View style={styles.buttons}>
+          <View style={{ marginRight: '10%', alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
+              <Text style={{ fontSize: 18, color: state === LOGIN ? colors.white : '#bbb' }}>Đăng nhập</Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'absolute',
+                marginTop: 35,
+              }}>
+              <Animated.View
+                style={{ borderRadius: 50, width: sizeCircleL, height: sizeCircleL, backgroundColor: '#FFF' }}
+              />
+            </View>
+          </View>
+          <View style={{ marginLeft: '10%', alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(REGISTER)}>
+              <Text style={{ fontSize: 18, color: state === REGISTER ? colors.white : '#bbb' }}>Tạo khóa</Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'absolute',
+                marginTop: 35,
+              }}>
+              <Animated.View
+                style={{ borderRadius: 50, width: sizeCircleR, height: sizeCircleR, backgroundColor: '#FFF' }}
+              />
+            </View>
           </View>
         </View>
-        <View style={{ marginLeft: '10%', alignItems: 'center' }}>
-          <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(REGISTER)}>
-            <Text style={{ fontSize: 18, color: state == LOGIN ? '#777' : '#444' }}>Tạo khóa</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'absolute',
-              marginTop: 35,
-            }}>
-            <Animated.View
-              style={{ borderRadius: 50, width: sizeCircleR, height: sizeCircleR, backgroundColor: '#FFF' }}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.form}>
-        <View style={styles.formInput}>
-          <FontAwesome style={{ marginLeft: 10 }} name="user" sizeCircle={18} color="#999" />
-          <TextInput
-            onChangeText={(value) => setUsername(value)}
-            style={styles.textInput}
-            placeholder="Nhập tên tài khoản"
-          />
-        </View>
-        <View style={styles.formInput}>
-          <FontAwesome style={{ marginLeft: 10 }} name="lock" sizeCircle={18} color="#999" />
-          <TextInput
-            onChangeText={(value) => setPassword(value)}
-            style={styles.textInput}
-            secureTextEntry
-            placeholder="Nhập mật khẩu"
-          />
-        </View>
-        <Animated.View style={{ height: hRegister, overflow: 'hidden' }}>
+        <View style={styles.form}>
           <View style={styles.formInput}>
-            <FontAwesome style={{ marginLeft: 10 }} name="lock" sizeCircle={18} color="#999" />
+            <FontAwesome style={{ marginLeft: 10 }} name="user" size={18} color="#999" />
             <TextInput
-              onChangeText={(value) => setRepassword(value)}
+              onChangeText={(value) => setUsername(value)}
+              style={styles.textInput}
+              placeholder="Nhập tên tài khoản"
+            />
+          </View>
+          <View style={styles.formInput}>
+            <FontAwesome style={{ marginLeft: 10 }} name="lock" size={18} color="#999" />
+            <TextInput
+              onChangeText={(value) => setPassword(value)}
               style={styles.textInput}
               secureTextEntry
-              placeholder="Nhập lại mật khẩu"
+              placeholder="Nhập mật khẩu"
             />
           </View>
-        </Animated.View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={state === LOGIN ? login : register}
-          style={{
-            alignSelf: 'center',
-            backgroundColor: '#E7938C',
-            width: 120,
-            height: 40,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 6,
-            marginTop: 10,
-          }}>
-          <Text style={{ color: '#FFF' }}>{btnText}</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={{ marginTop: 20, color: '#555' }}>Quên mật khẩu?</Text>
+          <Animated.View style={{ height: hRegister, overflow: 'hidden' }}>
+            <View style={styles.formInput}>
+              <FontAwesome style={{ marginLeft: 10 }} name="lock" size={18} color="#999" />
+              <TextInput
+                onChangeText={(value) => setRepassword(value)}
+                style={styles.textInput}
+                secureTextEntry
+                placeholder="Nhập lại mật khẩu"
+              />
+            </View>
+          </Animated.View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={state === LOGIN ? login : register}
+            style={{
+              alignSelf: 'center',
+              backgroundColor: '#E7938C',
+              width: 120,
+              height: 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 6,
+              marginTop: 10,
+            }}>
+            <Text style={{ color: '#FFF' }}>{btnText}</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={{ marginTop: 20, color: '#3f46ab' }}>Quên mật khẩu?</Text>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
@@ -203,11 +185,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#e0e5ee',
   },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
   buttons: {
     flexDirection: 'row',
   },
   form: {
-    width: '90%',
+    width: '80%',
     backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingTop: 30,
@@ -221,6 +208,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
+    height: 30,
   },
   textInput: {
     marginLeft: 20,
