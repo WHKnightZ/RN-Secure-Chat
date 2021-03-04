@@ -6,6 +6,7 @@ import axios from 'axios';
 import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { StatusBar } from 'expo-status-bar';
 
 import Auth from './screens/auth/Auth';
 import BottomNavigator from './navigation/BottomNavigator';
@@ -58,6 +59,7 @@ const App = () => {
 export default function Index() {
   return (
     <Provider store={store}>
+      <StatusBar style="light" backgroundColor="#111" />
       <App />
     </Provider>
   );
