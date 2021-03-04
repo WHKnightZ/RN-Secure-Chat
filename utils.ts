@@ -62,8 +62,8 @@ const RSAKey = require('react-native-rsa');
 export const rsa = new RSAKey();
 
 export const generateKey = () => {
-  const bits = 512;
-  const exponent = '29';
+  const bits = 1024;
+  const exponent = '10001';
   rsa.generate(bits, exponent);
   const publicKey = rsa.getPublicString();
   const privateKey = rsa.getPrivateString();

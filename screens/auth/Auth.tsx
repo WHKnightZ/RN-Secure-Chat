@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e5ee',
   },
   center: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
