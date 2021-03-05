@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, SafeAreaView, PaddingView } from '../../components';
+import { Text, PaddingView, HeaderBar } from '../../components';
 import AddContact from './AddContact';
 
 const Stack = createStackNavigator();
@@ -11,12 +11,12 @@ function Directory(props: any) {
   const { navigation } = props;
 
   return (
-    <SafeAreaView>
+    <View>
+      <HeaderBar title="Danh bạ" />
       <PaddingView>
-        <Text>Danh bạ!</Text>
         <Button onPress={() => navigation.push('Thêm bạn')}>Thêm liên lạc mới</Button>
       </PaddingView>
-    </SafeAreaView>
+    </View>
   );
 }
 

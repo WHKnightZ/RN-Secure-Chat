@@ -3,17 +3,15 @@ import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
 import { colors } from '../constants';
 
 interface Props {
-  isLoading: boolean;
+  loading: boolean;
 }
 
 const Loading: React.FC<Props> = (props) => {
-  const { isLoading } = props;
+  const { loading } = props;
   return (
-    <Modal transparent={true} animationType="none" visible={isLoading}>
+    <Modal transparent={true} animationType="none" visible={loading}>
       <View style={styles.modalBackground}>
-        <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator animating={isLoading} size="large" />
-        </View>
+        <ActivityIndicator animating={loading} size={60} color={colors.white} />
       </View>
     </Modal>
   );
@@ -28,14 +26,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     backgroundColor: '#00000040',
-  },
-  activityIndicatorWrapper: {
-    backgroundColor: colors.white,
-    width: 240,
-    height: 140,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-around',
   },
 });

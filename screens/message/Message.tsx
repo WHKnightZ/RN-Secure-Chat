@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { Button } from 'react-native-paper';
-import { Text, SafeAreaView, PaddingView } from '../../components';
+import { Text, PaddingView, HeaderBar } from '../../components';
 import { rest } from '../../config';
 import { colors } from '../../constants';
 import { callApi } from '../../utils';
@@ -31,23 +31,21 @@ const Message: React.FC<Props> = (props) => {
   const renderItem = ({ item }: { item: any }) => <MessageItem {...item} />;
 
   return (
-    <SafeAreaView>
+    <View>
+      <HeaderBar title="Tin nhắn" />
       <PaddingView>
-        <View style={styles.container}>
-          <Text style={styles.header}>Tin nhắn</Text>
-          <FlatList
-            data={messages}
-            renderItem={renderItem}
-            keyExtractor={(item: { group_id: string }) => item.group_id}
-          />
-          <Text style={styles.note}>
-            Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
-          </Text>
-          <Text style={styles.note}>Nhấn Quét để quét mã QR của bạn bè.</Text>
-          <Button>Thêm liên lạc mới</Button>
-        </View>
+        <FlatList
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item: { group_id: string }) => item.group_id}
+        />
+        <Text style={styles.note}>
+          Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
+        </Text>
+        <Text style={styles.note}>Nhấn Quét để quét mã QR của bạn bè.</Text>
+        <Button>Thêm liên lạc mới</Button>
       </PaddingView>
-    </SafeAreaView>
+    </View>
   );
 };
 

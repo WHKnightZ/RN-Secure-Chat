@@ -1,13 +1,40 @@
 import React from 'react';
-import { View } from 'react-native';
-import Text from '../../components/Text';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Button } from 'react-native-paper';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Text, PaddingView, HeaderBar, MenuContainer, MenuItem } from '../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutAction } from '../../store/auth/actions';
+import { colors } from '../../constants';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-function Group() {
+const Stack = createStackNavigator();
+
+function Group(props: any) {
+  const { navigation } = props;
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Nhóm!</Text>
+    <View>
+      <HeaderBar title="Nhóm" />
     </View>
   );
 }
 
-export default Group;
+function GroupStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Nhóm" component={Group} />
+    </Stack.Navigator>
+  );
+}
+
+export default GroupStack;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

@@ -8,5 +8,6 @@ export const app = {
 export const rest = {
   login: () => '/api/v1/auth/login',
   register: () => '/api/v1/users',
+  logout: () => '/api/v1/auth/logout',
   getListChats: (page: number) => `/api/v1/users/chats?page=${page}&page_size=10`,
 };

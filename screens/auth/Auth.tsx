@@ -19,7 +19,7 @@ const REGISTER = 1;
 
 const Auth: React.FC = () => {
   const [state, setState] = useState(LOGIN);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [hRegister] = useState(new Animated.Value(0));
   const [sizeCircle] = useState(new Animated.Value(0));
 
@@ -34,9 +34,9 @@ const Auth: React.FC = () => {
       Alert.alert('Không được để trống trường nào');
       return;
     }
-    setIsLoading(true);
-    await dispatch(loginAction({ username, password }));
-    setIsLoading(false);
+    setLoading(true);
+    const status = await loginAction(dispatch, { username, password, isAuto: false });
+    if (!status) setLoading(false);
   };
 
   const register = async () => {
@@ -48,9 +48,9 @@ const Auth: React.FC = () => {
       Alert.alert('Mật khẩu không khớp');
       return;
     }
-    setIsLoading(true);
-    await dispatch(registerAction({ username, password }));
-    setIsLoading(false);
+    setLoading(true);
+    const status = await registerAction(dispatch, { username, password });
+    if (!status) setLoading(false);
   };
 
   const timingHRegister: any = {
@@ -85,7 +85,7 @@ const Auth: React.FC = () => {
 
   return (
     <ImageBackground source={require('./background.png')} style={styles.container}>
-      <Loading isLoading={isLoading} />
+      <Loading loading={loading} />
       <Text style={{ color: colors.white, fontSize: 52, marginTop: 180, marginRight: 30 }}>Secure</Text>
       <Text style={{ color: colors.white, fontSize: 48, marginBottom: 80, marginLeft: 30 }}>Chat</Text>
       <KeyboardAvoidingView style={styles.center} behavior="height">

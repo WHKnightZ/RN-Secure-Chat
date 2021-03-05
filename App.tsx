@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { baseAPI } from './config';
 import axios from 'axios';
 import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 
 import Auth from './screens/auth/Auth';
 import BottomNavigator from './navigation/BottomNavigator';
@@ -36,7 +36,7 @@ const App = () => {
         return;
       }
       const user = JSON.parse(userString);
-      await dispatch(loginAction(user));
+      await loginAction(dispatch, { ...user, isAuto: true })
       setInit(false);
     };
 
@@ -59,7 +59,7 @@ const App = () => {
 export default function Index() {
   return (
     <Provider store={store}>
-      <StatusBar style="light" backgroundColor="#111" />
+      <StatusBar backgroundColor="#111" barStyle="light-content" />
       <App />
     </Provider>
   );

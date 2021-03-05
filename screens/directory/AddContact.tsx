@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
-import { Text, HeaderBack, SafeAreaView, PaddingView } from '../../components';
+import { Text, HeaderBar, PaddingView } from '../../components';
 
 interface Props {
   navigation: any;
@@ -13,8 +13,8 @@ const AddContact: React.FC<Props> = (props) => {
   const auth = useSelector((state: any) => state.auth);
 
   return (
-    <SafeAreaView>
-      <HeaderBack title="Thêm bạn" navigation={navigation} />
+    <View>
+      <HeaderBar title="Thêm bạn" isBack navigation={navigation} />
       <PaddingView>
         <View>
           <Text>Tìm theo tên</Text>
@@ -26,10 +26,10 @@ const AddContact: React.FC<Props> = (props) => {
           {/* <TouchableOpacity>Chia sẻ ngay</TouchableOpacity> */}
           {/* <View>{auth.user_id}</View> */}
           {/* <TouchableOpacity>Sao chép</TouchableOpacity> */}
-          <QRCode value={auth.user_id} size={400} />
+          <QRCode value={auth.user_id} size={300} />
         </View>
       </PaddingView>
-    </SafeAreaView>
+    </View>
   );
 };
 
