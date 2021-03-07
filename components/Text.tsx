@@ -17,7 +17,7 @@ export default MyText;
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Quicksand',
+    fontFamily: 'Bold',
     color: '#333',
   },
 });

@@ -2,9 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { colors } from '../constants';
 
-interface Props {
-  children?: any;
-}
+interface Props {}
 
 const MenuContainer: React.FC<Props> = (props) => {
   const { children } = props;
@@ -23,6 +21,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderTopColor: colors.light,
     borderBottomColor: colors.light,
-    marginTop: 20,
+    marginTop: 12,
   },
 });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { app } from './config';
 
 const MINUTE = 60;
 const HOUR = 3600;
@@ -20,10 +21,10 @@ export const timestampToDate = (timestamp: number) => {
   return Math.floor(different / YEAR) + ' năm trước';
 };
 
-const getApi = (api: string) => axios.get(api);
-const postApi = (api: string, data?: object) => axios.post(api, data);
-const putApi = (api: string, data?: object) => axios.put(api, data);
-const deleteApi = (api: string) => axios.delete(api);
+const getApi = (api: string) => axios.get(api, { timeout: app.timeout });
+const postApi = (api: string, data?: object) => axios.post(api, data, { timeout: app.timeout });
+const putApi = (api: string, data?: object) => axios.put(api, data, { timeout: app.timeout });
+const deleteApi = (api: string) => axios.delete(api, { timeout: app.timeout });
 
 const mapApi = {
   get: getApi,

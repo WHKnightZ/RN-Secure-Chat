@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-interface Props {
-  children?: any;
-}
+interface Props {}
 
 const PaddingView: React.FC<Props> = (props) => {
   const { children } = props;

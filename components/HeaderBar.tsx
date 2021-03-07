@@ -1,18 +1,27 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Text from './Text';
 import { colors } from '../constants';
+import TouchableOpacity from './TouchableOpacity';
+
+type ItemType = 'showqr' | 'scanqr' | 'search';
 
 interface Props {
-  title: string;
+  title?: string;
   isBack?: boolean;
-  item?: 'showqr' | 'scanqr' | 'search'[];
+  items?: ItemType[];
   navigation?: { goBack: () => void };
 }
 
+const mappingIcon = {
+  showqr: 'qrcode',
+  scanqr: 'qrcode',
+  search: 'search',
+};
+
 const HeaderBar: React.FC<Props> = (props) => {
-  const { title, isBack, item, navigation } = props;
+  const { title, isBack, items, navigation, children } = props;
 
   if (isBack)
     return (
@@ -20,13 +29,20 @@ const HeaderBar: React.FC<Props> = (props) => {
         <TouchableOpacity style={styles.iconBack} onPress={() => navigation?.goBack()}>
           <FontAwesome5 name="angle-left" size={28} color="black" />
         </TouchableOpacity>
-        <Text style={styles.title}>{title}</Text>
+        {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}
       </View>
     );
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{title}</Text>
+      <View style={styles.items}>
+        {items?.map((item, index) => (
+          <TouchableOpacity style={styles.buttonItem} key={index}>
+            <FontAwesome5 name={mappingIcon[item]} size={15} color={colors.darkGray} />
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
@@ -41,16 +57,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
+    justifyContent: 'space-between',
   },
   containerIsBack: {
     width: '100%',
     flexDirection: 'row',
     backgroundColor: colors.white,
     alignItems: 'center',
-    padding: 12,
+    padding: 8,
   },
   iconBack: {
-    marginRight: 10,
+    paddingHorizontal: 10,
   },
   header: {
     marginLeft: 8,
@@ -59,5 +76,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+  },
+  items: {
+    flexDirection: 'row',
+  },
+  buttonItem: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    overflow: 'hidden',
+    backgroundColor: colors.light2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 8,
   },
 });

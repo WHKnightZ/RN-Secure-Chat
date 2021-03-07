@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Text, PaddingView, HeaderBar } from '../../components';
+import { createStackNavigator } from '@react-navigation/stack';
 import { rest } from '../../config';
 import { colors } from '../../constants';
 import { callApi } from '../../utils';
-import MessageItem from './MessageItem';
+import MessengerItem from './MessengerItem';
+import Conversation from './Conversation';
 
-interface Props {}
+const Stack = createStackNavigator();
 
-const Message: React.FC<Props> = (props) => {
+interface Props {
+  navigation: { push: (routeName: string) => void };
+}
+
+const Messenger: React.FC<Props> = (props) => {
+  const { navigation } = props;
+
   const [page, setPage] = useState<number>(1);
   const [messages, setMessages] = useState<[]>([]);
 
-  const getAllMessages = async () => {
+  const getListChats = async () => {
     const response: any = await callApi({
       api: rest.getListChats(page),
       method: 'get',
@@ -25,31 +33,40 @@ const Message: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    getAllMessages();
+    getListChats();
   }, []);
 
-  const renderItem = ({ item }: { item: any }) => <MessageItem {...item} />;
-
   return (
-    <View>
-      <HeaderBar title="Tin nhắn" />
+    <ScrollView>
+      <HeaderBar title="Tin nhắn" items={['scanqr', 'search']} />
       <PaddingView>
-        <FlatList
-          data={messages}
-          renderItem={renderItem}
-          keyExtractor={(item: { group_id: string }) => item.group_id}
-        />
+        {messages.map((item: any) => (
+          <MessengerItem key={item.id} onPress={() => navigation.push('Conversation')} {...item} />
+        ))}
         <Text style={styles.note}>
           Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
         </Text>
         <Text style={styles.note}>Nhấn Quét để quét mã QR của bạn bè.</Text>
         <Button>Thêm liên lạc mới</Button>
       </PaddingView>
-    </View>
+    </ScrollView>
   );
 };
 
-export default Message;
+const MessengerStack: React.FC = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Conversation"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Messenger" component={Messenger} />
+      <Stack.Screen name="Conversation" component={Conversation} />
+    </Stack.Navigator>
+  );
+};
+
+export default MessengerStack;
 
 const styles = StyleSheet.create({
   container: {

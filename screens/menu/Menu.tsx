@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Button } from 'react-native-paper';
+import { ScrollView, View, StyleSheet, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, PaddingView, HeaderBar, MenuContainer, MenuItem } from '../../components';
+import { Text, HeaderBar, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../store/auth/actions';
 import { colors } from '../../constants';
@@ -10,23 +9,25 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 
-function Menu(props: any) {
+interface Props {
+  navigation: { push: (routeName: string) => void };
+}
+
+const Menu: React.FC<Props> = (props) => {
   const { navigation } = props;
 
-  const source = require('./default-avatar.png');
+  const source = require('../default-avatar.png');
   const auth = useSelector((state: any) => state.auth);
 
   const dispatch = useDispatch();
 
   return (
-    <View>
-      <HeaderBar title="Cá nhân" />
+    <ScrollView>
+      <HeaderBar title="Cá nhân" items={['scanqr', 'search']} />
       <View>
         <TouchableOpacity style={styles.profile}>
           <View style={styles.info}>
-            <View style={styles.avatar}>
-              <Image source={source} style={{ width: 60, height: 60 }} />
-            </View>
+            <Image source={source} style={styles.avatar} />
             <View style={styles.infoText}>
               <Text style={styles.username}>{auth.username}</Text>
               <Text style={styles.publicInfo}>Thông tin công khai</Text>
@@ -55,20 +56,20 @@ function Menu(props: any) {
           hideArrow
         />
       </MenuContainer>
-    </View>
+    </ScrollView>
   );
-}
+};
 
-function MenuStack() {
+const MenuStack: React.FC = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Cá nhân" component={Menu} />
+      <Stack.Screen name="Menu" component={Menu} />
     </Stack.Navigator>
   );
-}
+};
 
 export default MenuStack;
 
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profile: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#f3f3f3',
     width: '100%',
     borderTopWidth: 0.8,
     borderBottomWidth: 0.8,
@@ -97,18 +98,18 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#c5c5c5",
-    overflow: 'hidden',
+    backgroundColor: '#e0e0e0',
   },
   infoText: {
     marginLeft: 20,
-    marginTop: 5
+    marginTop: 5,
   },
   username: {
     fontSize: 20,
+    marginBottom: 5,
   },
   publicInfo: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.gray,
   },
 });

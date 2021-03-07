@@ -1,35 +1,37 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, PaddingView, HeaderBar, MenuContainer, MenuItem } from '../../components';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutAction } from '../../store/auth/actions';
-import { colors } from '../../constants';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Text, PaddingView, HeaderBar } from '../../components';
 
 const Stack = createStackNavigator();
 
-function Group(props: any) {
+interface Props {
+  navigation: { push: (routeName: string) => void };
+}
+
+const Group: React.FC<Props> = (props) => {
   const { navigation } = props;
 
   return (
-    <View>
-      <HeaderBar title="Nhóm" />
-    </View>
+    <ScrollView>
+      <HeaderBar title="Nhóm" items={['scanqr', 'search']} />
+      <PaddingView>
+      </PaddingView>
+    </ScrollView>
   );
-}
+};
 
-function GroupStack() {
+const GroupStack: React.FC = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Nhóm" component={Group} />
+      <Stack.Screen name="Group" component={Group} />
     </Stack.Navigator>
   );
-}
+};
 
 export default GroupStack;
 

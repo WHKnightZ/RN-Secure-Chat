@@ -1,8 +1,9 @@
 export const baseAPI = 'http://sv3.vn.boot.ai:5010';
 
 export const app = {
-  secretKey: 'hb2021',
+  secretKey: 'secure-chat',
   expiresIn: '1d',
+  timeout: 2000,
 };
 
 export const rest = {

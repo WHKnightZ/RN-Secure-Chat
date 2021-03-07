@@ -15,9 +15,8 @@ const MyTextInput: React.FC<Props> = (props) => {
       onChangeText={onChangeText}
       style={[styles.text, style]}
       placeholder={placeholder}
-      secureTextEntry={secureTextEntry}>
-      {props.children}
-    </TextInput>
+      secureTextEntry={secureTextEntry}
+    />
   );
 };
 
@@ -25,7 +24,7 @@ export default MyTextInput;
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Quicksand',
+    fontFamily: 'Bold',
     color: '#333',
   },
 });

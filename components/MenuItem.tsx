@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Text from './Text';
 import { colors } from '../constants';
+import TouchableOpacity from './TouchableOpacity';
 
 interface Props {
   icon: string;
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
   hideArrow?: boolean;
 }
 
@@ -18,11 +19,11 @@ const MenuItem: React.FC<Props> = (props) => {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.titleContainer}>
         <View style={styles.icon}>
-          <FontAwesome5 name={icon} size={18} color={colors.gray} />
+          <FontAwesome5 name={icon} size={18} color={colors.darkGray} />
         </View>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <FontAwesome5 name="angle-right" size={24} color={colors.lightGray} />
+      {!hideArrow && <FontAwesome5 name="angle-right" size={24} color={colors.lightGray} />}
     </TouchableOpacity>
   );
 };
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     overflow: 'hidden',
-    backgroundColor: colors.light,
+    backgroundColor: colors.light2,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,

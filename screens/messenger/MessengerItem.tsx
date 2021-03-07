@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity } from '../../components';
 import Text from '../../components/Text';
 import { colors } from '../../constants';
 import { timestampToDate } from '../../utils';
@@ -9,42 +10,42 @@ interface Props {
   group_name: string;
   name: string;
   avatar?: string;
-  create_date: number;
+  created_date: number;
   modified_date: number;
   latest_message: {
-    create_date: number;
+    created_date: number;
     group_id: string;
     id: string;
-    message_hash: string;
+    message: string;
     sender_id: string;
   };
+  onPress: () => void;
 }
 
-const MessageItem: React.FC<Props> = (props) => {
-  const { id, group_name, avatar, latest_message } = props;
+const MessengerItem: React.FC<Props> = (props) => {
+  const { id, group_name, avatar, latest_message, onPress } = props;
+
+  const avatarImage = avatar ? { uri: avatar } : require('../default-avatar.png');
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: avatar || 'https://i.pinimg.com/originals/89/59/2b/89592b3392fee110134235e95d80dbf7.jpg' }}
-        />
+        <Image style={styles.avatar} source={avatarImage} />
       </View>
       <View style={styles.messageContainer}>
         <View style={styles.messageTop}>
           <Text>{group_name}</Text>
-          <Text style={styles.time}>{timestampToDate(latest_message.create_date)}</Text>
+          <Text style={styles.time}>{timestampToDate(latest_message.created_date)}</Text>
         </View>
         <View style={styles.message}>
-          <Text>{latest_message.message_hash}</Text>
+          <Text>{latest_message.message}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-export default MessageItem;
+export default MessengerItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
+    backgroundColor: '#e0e0e0',
   },
   messageContainer: {
     flex: 4,

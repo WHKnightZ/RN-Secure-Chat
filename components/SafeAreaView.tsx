@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, StatusBar, Platform } from 'react-native';
 
-interface Props {
-  children?: any;
-}
+interface Props {}
 
 const MySafeAreaView: React.FC<Props> = (props) => {
   const { children } = props;

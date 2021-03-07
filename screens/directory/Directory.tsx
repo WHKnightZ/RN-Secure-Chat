@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, PaddingView, HeaderBar } from '../../components';
@@ -7,30 +7,34 @@ import AddContact from './AddContact';
 
 const Stack = createStackNavigator();
 
-function Directory(props: any) {
+interface Props {
+  navigation: { push: (routeName: string) => void };
+}
+
+const Directory: React.FC<Props> = (props) => {
   const { navigation } = props;
 
   return (
-    <View>
-      <HeaderBar title="Danh bạ" />
+    <ScrollView>
+      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} />
       <PaddingView>
-        <Button onPress={() => navigation.push('Thêm bạn')}>Thêm liên lạc mới</Button>
+        <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>
-    </View>
+    </ScrollView>
   );
-}
+};
 
-function DirectoryStack() {
+const DirectoryStack: React.FC = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Danh bạ" component={Directory} />
-      <Stack.Screen name="Thêm bạn" component={AddContact} />
+      <Stack.Screen name="Directory" component={Directory} />
+      <Stack.Screen name="AddContact" component={AddContact} />
     </Stack.Navigator>
   );
-}
+};
 
 export default DirectoryStack;
 

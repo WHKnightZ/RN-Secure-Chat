@@ -7,3 +7,4 @@ export { default as SafeAreaView } from './SafeAreaView';
 export { default as PaddingView } from './PaddingView';
 export { default as MenuContainer } from './MenuContainer';
 export { default as MenuItem } from './MenuItem';
+export { default as TouchableOpacity } from './TouchableOpacity';
