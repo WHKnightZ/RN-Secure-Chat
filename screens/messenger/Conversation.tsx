@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
-import { Text, PaddingView, HeaderBar } from '../../components';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Text, PaddingView, HeaderBar, TouchableOpacity } from '../../components';
+import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
 import { colors } from '../../constants';
 import { callApi } from '../../utils';
@@ -23,7 +23,7 @@ const data = {
     {
       created_date: 1615012223,
       id: '906f3c06-7ea2-11eb-97d3-0242ac120003',
-      message: 'Hello Ly Chan, my name is Khanh1',
+      message: 'Hello Ly',
       sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
     },
@@ -37,56 +37,99 @@ const data = {
     {
       created_date: 1615032223,
       id: '906f3c06-7ea2-11eb-97d3-0242ac120005',
-      message: 'Hello Ly Chan, my name is Khanh3, may la mot thang mat loz',
+      message:
+        'Hello Ly Chan, my name is Khanh3, sadsd ddddddddddddddddddddddddddddddddddddddd may la mot thang mat loz',
       sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
       id: '906f3c06-7ea2-11eb-97d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      message: 'Hello Ly Chan, my name is sadsadasd asdasd asdasdsa sadasdsad',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615012223,
+      id: '906f3c06-7ea2-11eb-97d3-0242ac120023',
+      message: 'Hello Ly Chan, my name is Khanh1',
+      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615012223,
+      id: '906f3c06-7ea2-11eb-97d3-0242ac120013',
+      message: 'Hello Ly Chan, my name is Khanh1',
+      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
       id: '906f3c06-7ea2-11eb-17d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      message: 'Hello Ly Chan, my name is Kh',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
       id: '906f3c06-7ea2-11eb-2dd3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      message: 'Hello Khanh',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-37d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      id: '906f3c06-7ea2-11eb-37d3-0242ac12d006',
+      message: 'Hello Ly Chan :)',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-47d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      id: '906f3c06-7ea2-11eb-47d3-0242ac120406',
+      message: 'Hello Ly Chan, my name',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-57d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      id: '906f3c06-7ea2-11eb-57d3-0242ac110106',
+      message: 'Hello Ly Chan, my n',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
     {
       created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Khanh4, are you ok today? I want to kill you :)',
+      id: '906f3c06-7ea2-11eb-67d3-0242ac120506',
+      message: 'Hello Ly Chan',
+      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615052223,
+      id: '906f3c06-7ea2-11eb-67d3-0242ac120044',
+      message: 'Hello Ly Chan, my na',
+      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615052223,
+      id: '906f3c06-7ea2-11eb-67d3-0242ac120036',
+      message: 'Hello Ly',
+      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615052223,
+      id: '906f3c06-7ea2-11eb-67d3-0242ac120026',
+      message: 'Hello Ly Chan',
+      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
+      seen: true,
+    },
+    {
+      created_date: 1615052223,
+      id: '906f3c06-7ea2-11eb-67d3-0242ac120016',
+      message: 'Hello Ly C',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
@@ -100,14 +143,38 @@ const Conversation: React.FC<Props> = (props) => {
   const userId = '0b7a2102-7e73-11eb-bffd-0242ac120003';
   const [page, setPage] = useState<number>(1);
   const [conversation, setConversation] = useState<any>(data);
+  const [text, setText] = useState('');
+  const refConversation = useRef<any>(null);
+  const refInput = useRef<any>(null);
 
   const groupImage = conversation.group_image ? { uri: conversation.group_image } : require('../default-avatar.png');
 
   useEffect(() => {}, []);
 
   const renderItem = ({ item, index }: any) => {
-    const showAvatar = index === 0 || conversation.messages[index].sender_id !== conversation.messages[index - 1].sender_id;
-    return <ConversationItem key={item.id} {...item} userId={userId} showAvatar={showAvatar} />;
+    const isLast = index === 0 || conversation.messages[index].sender_id !== conversation.messages[index - 1].sender_id;
+    return <ConversationItem key={item.id} {...item} userId={userId} isLast={isLast} />;
+  };
+
+  const send = (text: string) => {
+    if (text) setText('');
+    refConversation.current.scrollToOffset({ animated: true, offset: 0 });
+    refInput.current.focus();
+    setConversation((conversation: any) => {
+      return {
+        ...conversation,
+        messages: [
+          {
+            created_date: new Date().getTime() / 1000,
+            id: Math.random().toString(),
+            message: text,
+            sender_id: userId,
+            seen: false,
+          },
+          ...conversation.messages,
+        ],
+      };
+    });
   };
 
   return (
@@ -123,10 +190,29 @@ const Conversation: React.FC<Props> = (props) => {
           </View>
         </View>
       </HeaderBar>
-      <FlatList style={styles.conversation} inverted data={conversation.messages} renderItem={renderItem} />
+      <FlatList
+        ref={refConversation}
+        style={styles.conversation}
+        inverted
+        data={conversation.messages}
+        renderItem={renderItem}
+        onEndReached={() => console.log('x')}
+        onEndReachedThreshold={0.2}
+      />
       <View style={styles.footer}>
-        <TextInput style={styles.input} placeholder="Nhập nội dung..." />
-        <FontAwesome5 name="thumbs-up" size={20} color={colors.primary} />
+        <TextInput
+          ref={refInput}
+          style={styles.input}
+          value={text}
+          onChangeText={(v) => setText(v)}
+          onSubmitEditing={() => {
+            if (text) send(text);
+          }}
+          placeholder="Nhập nội dung..."
+        />
+        <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('[like]'))}>
+          <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -145,6 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 10,
   },
   groupImage: {
     width: 24,
@@ -153,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
   },
   groupTitle: {
-    marginLeft: 10,
+    marginLeft: 20,
   },
   groupName: {
     fontSize: 13,
@@ -184,7 +271,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: '#ccc',
     borderWidth: 1,
-    padding: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     marginRight: 10,
+  },
+  buttonSend: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
   },
 });

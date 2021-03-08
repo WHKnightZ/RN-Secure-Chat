@@ -11,36 +11,40 @@ interface Props {
   created_date: number;
   seen: boolean;
   userId: string;
-  showAvatar: boolean;
+  isLast: boolean;
 }
 
 const ConversationItem: React.FC<Props> = (props) => {
-  const { id, sender_id, message, created_date, seen, userId, showAvatar } = props;
+  const { id, sender_id, message, created_date, seen, userId, isLast } = props;
 
   const avatar = require('../default-avatar.png');
 
   const render =
     userId === sender_id ? (
-      <View style={styles.right}>
+      <View style={isLast ? styles.rightLast : styles.right}>
         <View style={styles.container}>
-          <View style={styles.textWrapperRight}>
-            <Text style={styles.textRight}>{message}</Text>
-          </View>
+          {message !== '[like]' ? (
+            // <View style={styles.textWrapperRight}>
+              <Text style={styles.textRight}>{message}</Text>
+            // </View>
+          ) : (
+            <FontAwesome name={'thumbs-up'} size={26} color={colors.primary} />
+          )}
           <FontAwesome
             style={styles.iconSeen}
-            name={seen ? 'check-circle-o' : 'check-circle'}
+            name={seen ? 'check-circle' : 'check-circle-o'}
             size={15}
             color={colors.gray}
           />
         </View>
       </View>
     ) : (
-      <View style={styles.left}>
+      <View style={isLast ? styles.leftLast : styles.left}>
         <View style={styles.container}>
-          <View style={styles.avatarContainer}>{showAvatar && <Image source={avatar} style={styles.avatar} />}</View>
-          <View style={styles.textWrapperLeft}>
+          <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>
+          {/* <View style={styles.textWrapperLeft}> */}
             <Text style={styles.textLeft}>{message}</Text>
-          </View>
+          {/* </View> */}
         </View>
       </View>
     );
@@ -51,22 +55,28 @@ const ConversationItem: React.FC<Props> = (props) => {
 export default ConversationItem;
 
 const styles = StyleSheet.create({
-  left: { marginBottom: 20, marginTop: 5 },
-  right: { marginBottom: 20, marginTop: 5, alignItems: 'flex-end' },
+  left: { marginBottom: 8, marginTop: 5, alignItems: 'flex-start' },
+  right: { marginBottom: 8, marginTop: 5, alignItems: 'flex-end' },
+  leftLast: { marginBottom: 20, marginTop: 5, alignItems: 'flex-start' },
+  rightLast: { marginBottom: 20, marginTop: 5, alignItems: 'flex-end' },
   container: {
+    flex: 1,
     flexDirection: 'row',
-    width: '70%',
+    maxWidth: '70%',
     alignItems: 'flex-end',
     marginHorizontal: 6,
   },
   textWrapperLeft: {
     flex: 1,
-    padding: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: '#e4e6eb',
   },
   textWrapperRight: {
     flex: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     padding: 8,
     borderRadius: 20,
     backgroundColor: '#0998fa',
@@ -78,7 +88,7 @@ const styles = StyleSheet.create({
   textRight: {
     fontFamily: 'Regular',
     fontSize: 14,
-    color: colors.white,
+    color: colors.black,
   },
   iconSeen: {
     marginLeft: 4,
