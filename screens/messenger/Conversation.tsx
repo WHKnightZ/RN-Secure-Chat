@@ -14,11 +14,10 @@ interface Props {
 }
 
 const data = {
-  group_id: 'bkinh812-esh4-22sm-mkss-0484ko240006',
-  group_name: 'Nguyễn Khánh',
-  group_image: '',
+  conversation_id: 'bkinh812-esh4-22sm-mkss-0484ko240006',
+  conversation_name: 'Nguyễn Khánh',
+  conversation_avatar: '',
   online: true,
-  avatars: [],
   messages: [
     {
       created_date: 1615012223,
@@ -26,6 +25,7 @@ const data = {
       message: 'Hello Ly',
       sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
+      avatar: '',
     },
     {
       created_date: 1615022223,
@@ -38,7 +38,7 @@ const data = {
       created_date: 1615032223,
       id: '906f3c06-7ea2-11eb-97d3-0242ac120005',
       message:
-        'Hello Ly Chan, my name is Khanh3, sadsd ddddddddddddddddddddddddddddddddddddddd may la mot thang mat loz',
+        '[like]',
       sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
     },
@@ -66,7 +66,7 @@ const data = {
     {
       created_date: 1615052223,
       id: '906f3c06-7ea2-11eb-17d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is Kh',
+      message: '[like]',
       sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
       seen: true,
     },
@@ -147,7 +147,7 @@ const Conversation: React.FC<Props> = (props) => {
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
 
-  const groupImage = conversation.group_image ? { uri: conversation.group_image } : require('../default-avatar.png');
+  const conversationImage = conversation.conversation_image ? { uri: conversation.conversation_image } : require('../default-avatar.png');
 
   useEffect(() => {}, []);
 
@@ -181,11 +181,11 @@ const Conversation: React.FC<Props> = (props) => {
     <View style={styles.container}>
       <HeaderBar isBack navigation={navigation}>
         <View style={styles.header}>
-          <View style={styles.groupImageContainer}>
-            <Image style={styles.groupImage} source={groupImage} />
+          <View style={styles.conversationImageContainer}>
+            <Image style={styles.conversationImage} source={conversationImage} />
           </View>
-          <View style={styles.groupTitle}>
-            <Text style={styles.groupName}>{conversation.group_name}</Text>
+          <View style={styles.conversationTitle}>
+            <Text style={styles.conversationName}>{conversation.conversation_name}</Text>
             <Text style={styles.online}>{conversation.online ? 'Đang hoạt động' : 'Không hoạt động'}</Text>
           </View>
         </View>
@@ -227,22 +227,22 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
   },
-  groupImageContainer: {
+  conversationImageContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
   },
-  groupImage: {
+  conversationImage: {
     width: 24,
     height: 24,
     borderRadius: 12,
     backgroundColor: '#e0e0e0',
   },
-  groupTitle: {
+  conversationTitle: {
     marginLeft: 20,
   },
-  groupName: {
+  conversationName: {
     fontSize: 13,
     color: colors.primary,
     marginBottom: 3,

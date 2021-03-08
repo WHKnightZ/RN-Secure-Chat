@@ -16,7 +16,8 @@ axios.defaults.baseURL = baseAPI;
 
 const fetchFonts = () => {
   return Font.loadAsync({
-    Regular: require('./assets/fonts/Quicksand.ttf'),
+    Light: require('./assets/fonts/Quicksand_Light.ttf'),
+    Regular: require('./assets/fonts/Quicksand_Regular.ttf'),
     Bold: require('./assets/fonts/Quicksand_bold.ttf'),
   });
 };

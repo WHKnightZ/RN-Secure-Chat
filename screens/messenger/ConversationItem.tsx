@@ -19,79 +19,53 @@ const ConversationItem: React.FC<Props> = (props) => {
 
   const avatar = require('../default-avatar.png');
 
-  const render =
-    userId === sender_id ? (
-      <View style={isLast ? styles.rightLast : styles.right}>
-        <View style={styles.container}>
-          {message !== '[like]' ? (
-            // <View style={styles.textWrapperRight}>
-              <Text style={styles.textRight}>{message}</Text>
-            // </View>
-          ) : (
-            <FontAwesome name={'thumbs-up'} size={26} color={colors.primary} />
-          )}
-          <FontAwesome
-            style={styles.iconSeen}
-            name={seen ? 'check-circle' : 'check-circle-o'}
-            size={15}
-            color={colors.gray}
-          />
-        </View>
-      </View>
-    ) : (
-      <View style={isLast ? styles.leftLast : styles.left}>
-        <View style={styles.container}>
-          <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>
-          {/* <View style={styles.textWrapperLeft}> */}
-            <Text style={styles.textLeft}>{message}</Text>
-          {/* </View> */}
-        </View>
-      </View>
-    );
+  const isMe = userId === sender_id;
 
-  return <View>{render}</View>;
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: isMe ? 'flex-end' : 'flex-start',
+        marginBottom: isLast ? 20 : 8,
+        marginTop: 5,
+        paddingHorizontal: 6,
+        alignItems: 'flex-end',
+      }}>
+      {!isMe && <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>}
+      {message !== '[like]' ? (
+        <Text
+          style={{
+            maxWidth: '70%',
+            fontFamily: 'Regular',
+            fontSize: 14,
+            paddingHorizontal: 14,
+            paddingVertical: 8,
+            backgroundColor: isMe ? '#0998fa' : '#e4e6eb',
+            borderRadius: 20,
+            color: isMe ? 'white' : 'black',
+          }}>
+          {message}
+        </Text>
+      ) : (
+        <FontAwesome style={styles.like} name={'thumbs-up'} size={26} color={colors.primary} />
+      )}
+      {isMe && (
+        <FontAwesome
+          style={styles.iconSeen}
+          name={seen ? 'check-circle' : 'check-circle-o'}
+          size={15}
+          color={colors.gray}
+        />
+      )}
+    </View>
+  );
 };
 
 export default ConversationItem;
 
 const styles = StyleSheet.create({
-  left: { marginBottom: 8, marginTop: 5, alignItems: 'flex-start' },
-  right: { marginBottom: 8, marginTop: 5, alignItems: 'flex-end' },
-  leftLast: { marginBottom: 20, marginTop: 5, alignItems: 'flex-start' },
-  rightLast: { marginBottom: 20, marginTop: 5, alignItems: 'flex-end' },
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    maxWidth: '70%',
-    alignItems: 'flex-end',
-    marginHorizontal: 6,
-  },
-  textWrapperLeft: {
-    flex: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#e4e6eb',
-  },
-  textWrapperRight: {
-    flex: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: '#0998fa',
-  },
-  textLeft: {
-    fontFamily: 'Regular',
-    fontSize: 14,
-  },
-  textRight: {
-    fontFamily: 'Regular',
-    fontSize: 14,
-    color: colors.black,
-  },
   iconSeen: {
-    marginLeft: 4,
+    marginLeft: 6,
   },
   avatarContainer: {
     width: 28,
@@ -103,5 +77,8 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 14,
     backgroundColor: '#e0e0e0',
+  },
+  like: {
+    marginLeft: 6,
   },
 });
