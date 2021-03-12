@@ -38,7 +38,7 @@ const HeaderBar: React.FC<Props> = (props) => {
       <Text style={styles.header}>{title}</Text>
       <View style={styles.items}>
         {items?.map((item, index) => (
-          <TouchableOpacity style={styles.buttonItem} key={index}>
+          <TouchableOpacity style={styles.buttonItem} key={index} onPress>
             <FontAwesome5 name={mappingIcon[item]} size={15} color={colors.darkGray} />
           </TouchableOpacity>
         ))}

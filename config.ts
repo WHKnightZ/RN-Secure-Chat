@@ -1,4 +1,6 @@
-export const baseAPI = 'http://sv3.vn.boot.ai:5010';
+// export const baseAPI = 'http://sv3.vn.boot.ai:5010';
+export const baseAPI = 'http://192.168.1.24:5012';
+export const socketioURL = 'http://192.168.1.24:5012';
 
 export const app = {
   secretKey: 'secure-chat',
