@@ -18,7 +18,7 @@ const BottomNavigator = () => {
         sceneAnimationEnabled
         barStyle={{ backgroundColor: colors.white }}>
         <Tab.Screen
-          name="Messenger"
+          name="MessengerTab"
           component={Messenger}
           options={{
             tabBarLabel: 'Tin nhắn',
@@ -26,7 +26,7 @@ const BottomNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Group"
+          name="GroupTab"
           component={Group}
           options={{
             tabBarLabel: 'Nhóm',
@@ -34,7 +34,7 @@ const BottomNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Directory"
+          name="DirectoryTab"
           component={Directory}
           options={{
             tabBarLabel: 'Danh bạ',
@@ -42,7 +42,7 @@ const BottomNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Menu"
+          name="MenuTab"
           component={Menu}
           options={{
             tabBarLabel: 'Thêm',

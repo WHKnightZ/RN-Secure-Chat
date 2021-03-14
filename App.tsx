@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, StatusBar, Text } from 'react-native';
 import * as Font from 'expo-font';
-import { baseAPI, socketioURL } from './config';
+import { BASE_URL } from './config';
 import axios from 'axios';
 import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction, initSocketio } from './store';
 
-axios.defaults.baseURL = baseAPI;
+axios.defaults.baseURL = BASE_URL;
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -24,10 +24,20 @@ const fetchFonts = () => {
 
 const io = require('socket.io-client');
 
+const socketio: any = io.connect('http://192.168.1.5:5012', {
+  // transports: ['websocket'],
+  // jsonp: false,
+  // secure: true,
+});
+
+const CONNECTING = 0;
+const CONNECTED = 1;
+const LOGGED = 2;
+
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [init, setInit] = useState(true);
-  const [connectState, setConnectState] = useState(0);
+  const [connectState, setConnectState] = useState(CONNECTING);
 
   const auth = useSelector((state: any) => state.auth);
   const sio = useSelector((state: any) => state.sio);
@@ -35,7 +45,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const socketio = io.connect(socketioURL);
     dispatch(initSocketio(socketio));
 
     const tryLogin = async () => {
@@ -57,7 +66,7 @@ const App = () => {
 
     sio.on('connect', () => {
       console.log('connected');
-      setConnectState(1);
+      setConnectState(CONNECTED);
     });
 
     sio.on('disconnect', () => {
@@ -75,9 +84,9 @@ const App = () => {
 
   if (!auth.access_token) return <Auth />;
 
-  if (connectState === 1) {
+  if (connectState === CONNECTED) {
     sio.emit('auth', auth.access_token);
-    setConnectState(2);
+    setConnectState(LOGGED);
   }
 
   return (

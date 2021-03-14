@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
-import { Text, PaddingView, HeaderBar, TouchableOpacity } from '../../components';
+import { Text, PaddingView, HeaderBar, TouchableOpacity, Loading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
 import { colors } from '../../constants';
 import { callApi } from '../../utils';
 import ConversationItem from './ConversationItem';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
+import { createMessage, getMessages } from '../../store';
 
 interface Props {
+  route: any;
   navigation: any;
 }
 
@@ -37,8 +39,7 @@ const data = {
     {
       created_date: 1615032223,
       id: '906f3c06-7ea2-11eb-97d3-0242ac120005',
-      message:
-        '[like]',
+      message: '[like]',
       sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
       seen: true,
     },
@@ -137,82 +138,111 @@ const data = {
 };
 
 const Conversation: React.FC<Props> = (props) => {
-  const { navigation } = props;
+  const { route, navigation } = props;
+  const conversationId = route.params.conversationId;
 
   const auth = useSelector((state: any) => state.auth);
-  const userId = '0b7a2102-7e73-11eb-bffd-0242ac120003';
-  const [page, setPage] = useState<number>(1);
-  const [conversation, setConversation] = useState<any>(data);
+  const convInfo = useSelector((state: any) => state.convInfo);
+  const convContent = useSelector((state: any) => state.convContent);
+
+  const userId = auth.user_id;
+  const page = useRef<number>(1);
+  const [loading, setLoading] = useState(false);
+  const [loadingInput, setLoadingInput] = useState(false);
+  const [full, setFull] = useState(false);
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
 
-  const conversationImage = conversation.conversation_image ? { uri: conversation.conversation_image } : require('../default-avatar.png');
+  const index = convContent.findIndex((item: any) => item.id === conversationId);
+  const conversation = convContent[index];
+  const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  const avatar = conversation.avatar ? { uri: conversation.avatar } : require('../default-avatar.png');
+
+  const loadMoreMessages = async () => {
+    setLoading(true);
+    const size: number = await getMessages(dispatch, { conversationId, page: page.current });
+    if (size < 20) setFull(true);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (conversation.messages.length === 0) loadMoreMessages();
+  }, []);
 
   const renderItem = ({ item, index }: any) => {
     const isLast = index === 0 || conversation.messages[index].sender_id !== conversation.messages[index - 1].sender_id;
     return <ConversationItem key={item.id} {...item} userId={userId} isLast={isLast} />;
   };
 
-  const send = (text: string) => {
+  const handleEndReached = async () => {
+    if (loading || full) return;
+    console.log('Reached');
+    page.current += 1;
+    loadMoreMessages();
+  };
+
+  const send = async (text: string) => {
     if (text) setText('');
     refConversation.current.scrollToOffset({ animated: true, offset: 0 });
     refInput.current.focus();
-    setConversation((conversation: any) => {
-      return {
-        ...conversation,
-        messages: [
-          {
-            created_date: new Date().getTime() / 1000,
-            id: Math.random().toString(),
-            message: text,
-            sender_id: userId,
-            seen: false,
-          },
-          ...conversation.messages,
-        ],
-      };
+    setLoadingInput(true);
+    const response: any = await callApi({
+      method: 'post',
+      api: rest.createMessage(conversationId),
+      body: { message: text },
     });
+    setLoadingInput(false);
+    const { status, data } = response;
+    if (status) {
+      createMessage(dispatch, { conversationsInfo: convInfo, conversationId, message: data });
+    }
   };
 
   return (
     <View style={styles.container}>
       <HeaderBar isBack navigation={navigation}>
         <View style={styles.header}>
-          <View style={styles.conversationImageContainer}>
-            <Image style={styles.conversationImage} source={conversationImage} />
+          <View style={styles.avatarContainer}>
+            <Image style={styles.avatar} source={avatar} />
           </View>
-          <View style={styles.conversationTitle}>
-            <Text style={styles.conversationName}>{conversation.conversation_name}</Text>
+          <View style={styles.title}>
+            <Text style={styles.name}>{conversation.name}</Text>
             <Text style={styles.online}>{conversation.online ? 'Đang hoạt động' : 'Không hoạt động'}</Text>
           </View>
         </View>
       </HeaderBar>
+      <Loading loading={loading} />
       <FlatList
         ref={refConversation}
         style={styles.conversation}
         inverted
         data={conversation.messages}
         renderItem={renderItem}
-        onEndReached={() => console.log('x')}
+        onEndReached={handleEndReached}
         onEndReachedThreshold={0.2}
       />
       <View style={styles.footer}>
-        <TextInput
-          ref={refInput}
-          style={styles.input}
-          value={text}
-          onChangeText={(v) => setText(v)}
-          onSubmitEditing={() => {
-            if (text) send(text);
-          }}
-          placeholder="Nhập nội dung..."
-        />
-        <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('[like]'))}>
-          <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />
-        </TouchableOpacity>
+        {loadingInput ? (
+          <Loading loading={loadingInput} />
+        ) : (
+          <>
+            <TextInput
+              ref={refInput}
+              style={styles.input}
+              value={text}
+              onChangeText={(v) => setText(v)}
+              onSubmitEditing={() => {
+                if (text) send(text);
+              }}
+              placeholder="Nhập nội dung..."
+            />
+            <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('[like]'))}>
+              <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );
@@ -227,22 +257,22 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
   },
-  conversationImageContainer: {
+  avatarContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
   },
-  conversationImage: {
+  avatar: {
     width: 24,
     height: 24,
     borderRadius: 12,
     backgroundColor: '#e0e0e0',
   },
-  conversationTitle: {
+  title: {
     marginLeft: 20,
   },
-  conversationName: {
+  name: {
     fontSize: 13,
     color: colors.primary,
     marginBottom: 3,

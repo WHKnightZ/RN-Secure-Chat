@@ -2,6 +2,8 @@ import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
 interface Props {
+  numberOfLines?: number;
+  ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
   style?: any;
 }
 

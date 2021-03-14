@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-interface Props {}
+interface Props {
+  navigation: { navigate: (routeName: string) => void };
+}
 
 const ScanQR: React.FC<Props> = (props) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);

@@ -17,10 +17,10 @@ export const loginAction = async (dispatch: any, payload: any) => {
   });
   const { status, data } = response;
   if (status) {
-    const privateKey = await AsyncStorage.getItem(`${username}-private`);
-    if (!privateKey) return;
-    rsa.setPrivateString(privateKey);
-    if (!rsa.decrypt(data.test_message)) return;
+    // const privateKey = await AsyncStorage.getItem(`${username}-private`);
+    // if (!privateKey) return;
+    // rsa.setPrivateString(privateKey);
+    // if (!rsa.decrypt(data.test_message)) return;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.access_token;
     await AsyncStorage.setItem('user', JSON.stringify(payload));
     dispatch({ type: LOGIN, payload: data });

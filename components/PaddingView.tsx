@@ -13,6 +13,7 @@ export default PaddingView;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 18,
     paddingVertical: 4,
   },

@@ -7,7 +7,7 @@ import { Text, PaddingView, HeaderBar } from '../../components';
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: (routeName: string) => void };
+  navigation: { push: (routeName: string) => void; navigate: any; goBack: any };
 }
 
 const Group: React.FC<Props> = (props) => {
@@ -15,7 +15,7 @@ const Group: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Nhóm" items={['scanqr', 'search']} />
+      <HeaderBar title="Nhóm" items={['scanqr', 'search']} navigation={navigation} />
       <PaddingView>
       </PaddingView>
     </ScrollView>

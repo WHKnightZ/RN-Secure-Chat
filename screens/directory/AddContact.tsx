@@ -31,7 +31,7 @@ const AddContact: React.FC<Props> = (props) => {
             Mỗi tài khoản Secure Chat có một Khóa định danh duy nhất kết bạn với tài khoản Secure Chat khác
           </Text>
           <View style={styles.buttonShare}>
-            <TouchableOpacity style={styles.viewShare} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.viewShare}>
               <FontAwesome5 name="share-alt" size={18} color={colors.white} />
               <Text style={styles.textShare}>Chia sẻ ngay</Text>
             </TouchableOpacity>

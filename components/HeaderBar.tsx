@@ -11,7 +11,7 @@ interface Props {
   title?: string;
   isBack?: boolean;
   items?: ItemType[];
-  navigation?: { goBack: () => void };
+  navigation?: { goBack: () => void; navigate: any };
 }
 
 const mappingIcon = {
@@ -33,12 +33,18 @@ const HeaderBar: React.FC<Props> = (props) => {
       </View>
     );
 
+  const mappingNavigate = {
+    showqr: () => {},
+    scanqr: () => {navigation?.navigate('DirectoryTab', { screen: 'ScanQR' }); console.log('ok')},
+    search: () => {},
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{title}</Text>
       <View style={styles.items}>
         {items?.map((item, index) => (
-          <TouchableOpacity style={styles.buttonItem} key={index} onPress>
+          <TouchableOpacity style={styles.buttonItem} key={index} onPress={mappingNavigate[item]}>
             <FontAwesome5 name={mappingIcon[item]} size={15} color={colors.darkGray} />
           </TouchableOpacity>
         ))}

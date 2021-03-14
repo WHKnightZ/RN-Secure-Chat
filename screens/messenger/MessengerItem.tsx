@@ -18,12 +18,12 @@ interface Props {
     id: string;
     message: string;
     sender_id: string;
-  };
+  } | null;
   onPress: () => void;
 }
 
 const MessengerItem: React.FC<Props> = (props) => {
-  const { id, group_name, avatar, latest_message, onPress } = props;
+  const { id, name, avatar, latest_message, onPress } = props;
 
   const avatarImage = avatar ? { uri: avatar } : require('../default-avatar.png');
 
@@ -34,11 +34,13 @@ const MessengerItem: React.FC<Props> = (props) => {
       </View>
       <View style={styles.messageContainer}>
         <View style={styles.messageTop}>
-          <Text>{group_name}</Text>
-          <Text style={styles.time}>{timestampToDate(latest_message.created_date)}</Text>
+          <Text>{name}</Text>
+          <Text style={styles.time}>{latest_message ? timestampToDate(latest_message.created_date) : ''}</Text>
         </View>
         <View style={styles.message}>
-          <Text>{latest_message.message}</Text>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.textMessage}>
+            {latest_message ? latest_message.message : ''}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -73,7 +75,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  message: {},
+  message: {
+    marginTop: 4,
+    width: '80%',
+  },
+  textMessage: {
+    color: colors.darkGray,
+    fontSize: 13,
+  },
   time: {
     fontSize: 12,
     color: colors.gray,

@@ -4,11 +4,12 @@ import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, PaddingView, HeaderBar } from '../../components';
 import AddContact from './AddContact';
+import ScanQR from './ScanQR';
 
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: (routeName: string) => void };
+  navigation: { push: (routeName: string) => void; navigate: any; goBack: any };
 }
 
 const Directory: React.FC<Props> = (props) => {
@@ -16,7 +17,7 @@ const Directory: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} />
+      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} navigation={navigation} />
       <PaddingView>
         <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>
@@ -32,6 +33,7 @@ const DirectoryStack: React.FC = () => {
       }}>
       <Stack.Screen name="Directory" component={Directory} />
       <Stack.Screen name="AddContact" component={AddContact} />
+      <Stack.Screen name="ScanQR" component={ScanQR} />
     </Stack.Navigator>
   );
 };
