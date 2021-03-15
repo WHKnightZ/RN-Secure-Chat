@@ -4,7 +4,6 @@ import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, PaddingView, HeaderBar } from '../../components';
 import AddContact from './AddContact';
-import ScanQR from './ScanQR';
 
 const Stack = createStackNavigator();
 
@@ -33,7 +32,6 @@ const DirectoryStack: React.FC = () => {
       }}>
       <Stack.Screen name="Directory" component={Directory} />
       <Stack.Screen name="AddContact" component={AddContact} />
-      <Stack.Screen name="ScanQR" component={ScanQR} />
     </Stack.Navigator>
   );
 };

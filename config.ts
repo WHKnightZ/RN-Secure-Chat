@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://sv3.vn.boot.ai:5010';
+export const BASE_URL = 'http://sv3.vn.boot.ai:5010';
 // export const BASE_URL = 'http://192.168.1.5:5012';
 
 export const app = {

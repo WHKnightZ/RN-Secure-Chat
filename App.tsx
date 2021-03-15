@@ -11,6 +11,7 @@ import Auth from './screens/auth/Auth';
 import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction, initSocketio } from './store';
+import ScanQR from './screens/common/ScanQR';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -25,9 +26,10 @@ const fetchFonts = () => {
 const io = require('socket.io-client');
 
 const socketio: any = io.connect('http://192.168.1.5:5012', {
-  // transports: ['websocket'],
-  // jsonp: false,
-  // secure: true,
+  transports: ['websocket'],
+  jsonp: false,
+  secure: true,
+  pingTimeout: 30000,
 });
 
 const CONNECTING = 0;
@@ -36,7 +38,8 @@ const LOGGED = 2;
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
-  const [init, setInit] = useState(true);
+  // const [init, setInit] = useState(true);
+  const [init, setInit] = useState(false);
   const [connectState, setConnectState] = useState(CONNECTING);
 
   const auth = useSelector((state: any) => state.auth);
@@ -44,54 +47,55 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(initSocketio(socketio));
+  // useEffect(() => {
+  //   dispatch(initSocketio(socketio));
 
-    const tryLogin = async () => {
-      const userString: any = await AsyncStorage.getItem('user');
-      if (!userString) {
-        setInit(false);
-        return;
-      }
-      const user = JSON.parse(userString);
-      await loginAction(dispatch, { ...user, isAuto: true });
-      setInit(false);
-    };
+  //   const tryLogin = async () => {
+  //     const userString: any = await AsyncStorage.getItem('user');
+  //     if (!userString) {
+  //       setInit(false);
+  //       return;
+  //     }
+  //     const user = JSON.parse(userString);
+  //     await loginAction(dispatch, { ...user, isAuto: true });
+  //     setInit(false);
+  //   };
 
-    tryLogin();
-  }, []);
+  //   tryLogin();
+  // }, []);
 
-  useEffect(() => {
-    if (!sio) return;
+  // useEffect(() => {
+  //   if (!sio) return;
 
-    sio.on('connect', () => {
-      console.log('connected');
-      setConnectState(CONNECTED);
-    });
+  //   sio.on('connect', () => {
+  //     console.log('connected');
+  //     setConnectState(CONNECTED);
+  //   });
 
-    sio.on('disconnect', () => {
-      console.log('disconnected');
-    });
+  //   sio.on('disconnect', () => {
+  //     console.log('disconnected');
+  //   });
 
-    sio.on('message', (data: any) => {
-      console.log(data);
-    });
-  }, [sio]);
+  //   sio.on('message', (data: any) => {
+  //     console.log(data);
+  //   });
+  // }, [sio]);
 
   if (!fontLoaded || init) {
     return <AppLoading onError={() => {}} startAsync={fetchFonts} onFinish={() => setFontLoaded(true)} />;
   }
 
-  if (!auth.access_token) return <Auth />;
+  // if (!auth.access_token) return <Auth />;
 
-  if (connectState === CONNECTED) {
-    sio.emit('auth', auth.access_token);
-    setConnectState(LOGGED);
-  }
+  // if (connectState === CONNECTED) {
+  //   sio.emit('auth', auth.access_token);
+  //   setConnectState(LOGGED);
+  // }
 
   return (
     <View style={styles.container}>
       <BottomNavigator />
+      <ScanQR />
     </View>
   );
 };

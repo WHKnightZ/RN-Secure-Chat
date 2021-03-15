@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, BackHandler, ToastAndroid } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 interface Props {
-  navigation: { navigate: (routeName: string) => void };
+  // navigation: { navigate: (routeName: string) => void };
 }
 
 const ScanQR: React.FC<Props> = (props) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
 
+  const handleBackButton = () => {
+    ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
+    return true;
+  };
+
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
+
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
   }, []);
 
   const handleBarCodeScanned = ({ type, data }: any) => {
@@ -40,4 +48,6 @@ const ScanQR: React.FC<Props> = (props) => {
 
 export default ScanQR;
 
-const styles = StyleSheet.create({ container: { flex: 1 } });
+const styles = StyleSheet.create({
+  container: { flex: 1, position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 },
+});
