@@ -1,3 +1,4 @@
+export { default as ModalLoading } from './ModalLoading';
 export { default as Loading } from './Loading';
 export { default as Text } from './Text';
 export { default as TextInput } from './TextInput';

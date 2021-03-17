@@ -15,128 +15,6 @@ interface Props {
   navigation: any;
 }
 
-const data = {
-  conversation_id: 'bkinh812-esh4-22sm-mkss-0484ko240006',
-  conversation_name: 'Nguyễn Khánh',
-  conversation_avatar: '',
-  online: true,
-  messages: [
-    {
-      created_date: 1615012223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120003',
-      message: 'Hello Ly',
-      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
-      seen: true,
-      avatar: '',
-    },
-    {
-      created_date: 1615022223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120004',
-      message: 'Hello Ly Chan, my name is Khanh2',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615032223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120005',
-      message: '[like]',
-      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120006',
-      message: 'Hello Ly Chan, my name is sadsadasd asdasd asdasdsa sadasdsad',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615012223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120023',
-      message: 'Hello Ly Chan, my name is Khanh1',
-      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615012223,
-      id: '906f3c06-7ea2-11eb-97d3-0242ac120013',
-      message: 'Hello Ly Chan, my name is Khanh1',
-      sender_id: '0b7a2102-7e73-11eb-bffd-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-17d3-0242ac120006',
-      message: '[like]',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-2dd3-0242ac120006',
-      message: 'Hello Khanh',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-37d3-0242ac12d006',
-      message: 'Hello Ly Chan :)',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-47d3-0242ac120406',
-      message: 'Hello Ly Chan, my name',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-57d3-0242ac110106',
-      message: 'Hello Ly Chan, my n',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120506',
-      message: 'Hello Ly Chan',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120044',
-      message: 'Hello Ly Chan, my na',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120036',
-      message: 'Hello Ly',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120026',
-      message: 'Hello Ly Chan',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-    {
-      created_date: 1615052223,
-      id: '906f3c06-7ea2-11eb-67d3-0242ac120016',
-      message: 'Hello Ly C',
-      sender_id: 'b9bdf710-7ea1-11eb-b5df-0242ac120003',
-      seen: true,
-    },
-  ],
-};
-
 const Conversation: React.FC<Props> = (props) => {
   const { route, navigation } = props;
   const conversationId = route.params.conversationId;
@@ -213,7 +91,6 @@ const Conversation: React.FC<Props> = (props) => {
           </View>
         </View>
       </HeaderBar>
-      <Loading loading={loading} />
       <FlatList
         ref={refConversation}
         style={styles.conversation}
@@ -222,10 +99,12 @@ const Conversation: React.FC<Props> = (props) => {
         renderItem={renderItem}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.2}
+        ListFooterComponent={loading ? <Loading /> : null}
       />
+
       <View style={styles.footer}>
         {loadingInput ? (
-          <Loading loading={loadingInput} />
+          <Loading />
         ) : (
           <>
             <TextInput
@@ -293,6 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
+    height: 60,
   },
   input: {
     flex: 1,

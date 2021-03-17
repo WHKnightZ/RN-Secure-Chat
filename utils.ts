@@ -71,3 +71,11 @@ export const getKey = () => {
   const privateKey = rsa.getPrivateString();
   return { publicKey, privateKey };
 };
+
+// export const includes = (arr: [], item: any) => {
+//   return arr.filter((i: any) => i.id === item.id).length > 0;
+// };
+
+export const includes = (arr: any[], item: any) => {
+  return arr.findIndex((i: any) => i.id === item.id) !== -1;
+};

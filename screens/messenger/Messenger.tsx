@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
-import { Text, PaddingView, HeaderBar, Loading } from '../../components';
+import { Text, PaddingView, HeaderBar } from '../../components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../../constants';
 import MessengerItem from './MessengerItem';
@@ -88,7 +88,7 @@ const Messenger: React.FC<Props> = (props) => {
     <View style={styles.container}>
       <HeaderBar title="Tin nhắn" items={['scanqr', 'search']} navigation={navigation} />
       <PaddingView>
-        <Loading loading={loading} />
+        {loading && <ActivityIndicator animating={loading} size={30} color={colors.white} />}
         <FlatList
           style={styles.container}
           data={convInfo}

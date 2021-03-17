@@ -1,3 +1,4 @@
+import { includes } from '../../utils';
 import {
   GET_CONVERSATIONS,
   GET_MESSAGES,
@@ -40,7 +41,9 @@ export const conversationsContentReducer = (state = [], action: { type: string; 
       messages = payload.messages;
       conversations = [...state];
       index = conversations.findIndex((item: ConversationContentType) => item.id === conversationId);
-      conversations[index].messages = [...conversations[index].messages, ...messages];
+      const newMessages = conversations[index].messages;
+      const filteredMessages = messages.filter((message) => !includes(newMessages, message));
+      conversations[index].messages = [...conversations[index].messages, ...filteredMessages];
       return conversations;
     case CREATE_CONVERSATION_CONTENT:
       return [...state, action.payload];

@@ -1,19 +1,12 @@
 import React from 'react';
-import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { colors } from '../constants';
 
-interface Props {
-  loading: boolean;
-}
-
-const Loading: React.FC<Props> = (props) => {
-  const { loading } = props;
+const Loading: React.FC = () => {
   return (
-    <Modal transparent={true} animationType="none" visible={loading}>
-      <View style={styles.modalBackground}>
-        <ActivityIndicator animating={loading} size={60} color={colors.white} />
-      </View>
-    </Modal>
+    <View style={styles.modalBackground}>
+      <ActivityIndicator animating={true} size={40} color={colors.primary} />
+    </View>
   );
 };
 
@@ -21,10 +14,8 @@ export default Loading;
 
 const styles = StyleSheet.create({
   modalBackground: {
-    flex: 1,
+    width: '100%',
     alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    backgroundColor: '#00000040',
+    justifyContent: 'center',
   },
 });

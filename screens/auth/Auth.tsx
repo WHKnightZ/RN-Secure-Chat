@@ -9,7 +9,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
 } from 'react-native';
-import { Text, Loading, TextInput } from '../../components';
+import { Text, ModalLoading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { loginAction, registerAction } from '../../store';
 import { colors } from '../../constants';
@@ -85,7 +85,7 @@ const Auth: React.FC = () => {
 
   return (
     <ImageBackground source={require('./background.png')} style={styles.container}>
-      <Loading loading={loading} />
+      <ModalLoading loading={loading} />
       <Text style={{ color: colors.white, fontSize: 52, marginTop: 180, marginRight: 30 }}>Secure</Text>
       <Text style={{ color: colors.white, fontSize: 48, marginBottom: 80, marginLeft: 30 }}>Chat</Text>
       <KeyboardAvoidingView style={styles.center} behavior="height">
