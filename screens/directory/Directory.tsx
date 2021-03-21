@@ -8,7 +8,7 @@ import AddContact from './AddContact';
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: (routeName: string) => void; navigate: any; goBack: any };
+  navigation: { push: any; navigate: any; goBack: any };
 }
 
 const Directory: React.FC<Props> = (props) => {
@@ -16,7 +16,7 @@ const Directory: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} navigation={navigation} />
+      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} />
       <PaddingView>
         <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>

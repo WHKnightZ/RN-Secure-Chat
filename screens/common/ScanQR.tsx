@@ -1,53 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, BackHandler, ToastAndroid } from 'react-native';
+import { StyleSheet, Modal, View, Text } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideScanQR } from '../../store';
+import { createConversation } from '../../store/conversations/actions';
+import { ModalLoading } from '../../components';
+import BarcodeMask from './BarcodeMask';
 
-interface Props {
-  // navigation: { navigate: (routeName: string) => void };
-}
+interface Props {}
 
-const ScanQR: React.FC<Props> = (props) => {
+const ScanQR: React.FC<Props> = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleBackButton = () => {
-    ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
-    return true;
-  };
+  // const handleBackButton = () => {
+  //   dispatch(hideScanQR());
+  //   ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
+  //   return true;
+  // };
+
+  const common = useSelector((state: any) => state.common);
+  const navigation = common.navigation;
+  const scanQR = common.scanQR;
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!scanQR || hasPermission) return;
+
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
+  }, [scanQR]);
 
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-    return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-  }, []);
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //   return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  // }, []);
 
-  const handleBarCodeScanned = ({ type, data }: any) => {
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  const handleBarCodeScanned = async ({ type, data }: any) => {
+    dispatch(hideScanQR());
+    setLoading(true);
+    await createConversation(dispatch, { userId: data });
+    setLoading(false);
+    navigation.navigate('Conversation', { conversationId: data });
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // if (hasPermission === null) {
+  //   return <Text>Requesting for camera permission</Text>;
+  // }
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
 
   return (
-    <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-    </View>
+    <>
+      <Modal transparent={true} animationType="slide" visible={scanQR} onRequestClose={() => dispatch(hideScanQR())}>
+        <BarCodeScanner
+          barCodeTypes={['qr']}
+          onBarCodeScanned={handleBarCodeScanned}
+          style={[StyleSheet.absoluteFillObject, styles.camera]}>
+          <BarcodeMask />
+        </BarCodeScanner>
+      </Modal>
+
+      <ModalLoading loading={loading} />
+    </>
   );
 };
 
 export default ScanQR;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 },
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

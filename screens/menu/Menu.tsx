@@ -10,7 +10,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: (routeName: string) => void; navigate: any; goBack: any };
+  navigation: { push: any; navigate: any; goBack: any };
 }
 
 const Menu: React.FC<Props> = (props) => {
@@ -23,7 +23,7 @@ const Menu: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Cá nhân" items={['showqr', 'search']} navigation={navigation} />
+      <HeaderBar title="Cá nhân" items={['showqr', 'search']} />
       <View>
         <TouchableOpacity style={styles.profile}>
           <View style={styles.info}>

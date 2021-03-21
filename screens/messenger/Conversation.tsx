@@ -12,7 +12,7 @@ import { createMessage, getMessages } from '../../store';
 
 interface Props {
   route: any;
-  navigation: any;
+  navigation: { push: any; navigate: any; goBack: any };
 }
 
 const Conversation: React.FC<Props> = (props) => {
@@ -80,7 +80,7 @@ const Conversation: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <HeaderBar isBack navigation={navigation}>
+      <HeaderBar isBack>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <Image style={styles.avatar} source={avatar} />

@@ -10,11 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { FlatList } from 'react-native-gesture-handler';
 import { getConversations } from '../../store';
 import { ConversationInfoType, createConversationContent, createMessage } from '../../store/conversations/actions';
+import { saveNavigation } from '../../store/common/actions';
 
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: (routeName: string) => void; navigate: any; goBack: any };
+  navigation: { push: any; navigate: any; goBack: any };
 }
 
 const Messenger: React.FC<Props> = (props) => {
@@ -36,6 +37,7 @@ const Messenger: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
+    dispatch(saveNavigation(navigation));
     console.log('Init Messenger');
     loadMoreConversations();
   }, []);
@@ -86,7 +88,7 @@ const Messenger: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <HeaderBar title="Tin nhắn" items={['scanqr', 'search']} navigation={navigation} />
+      <HeaderBar title="Tin nhắn" items={['scanqr', 'search']} />
       <PaddingView>
         {loading && <ActivityIndicator animating={loading} size={30} color={colors.white} />}
         <FlatList

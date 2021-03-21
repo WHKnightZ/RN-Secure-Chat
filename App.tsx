@@ -7,11 +7,10 @@ import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Auth from './screens/auth/Auth';
 import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction, initSocketio } from './store';
-import ScanQR from './screens/common/ScanQR';
+import { Auth, ScanQR } from './screens';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -92,9 +91,9 @@ const App = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <BottomNavigator />
-      {/* <ScanQR /> */}
+      <ScanQR />
     </View>
   );
 };

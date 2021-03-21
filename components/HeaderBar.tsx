@@ -4,6 +4,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Text from './Text';
 import { colors } from '../constants';
 import TouchableOpacity from './TouchableOpacity';
+import { useDispatch, useSelector } from 'react-redux';
+import { showScanQR } from '../store';
 
 type ItemType = 'showqr' | 'scanqr' | 'search';
 
@@ -11,7 +13,6 @@ interface Props {
   title?: string;
   isBack?: boolean;
   items?: ItemType[];
-  navigation?: { goBack: () => void; navigate: any };
 }
 
 const mappingIcon = {
@@ -21,12 +22,14 @@ const mappingIcon = {
 };
 
 const HeaderBar: React.FC<Props> = (props) => {
-  const { title, isBack, items, navigation, children } = props;
+  const { title, isBack, items, children } = props;
+  const navigation = useSelector((state: any) => state.common.navigation);
+  const dispatch = useDispatch();
 
   if (isBack)
     return (
       <View style={styles.containerIsBack}>
-        <TouchableOpacity style={styles.iconBack} onPress={() => navigation?.goBack()}>
+        <TouchableOpacity style={styles.iconBack} onPress={() => navigation.goBack()}>
           <FontAwesome5 name="angle-left" size={28} color="black" />
         </TouchableOpacity>
         {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}
@@ -35,7 +38,7 @@ const HeaderBar: React.FC<Props> = (props) => {
 
   const mappingNavigate = {
     showqr: () => {},
-    scanqr: () => {navigation?.navigate('DirectoryTab', { screen: 'ScanQR' }); console.log('ok')},
+    scanqr: () => dispatch(showScanQR()),
     search: () => {},
   };
 
