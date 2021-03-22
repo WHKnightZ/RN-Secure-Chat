@@ -22,6 +22,7 @@ const BottomNavigator = () => {
           component={Messenger}
           options={{
             tabBarLabel: 'Tin nhắn',
+            tabBarBadge: 5,
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="comment-text-multiple" color={color} size={24} />,
           }}
         />

@@ -84,18 +84,18 @@ const BarcodeMask: React.FC<Props> = (props) => {
 
   return (
     <View style={[styles.container]}>
-      <View style={[styles.finder, { width, height, elevation: Platform.OS === 'android' ? 6 : 0 }]}>
-        {_renderEdge('topLeft')}
-        {_renderEdge('topRight')}
-        {_renderEdge('bottomLeft')}
-        {_renderEdge('bottomRight')}
-      </View>
+      <View style={[styles.finder, { width, height }]}></View>
       <Text style={{ color: colors.white }}>Di chuyển camera đến vùng chứa mã QR để quét</Text>
       <View style={styles.maskOuter}>
         <View style={[styles.maskRow, maskFrameStyle]} />
         <View style={[{ height }, styles.maskCenter]}>
           <View style={maskFrameStyle} />
-          <View style={[styles.maskInner, { width, height }]} />
+          <View style={[styles.maskInner, { width, height, zIndex: 6, elevation: Platform.OS === 'android' ? 6 : 0 }]}>
+            {_renderEdge('topLeft')}
+            {_renderEdge('topRight')}
+            {_renderEdge('bottomLeft')}
+            {_renderEdge('bottomRight')}
+          </View>
           <View style={maskFrameStyle} />
         </View>
         <View style={[styles.maskRow, maskFrameStyle]} />

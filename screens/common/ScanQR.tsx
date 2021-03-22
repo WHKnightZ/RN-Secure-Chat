@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Modal, View, Text } from 'react-native';
+import { StyleSheet, Modal, View, Text, Platform } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideScanQR } from '../../store';
@@ -27,12 +27,15 @@ const ScanQR: React.FC<Props> = () => {
 
   useEffect(() => {
     if (!scanQR || hasPermission) return;
+    if (Platform.OS === 'web') return;
 
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, [scanQR]);
+
+  if (Platform.OS === 'web') return <View />;
 
   // useEffect(() => {
   //   BackHandler.addEventListener('hardwareBackPress', handleBackButton);
@@ -57,12 +60,14 @@ const ScanQR: React.FC<Props> = () => {
   return (
     <>
       <Modal transparent={true} animationType="slide" visible={scanQR} onRequestClose={() => dispatch(hideScanQR())}>
-        <BarCodeScanner
-          barCodeTypes={['qr']}
-          onBarCodeScanned={handleBarCodeScanned}
-          style={[StyleSheet.absoluteFillObject, styles.camera]}>
-          <BarcodeMask />
-        </BarCodeScanner>
+        <View style={styles.container}>
+          <BarCodeScanner
+            barCodeTypes={['qr']}
+            onBarCodeScanned={handleBarCodeScanned}
+            style={[StyleSheet.absoluteFillObject, styles.camera]}>
+            <BarcodeMask />
+          </BarCodeScanner>
+        </View>
       </Modal>
 
       <ModalLoading loading={loading} />
@@ -75,6 +80,9 @@ export default ScanQR;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000',
   },
   camera: {
     flex: 1,
