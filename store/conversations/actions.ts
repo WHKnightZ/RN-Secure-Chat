@@ -6,6 +6,7 @@ export type ConversationInfoType = {
   name: string;
   avatar: string | null;
   online: boolean;
+  unseen: number;
   latest_message: {
     created_date: number;
     id: string;
@@ -32,12 +33,16 @@ export type ConversationContentType = {
   messages: MessageType[];
 };
 
-export const RELOAD_CONVERSATIONS = 'RELOAD_CONVERSATIONS';
+export const RELOAD_MESSENGER = 'RELOAD_MESSENGER';
 export const GET_CONVERSATIONS = 'GET_CONVERSATIONS';
 export const GET_MESSAGES = 'GET_MESSAGES';
 export const CREATE_CONVERSATION_INFO = 'CREATE_CONVERSATION_INFO';
 export const CREATE_CONVERSATION_CONTENT = 'CREATE_CONVERSATION_CONTENT';
 export const CREATE_MESSAGE = 'CREATE_MESSAGE';
+
+export const reloadMessenger = () => {
+  return { type: RELOAD_MESSENGER };
+};
 
 export const getConversations = async (dispatch: any, payload: any) => {
   const { page } = payload;
@@ -55,6 +60,7 @@ export const getConversations = async (dispatch: any, payload: any) => {
           name: item.display_name || item.username,
           avatar: item.avatar_path,
           online: item.online,
+          unseen: item.unseen || 0,
           latest_message: item.latest_message,
         };
       }),

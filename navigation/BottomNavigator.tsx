@@ -4,10 +4,18 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { colors } from '../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Messenger, Group, Directory, Menu } from '../screens';
+import { useSelector } from 'react-redux';
 
 const Tab = createMaterialBottomTabNavigator();
 
 const BottomNavigator = () => {
+  // const convContent = useSelector((state: any) => state.convContent);
+  // const unseen = convContent
+  //   .map((i: any) => i.messages.filter((j: any) => j.seen === false).length)
+  //   .reduce((a: any, b: any) => a + b, 0);
+  const convInfo = useSelector((state: any) => state.convInfo);
+  const unseen = convInfo.reduce((a: any, b: any) => a + b.unseen, 0);
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -22,7 +30,7 @@ const BottomNavigator = () => {
           component={Messenger}
           options={{
             tabBarLabel: 'Tin nhắn',
-            tabBarBadge: 5,
+            tabBarBadge: unseen || null,
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="comment-text-multiple" color={color} size={24} />,
           }}
         />

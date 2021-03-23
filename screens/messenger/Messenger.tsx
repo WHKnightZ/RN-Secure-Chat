@@ -45,8 +45,7 @@ const Messenger: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!sio) return;
 
-    sio.on('new_private_msg', (data: any) => {
-      console.log(data);
+    sio.on?.('new_private_msg', (data: any) => {
       createMessage(dispatch, {
         conversationsInfo: convInfo,
         conversationId: data.sender_id,
@@ -61,7 +60,7 @@ const Messenger: React.FC<Props> = (props) => {
       });
     });
 
-    return () => sio.off('new_private_msg');
+    return () => sio.off?.('new_private_msg');
   }, [sio, convInfo]);
 
   const handleEndReached = () => {
@@ -75,7 +74,7 @@ const Messenger: React.FC<Props> = (props) => {
     createConversationContent(dispatch, {
       id: item.id,
       name: item.name,
-      avatar: item.name,
+      avatar: item.avatar,
       online: item.online,
       messages: [],
     });

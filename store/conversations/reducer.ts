@@ -1,5 +1,6 @@
 import { includes } from '../../utils';
 import {
+  RELOAD_MESSENGER,
   GET_CONVERSATIONS,
   GET_MESSAGES,
   CREATE_CONVERSATION_INFO,
@@ -20,11 +21,15 @@ export const conversationsInfoReducer = (state = [], action: { type: string; pay
       const { conversationId, message } = action.payload;
       let conversations: ConversationInfoType[] = [...state];
       const index = conversations.findIndex((item: ConversationInfoType) => item.id === conversationId);
+      conversations[index].unseen += 1;
       conversations[index].latest_message = message;
       const item = conversations[index];
       conversations.splice(index, 1);
       conversations = [item, ...conversations];
       return conversations;
+
+    case RELOAD_MESSENGER:
+      return [];
 
     default:
       return state;
@@ -57,6 +62,9 @@ export const conversationsContentReducer = (state = [], action: { type: string; 
         return conversations;
       }
       return state;
+
+    case RELOAD_MESSENGER:
+      return [];
 
     default:
       return state;

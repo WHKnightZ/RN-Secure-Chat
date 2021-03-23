@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Modal, View, Platform, ImageBackground, Image, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  Modal,
+  View,
+  Platform,
+  ImageBackground,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideScanQR } from '../../store';
@@ -26,8 +36,7 @@ const ScanQR: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!scanQR || hasPermission) return;
-    if (Platform.OS === 'web') return;
+    if (!scanQR || hasPermission || Platform.OS === 'web') return;
 
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -44,6 +53,10 @@ const ScanQR: React.FC<Props> = () => {
 
   const handleBarCodeScanned = async ({ type, data }: any) => {
     dispatch(hideScanQR());
+    if (data.length !== 36) {
+      Alert.alert('Mã không đúng!');
+      return;
+    }
     setLoading(true);
     await createConversation(dispatch, { userId: data });
     setLoading(false);
@@ -64,31 +77,22 @@ const ScanQR: React.FC<Props> = () => {
           <BarCodeScanner
             barCodeTypes={['qr']}
             onBarCodeScanned={handleBarCodeScanned}
-            style={[StyleSheet.absoluteFillObject, styles.camera]}>
-            {/* <BarcodeMask /> */}
-            <Image
-              source={require('./BarcodeMask.png')}
-              style={{
-                flex: 1,
-                width: Dimensions.get('window').width,
-              }}
-            />
-            <View
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                bottom: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 25,
-              }}>
-              <Text
-                style={{ textAlign: 'center', fontSize: 24, color: colors.white }}>
-                Di chuyển camera đến vùng chứa mã QR để quét
-              </Text>
-            </View>
-          </BarCodeScanner>
+            style={[StyleSheet.absoluteFillObject, styles.camera]}></BarCodeScanner>
+          <Image
+            source={require('./BarcodeMask.png')}
+            style={{
+              flex: 1,
+              width: Dimensions.get('window').width,
+            }}
+          />
+          <View style={styles.footer}>
+            <Text style={{ textAlign: 'center', fontSize: 24, color: colors.white }}>
+              Di chuyển camera đến vùng chứa mã QR để quét
+            </Text>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => dispatch(hideScanQR())} style={styles.back}>
+              <Text style={{ color: colors.white, fontSize: 18, paddingBottom: 8 }}>Quay Lại</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 
@@ -108,6 +112,26 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: '15%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    zIndex: 10,
+    elevation: 10,
+  },
+  back: {
+    backgroundColor: colors.primary,
+    width: 140,
+    height: 50,
+    borderRadius: 25,
+    marginTop: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },

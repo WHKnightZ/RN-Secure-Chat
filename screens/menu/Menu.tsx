@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../store/auth/actions';
 import { colors } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { closeSocketio } from '../../store';
+import { reloadMessenger } from '../../store/conversations/actions';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +20,7 @@ const Menu: React.FC<Props> = (props) => {
 
   const source = require('../default-avatar.png');
   const auth = useSelector((state: any) => state.auth);
+  const sio = useSelector((state: any) => state.sio);
 
   const dispatch = useDispatch();
 
@@ -51,6 +54,9 @@ const Menu: React.FC<Props> = (props) => {
           icon="sign-out-alt"
           title="Đăng xuất"
           onPress={() => {
+            dispatch(reloadMessenger());
+            sio.close();
+            dispatch(closeSocketio());
             logoutAction(dispatch);
           }}
           hideArrow

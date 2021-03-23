@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Modal, View, ActivityIndicator, Platform } from 'react-native';
 import { colors } from '../constants';
 
 interface Props {
@@ -8,6 +8,9 @@ interface Props {
 
 const ModalLoading: React.FC<Props> = (props) => {
   const { loading } = props;
+
+  if (Platform.OS === 'web') return <View />;
+
   return (
     <Modal transparent={true} animationType="fade" visible={loading}>
       <View style={styles.modalBackground}>

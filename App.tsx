@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
-import { loginAction, initSocketio } from './store';
+import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
 
 axios.defaults.baseURL = BASE_URL;
@@ -22,14 +22,6 @@ const fetchFonts = () => {
   });
 };
 
-const io = require('socket.io-client');
-
-// const socketio: any = io.connect(BASE_URL, {
-//   transports: ['websocket'],
-//   jsonp: false,
-//   secure: true,
-// });
-
 const CONNECTING = 0;
 const CONNECTED = 1;
 const LOGGED = 2;
@@ -37,7 +29,6 @@ const LOGGED = 2;
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [init, setInit] = useState(true);
-  // const [init, setInit] = useState(false);
   const [connectState, setConnectState] = useState(CONNECTING);
 
   const auth = useSelector((state: any) => state.auth);
@@ -46,8 +37,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(initSocketio(socketio));
-
     const tryLogin = async () => {
       const userString: any = await AsyncStorage.getItem('user');
       if (!userString) {
@@ -65,16 +54,16 @@ const App = () => {
   useEffect(() => {
     if (!sio) return;
 
-    sio.on('connect', () => {
+    sio.on?.('connect', () => {
       console.log('connected');
       setConnectState(CONNECTED);
     });
 
-    sio.on('disconnect', () => {
+    sio.on?.('disconnect', () => {
       console.log('disconnected');
     });
 
-    sio.on('message', (data: any) => {
+    sio.on?.('message', (data: any) => {
       console.log(data);
     });
   }, [sio]);

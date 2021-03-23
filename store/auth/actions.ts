@@ -1,13 +1,23 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { Alert } from 'react-native';
-import { rest } from '../../config';
+import { initSocketio } from '../sio/actions';
+import { BASE_URL, rest } from '../../config';
 import { callApi, rsa, getKey } from '../../utils';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 
+const io = require('socket.io-client');
+
 export const loginAction = async (dispatch: any, payload: any) => {
+  const socketio: any = io.connect(BASE_URL, {
+    transports: ['websocket'],
+    jsonp: false,
+    secure: true,
+  });
+  dispatch(initSocketio(socketio));
+
   const { username, password, isAuto } = payload;
 
   const response: any = await callApi({
