@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Modal, View, Text, Platform } from 'react-native';
+import { StyleSheet, Modal, View, Platform, ImageBackground, Image, Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideScanQR } from '../../store';
 import { createConversation } from '../../store/conversations/actions';
-import { ModalLoading } from '../../components';
-import BarcodeMask from './BarcodeMask';
+import { ModalLoading, Text } from '../../components';
+import { colors } from '../../constants';
 
 interface Props {}
 
@@ -65,7 +65,29 @@ const ScanQR: React.FC<Props> = () => {
             barCodeTypes={['qr']}
             onBarCodeScanned={handleBarCodeScanned}
             style={[StyleSheet.absoluteFillObject, styles.camera]}>
-            <BarcodeMask />
+            {/* <BarcodeMask /> */}
+            <Image
+              source={require('./BarcodeMask.png')}
+              style={{
+                flex: 1,
+                width: Dimensions.get('window').width,
+              }}
+            />
+            <View
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: '20%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 25,
+              }}>
+              <Text
+                style={{ textAlign: 'center', fontSize: 24, color: colors.white }}>
+                Di chuyển camera đến vùng chứa mã QR để quét
+              </Text>
+            </View>
           </BarCodeScanner>
         </View>
       </Modal>
