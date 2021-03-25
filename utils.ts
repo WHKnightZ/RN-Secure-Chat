@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { app } from './config';
+import { iconCodes } from './constants';
 
 const MINUTE = 60;
 const HOUR = 3600;
@@ -37,7 +38,7 @@ export const callApi = async (payload: {
   method: 'get' | 'post' | 'put' | 'delete';
   api: string;
   body?: object;
-  enableLoading?: boolean;
+  loading?: boolean;
   msg?: 'string';
 }) => {
   let result = {
@@ -72,10 +73,27 @@ export const getKey = () => {
   return { publicKey, privateKey };
 };
 
-// export const includes = (arr: [], item: any) => {
-//   return arr.filter((i: any) => i.id === item.id).length > 0;
-// };
-
 export const includes = (arr: any[], item: any) => {
   return arr.findIndex((i: any) => i.id === item.id) !== -1;
+  // return arr.filter((i: any) => i.id === item.id).length > 0;
+};
+
+export const stringToBlocks = (str: string) => {
+  const strs = str.split(' ');
+  let type = 0;
+  let arr: { type: 0 | 1; value: string }[] = [];
+  strs.map((item: any) => {
+    if (iconCodes.includes(item)) {
+      type = 0;
+      arr.push({ type: 0, value: item });
+    } else {
+      if (type === 0) {
+        arr.push({ type: 1, value: item });
+      } else {
+        arr[arr.length - 1].value += ' ' + item;
+      }
+      type = 1;
+    }
+  });
+  return arr;
 };

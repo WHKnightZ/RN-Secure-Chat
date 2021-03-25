@@ -11,6 +11,8 @@ import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
+import { stringToBlocks } from './utils';
+import { Icon, Text } from './components';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -79,9 +81,26 @@ const App = () => {
     setConnectState(LOGGED);
   }
 
+  const render = (str: string) => {
+    const arr = stringToBlocks(str);
+    return (
+      <View style={{ flexDirection: 'row', paddingVertical: 6, alignItems: "flex-end" }}>
+        {arr.map((item: any, index: number) => (
+          <View key={index} style={{ paddingHorizontal: 4 }}>
+            {item.type === 0 ? <Icon name={item.value} size="sm" /> : <Text>{item.value}</Text>}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <BottomNavigator />
+      {render('toi la :D :D khanh day nha (y hi hi hi')}
+      {render(':) :D 8D =) (y (y')}
+      {render('dit me may :) :) :) :)')}
+      {render(':D :D :D :D')}
       <ScanQR />
     </View>
   );
