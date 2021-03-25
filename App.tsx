@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar, Text } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { BASE_URL } from './config';
 import axios from 'axios';
