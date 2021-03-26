@@ -5,7 +5,7 @@ import { iconCodes } from '../../constants';
 const mappingIcon: any = {};
 
 iconCodes.map((item: string, index: number) => {
-  mappingIcon[item] = require(`./${('0' + index).substr(-2)}.png`);
+  mappingIcon[item] = require(`./${index}.png`);
 });
 
 const mappingSize = {

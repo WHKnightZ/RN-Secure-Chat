@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView, Text } from 'react-native';
-import { PaddingView, HeaderBar } from '../../components';
+import { PaddingView, HeaderBar, TextIcon } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { colors } from '../../constants';
 
@@ -32,7 +32,7 @@ const ConversationItem: React.FC<Props> = (props) => {
         alignItems: 'flex-end',
       }}>
       {!isMe && <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>}
-      {message !== '[like]' ? (
+      {/* {message !== '[like]' ? (
         <Text
           style={{
             maxWidth: '70%',
@@ -48,7 +48,8 @@ const ConversationItem: React.FC<Props> = (props) => {
         </Text>
       ) : (
         <FontAwesome style={styles.like} name={'thumbs-up'} size={26} color={colors.primary} />
-      )}
+      )} */}
+      <TextIcon str={message} />
       {isMe && (
         <FontAwesome
           style={styles.iconSeen}

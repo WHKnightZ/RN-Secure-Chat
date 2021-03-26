@@ -81,12 +81,14 @@ export const includes = (arr: any[], item: any) => {
 export const stringToBlocks = (str: string) => {
   const strs = str.split(' ');
   let type = 0;
+  let noText = true;
   let arr: { type: 0 | 1; value: string }[] = [];
   strs.map((item: any) => {
     if (iconCodes.includes(item)) {
       type = 0;
       arr.push({ type: 0, value: item });
     } else {
+      noText = false;
       if (type === 0) {
         arr.push({ type: 1, value: item });
       } else {
@@ -95,5 +97,5 @@ export const stringToBlocks = (str: string) => {
       type = 1;
     }
   });
-  return arr;
+  return { arr, noText };
 };

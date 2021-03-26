@@ -14,7 +14,8 @@ const BottomNavigator = () => {
   //   .map((i: any) => i.messages.filter((j: any) => j.seen === false).length)
   //   .reduce((a: any, b: any) => a + b, 0);
   const convInfo = useSelector((state: any) => state.convInfo);
-  const unseen = convInfo.reduce((a: any, b: any) => a + b.unseen, 0);
+  const unseen = convInfo.reduce((a: any, b: any) => a + b.unseen || 0, 0);
+  console.log(convInfo);
 
   return (
     <NavigationContainer>

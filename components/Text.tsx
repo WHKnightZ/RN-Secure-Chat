@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TextStyle } from 'react-native';
 
 interface Props {
   numberOfLines?: number;
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
-  style?: any;
+  style?: TextStyle;
 }
 
 const MyText: React.FC<Props> = (props) => {
