@@ -161,7 +161,7 @@ const Auth: React.FC = () => {
             onPress={state === LOGIN ? login : register}
             style={{
               alignSelf: 'center',
-              backgroundColor: '#E7938C',
+              backgroundColor: '#E7736C',
               width: 120,
               height: 40,
               justifyContent: 'center',
@@ -201,6 +201,8 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 20,
     borderRadius: 10,
+    // position: 'absolute',
+    // bottom: '20%',
   },
   formInput: {
     borderBottomColor: '#ddd',

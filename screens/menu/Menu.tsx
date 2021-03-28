@@ -8,6 +8,7 @@ import { colors } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { closeSocketio } from '../../store';
 import { reloadMessenger } from '../../store/conversations/actions';
+import Profile from './Profile';
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,9 @@ interface Props {
 const Menu: React.FC<Props> = (props) => {
   const { navigation } = props;
 
-  const source = require('../default-avatar.png');
   const auth = useSelector((state: any) => state.auth);
   const sio = useSelector((state: any) => state.sio);
+  const avatar = auth.avatar_path || require('../default-avatar.png');
 
   const dispatch = useDispatch();
 
@@ -28,11 +29,11 @@ const Menu: React.FC<Props> = (props) => {
     <ScrollView>
       <HeaderBar title="Cá nhân" items={['showqr', 'search']} />
       <View>
-        <TouchableOpacity style={styles.profile}>
+        <TouchableOpacity style={styles.profile} onPress={() => navigation.push('Profile')}>
           <View style={styles.info}>
-            <Image source={source} style={styles.avatar} />
+            <Image source={avatar} style={styles.avatar} />
             <View style={styles.infoText}>
-              <Text style={styles.username}>{auth.username}</Text>
+              <Text style={styles.username}>{auth.display_name || auth.username}</Text>
               <Text style={styles.publicInfo}>Thông tin công khai</Text>
             </View>
           </View>
@@ -73,6 +74,7 @@ const MenuStack: React.FC = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="Menu" component={Menu} />
+      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 };

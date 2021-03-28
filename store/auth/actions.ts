@@ -33,8 +33,17 @@ export const loginAction = async (dispatch: any, payload: any) => {
     // if (!rsa.decrypt(data.test_message)) return;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.access_token;
     await AsyncStorage.setItem('user', JSON.stringify(payload));
-    dispatch({ type: LOGIN, payload: data });
-    return true;
+    const response2: any = await callApi({
+      api: rest.getUserById(data.user_id),
+      method: 'get',
+    });
+    const status2 = response2.status;
+    if (status2) {
+      const data2 = response2.data;
+      dispatch({ type: LOGIN, payload: { ...data2, ...data } });
+      return true;
+    }
+    return false;
   } else {
     if (!isAuto) Alert.alert('Sai tài khoản hoặc mật khẩu');
     return false;

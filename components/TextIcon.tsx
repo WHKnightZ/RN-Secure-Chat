@@ -1,30 +1,26 @@
 import React from 'react';
 import { View } from 'react-native';
-import { stringToBlocks } from '../utils';
 import Icon from './icon/Icon';
 import Text from './Text';
 
 interface Props {
-  str: string;
+  color?: string;
+  blocks: { type: 0 | 1; value: string }[];
+  size: 'sm' | 'md' | 'lg';
 }
 
 const TextIcon: React.FC<Props> = (props) => {
-  const { str } = props;
-
-  const { arr, noText } = stringToBlocks(str);
-
-  if (noText) return <View></View>
-
-  console.log(arr);
+  const { color, blocks, size } = props;
 
   return (
-    <View style={{ flexDirection: 'row', paddingVertical: 6, alignItems: 'flex-end' }}>
-      {arr.map((item: any, index: number) => (
-        <View key={index} style={{ paddingHorizontal: 4 }}>
-          {item.type === 0 ? <Icon name={item.value} size="sm" /> : <Text>{item.value}</Text>}
-        </View>
-      ))}
-    </View>
+    // <View style={{ flexDirection: 'row', paddingVertical: 6, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+    <Text style={{ marginHorizontal: 4, paddingVertical: 6, color }}>
+      {blocks.map((item: any, index: number) => {
+        if (item.type === 0) return <Icon key={index} style={{ marginHorizontal: 4 }} name={item.value} size={size} />;
+        return item.value;
+      })}
+    </Text>
+    // </View>
   );
 };
 

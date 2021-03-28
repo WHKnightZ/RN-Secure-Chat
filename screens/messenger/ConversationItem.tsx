@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, TextInput, ScrollView, Text } from 'react-native';
-import { PaddingView, HeaderBar, TextIcon } from '../../components';
+import React from 'react';
+import { View, StyleSheet, Image } from 'react-native';
+import { TextIcon } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { colors } from '../../constants';
+import { stringToBlocks } from '../../utils';
 
 interface Props {
   id: string;
@@ -15,11 +16,10 @@ interface Props {
 }
 
 const ConversationItem: React.FC<Props> = (props) => {
-  const { id, sender_id, message, created_date, seen, userId, isLast } = props;
-
+  const { id, sender_id, message, seen, userId, isLast } = props;
   const avatar = require('../default-avatar.png');
-
   const isMe = userId === sender_id;
+  const { blocks, noText } = stringToBlocks(message);
 
   return (
     <View
@@ -32,28 +32,30 @@ const ConversationItem: React.FC<Props> = (props) => {
         alignItems: 'flex-end',
       }}>
       {!isMe && <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>}
-      {/* {message !== '[like]' ? (
-        <Text
-          style={{
-            maxWidth: '70%',
-            fontFamily: 'Regular',
-            fontSize: 14,
-            paddingHorizontal: 14,
-            paddingVertical: 8,
-            backgroundColor: isMe ? '#0998fa' : '#e4e6eb',
-            borderRadius: 20,
-            color: isMe ? 'white' : 'black',
-          }}>
-          {message}
-        </Text>
-      ) : (
-        <FontAwesome style={styles.like} name={'thumbs-up'} size={26} color={colors.primary} />
-      )} */}
-      <TextIcon str={message} />
+
+      <View
+        style={{
+          maxWidth: '70%',
+          paddingHorizontal: 4,
+        }}>
+        {!noText ? (
+          <View
+            style={{
+              backgroundColor: isMe ? '#0998fa' : '#e4e6eb',
+              borderRadius: 20,
+              paddingHorizontal: 14,
+              paddingVertical: 8,
+            }}>
+            <TextIcon color={isMe ? colors.white : colors.black} blocks={blocks} size="sm" />
+          </View>
+        ) : (
+          <TextIcon blocks={blocks} size="md" />
+        )}
+      </View>
       {isMe && (
         <FontAwesome
           style={styles.iconSeen}
-          name={seen ? 'check-circle' : 'check-circle-o'}
+          name={seen ? 'eye' : 'check-circle'}
           size={15}
           color={colors.gray}
         />

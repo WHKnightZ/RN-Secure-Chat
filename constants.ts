@@ -11,39 +11,8 @@ export const colors = {
   loading: '#1976d2',
 };
 
-// export const iconCodes = [
-//   '(y',
-//   ':D',
-//   ':)',
-//   '<3',
-//   'XO',
-//   ':3',
-//   'TT',
-//   '8,',
-//   '8X',
-//   'Zz',
-//   ';)',
-//   'X(',
-//   '8~',
-//   '8:',
-//   'PP',
-//   '!!',
-//   '8(',
-//   '8.',
-//   '8/',
-//   '(*',
-//   '8{',
-//   '=)',
-//   '{3',
-//   ')(',
-//   '8D',
-//   '8,',
-//   ')D',
-//   '))',
-// ] as const;
-
 export const iconCodes = [
-  '(y',
+  '(y)',
   '>|',
   '3.',
   ':|',
@@ -67,3 +36,5 @@ export const iconCodes = [
   ':P',
   ';)',
 ] as const;
+
+export const defaultUuid = '380a2ef3-9e77-49dc-b2d6-2df935e972b6';

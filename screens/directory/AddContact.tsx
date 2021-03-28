@@ -3,7 +3,7 @@ import { ScrollView, View, StyleSheet, Clipboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
 import { Text, HeaderBar, PaddingView, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
-import { colors } from '../../constants';
+import { colors, defaultUuid } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 interface Props {
@@ -37,7 +37,7 @@ const AddContact: React.FC<Props> = (props) => {
           </View>
           <View style={styles.center}>
             <View style={styles.viewUserId}>
-              <Text style={styles.userId}>{auth.user_id.replace(/-/g, '')}</Text>
+              <Text style={styles.userId}>{(auth.user_id || defaultUuid).replace(/-/g, '')}</Text>
             </View>
           </View>
           <View style={styles.center}>

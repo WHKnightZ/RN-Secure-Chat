@@ -15,12 +15,10 @@ const BottomNavigator = () => {
   //   .reduce((a: any, b: any) => a + b, 0);
   const convInfo = useSelector((state: any) => state.convInfo);
   const unseen = convInfo.reduce((a: any, b: any) => a + b.unseen || 0, 0);
-  console.log(convInfo);
 
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Messenger"
         activeColor={colors.primary}
         inactiveColor={colors.secondary}
         shifting

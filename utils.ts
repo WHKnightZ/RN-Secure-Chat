@@ -82,20 +82,20 @@ export const stringToBlocks = (str: string) => {
   const strs = str.split(' ');
   let type = 0;
   let noText = true;
-  let arr: { type: 0 | 1; value: string }[] = [];
+  let blocks: { type: 0 | 1; value: string }[] = [];
   strs.map((item: any) => {
     if (iconCodes.includes(item)) {
       type = 0;
-      arr.push({ type: 0, value: item });
+      blocks.push({ type: 0, value: item });
     } else {
       noText = false;
       if (type === 0) {
-        arr.push({ type: 1, value: item });
+        blocks.push({ type: 1, value: item });
       } else {
-        arr[arr.length - 1].value += ' ' + item;
+        blocks[blocks.length - 1].value += ' ' + item;
       }
       type = 1;
     }
   });
-  return { arr, noText };
+  return { blocks, noText };
 };

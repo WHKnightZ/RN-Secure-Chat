@@ -9,6 +9,7 @@ import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import { createMessage, getMessages } from '../../store';
+import { seenConversation } from '../../store/conversations/actions';
 
 interface Props {
   route: any;
@@ -46,6 +47,7 @@ const Conversation: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
+    dispatch(seenConversation(conversationId));
     if (conversation.messages.length === 0) loadMoreMessages();
   }, []);
 
@@ -74,7 +76,7 @@ const Conversation: React.FC<Props> = (props) => {
     setLoadingInput(false);
     const { status, data } = response;
     if (status) {
-      createMessage(dispatch, { conversationsInfo: convInfo, conversationId, message: data });
+      createMessage(dispatch, { conversationsInfo: convInfo, conversationId, message: { ...data, seen: true } });
     }
   };
 
@@ -117,7 +119,7 @@ const Conversation: React.FC<Props> = (props) => {
               }}
               placeholder="Nhập nội dung..."
             />
-            <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('[like]'))}>
+            <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('(y)'))}>
               <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />
             </TouchableOpacity>
           </>

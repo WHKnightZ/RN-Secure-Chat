@@ -7,7 +7,6 @@ import { colors } from '../../constants';
 import MessengerItem from './MessengerItem';
 import Conversation from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
-// import { FlatList } from 'react-native-gesture-handler';
 import { getConversations } from '../../store';
 import { ConversationInfoType, createConversationContent, createMessage } from '../../store/conversations/actions';
 import { saveNavigation } from '../../store/common/actions';

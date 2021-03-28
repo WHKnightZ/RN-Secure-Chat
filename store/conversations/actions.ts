@@ -39,6 +39,7 @@ export const GET_MESSAGES = 'GET_MESSAGES';
 export const CREATE_CONVERSATION_INFO = 'CREATE_CONVERSATION_INFO';
 export const CREATE_CONVERSATION_CONTENT = 'CREATE_CONVERSATION_CONTENT';
 export const CREATE_MESSAGE = 'CREATE_MESSAGE';
+export const SEEN_CONVERSATION = 'SEEN_CONVERSATION';
 
 export const reloadMessenger = () => {
   return { type: RELOAD_MESSENGER };
@@ -131,6 +132,7 @@ export const createMessage = async (
           name: data.display_name || data.username,
           avatar: data.avatar_path,
           online: data.online,
+          unseen: data.unseen,
           latest_message: null,
         },
       });
@@ -141,4 +143,8 @@ export const createMessage = async (
   }
   dispatch({ type: CREATE_MESSAGE, payload: { conversationId, message } });
   return true;
+};
+
+export const seenConversation = (conversationId: string) => {
+  return { type: SEEN_CONVERSATION, payload: conversationId };
 };

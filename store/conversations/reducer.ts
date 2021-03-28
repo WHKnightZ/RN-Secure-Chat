@@ -6,12 +6,15 @@ import {
   CREATE_CONVERSATION_INFO,
   CREATE_CONVERSATION_CONTENT,
   CREATE_MESSAGE,
+  SEEN_CONVERSATION,
   ConversationInfoType,
   ConversationContentType,
   MessageType,
 } from './actions';
 
 export const conversationsInfoReducer = (state = [], action: { type: string; payload: any }) => {
+  let conversations: ConversationInfoType[];
+
   switch (action.type) {
     case GET_CONVERSATIONS:
       return [...state, ...action.payload];
@@ -19,13 +22,19 @@ export const conversationsInfoReducer = (state = [], action: { type: string; pay
       return [action.payload, ...state];
     case CREATE_MESSAGE:
       const { conversationId, message } = action.payload;
-      let conversations: ConversationInfoType[] = [...state];
+      conversations = [...state];
       const index = conversations.findIndex((item: ConversationInfoType) => item.id === conversationId);
-      conversations[index].unseen += 1;
+      conversations[index].unseen += !message.seen ? 1 : 0;
       conversations[index].latest_message = message;
       const item = conversations[index];
       conversations.splice(index, 1);
       conversations = [item, ...conversations];
+      return conversations;
+    case SEEN_CONVERSATION:
+      const convId = action.payload;
+      conversations = [...state];
+      const idx = conversations.findIndex((item: ConversationInfoType) => item.id === convId);
+      conversations[idx].unseen = 0;
       return conversations;
 
     case RELOAD_MESSENGER:
