@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, PaddingView, HeaderBar } from '../../components';
 import AddContact from './AddContact';
+import { useDispatch } from 'react-redux';
+import { saveNavigation } from '../../store/common/actions';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +15,12 @@ interface Props {
 
 const Directory: React.FC<Props> = (props) => {
   const { navigation } = props;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(saveNavigation({ directory: navigation }));
+  }, []);
 
   return (
     <ScrollView>

@@ -10,6 +10,8 @@ import { showScanQR } from '../store';
 type ItemType = 'showqr' | 'scanqr' | 'search';
 
 interface Props {
+  fromScreen?: any;
+  navigation?: any;
   title?: string;
   isBack?: boolean;
   items?: ItemType[];
@@ -22,14 +24,20 @@ const mappingIcon = {
 };
 
 const HeaderBar: React.FC<Props> = (props) => {
-  const { title, isBack, items, children } = props;
-  const navigation = useSelector((state: any) => state.common.navigation);
+  const { navigation, title, isBack, items, children } = props;
   const dispatch = useDispatch();
+  const fromScreen = 'Messenger';
 
   if (isBack)
     return (
       <View style={styles.containerIsBack}>
-        <TouchableOpacity style={styles.iconBack} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.iconBack}
+          onPress={() => (fromScreen ? navigation.navigate(fromScreen) : navigation.goBack())}>
+          {/* onPress={() => {
+            navigation.navigate('Directory');
+            navigation.navigate('Messenger');
+          }}> */}
           <FontAwesome5 name="angle-left" size={28} color="black" />
         </TouchableOpacity>
         {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}

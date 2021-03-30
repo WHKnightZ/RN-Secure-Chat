@@ -36,7 +36,7 @@ const Messenger: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    dispatch(saveNavigation(navigation));
+    dispatch(saveNavigation({ messenger: navigation }));
     console.log('Init Messenger');
     loadMoreConversations();
   }, []);
@@ -100,7 +100,10 @@ const Messenger: React.FC<Props> = (props) => {
           Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
         </Text>
         <Text style={styles.note}>Nhấn Quét để quét mã QR của bạn bè.</Text>
-        <Button onPress={() => navigation.navigate('DirectoryTab', { screen: 'AddContact' })}>Thêm liên lạc mới</Button>
+        <Button
+          onPress={() => navigation.navigate('DirectoryTab', { screen: 'AddContact', fromScreen: 'DirectoryTab' })}>
+          Thêm liên lạc mới
+        </Button>
       </PaddingView>
     </View>
   );

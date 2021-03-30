@@ -11,6 +11,8 @@ interface Props {
 }
 
 const Profile: React.FC<Props> = (props) => {
+  const { navigation } = props;
+
   const auth = useSelector((state: any) => state.auth);
   const cover = auth.cover || require('./default-cover.jpg');
   const avatar = auth.avatar_path || require('../default-avatar.png');
@@ -39,7 +41,7 @@ const Profile: React.FC<Props> = (props) => {
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <HeaderBar title="Trang cá nhân" isBack />
+      <HeaderBar navigation={navigation} title="Trang cá nhân" isBack />
       <View style={{ paddingHorizontal: 16, alignItems: 'center', paddingBottom: 10 }}>
         <View style={{ alignItems: 'center', width: '100%' }}>
           <ImageBackground
