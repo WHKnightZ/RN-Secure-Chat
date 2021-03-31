@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ScrollView, View, StyleSheet, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, HeaderBar, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
@@ -9,7 +9,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { closeSocketio } from '../../store';
 import { reloadMessenger } from '../../store/conversations/actions';
 import Profile from './Profile';
-import { saveNavigation } from '../../store/common/actions';
 
 const Stack = createStackNavigator();
 
@@ -25,10 +24,6 @@ const Menu: React.FC<Props> = (props) => {
   const avatar = auth.avatar_path || require('../default-avatar.png');
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(saveNavigation({ menu: navigation }));
-  }, []);
 
   return (
     <ScrollView>

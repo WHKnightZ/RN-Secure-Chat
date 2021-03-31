@@ -36,7 +36,7 @@ const Messenger: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    dispatch(saveNavigation({ messenger: navigation }));
+    dispatch(saveNavigation(navigation));
     console.log('Init Messenger');
     loadMoreConversations();
   }, []);

@@ -30,7 +30,7 @@ const ScanQR: React.FC<Props> = () => {
   // };
 
   const common = useSelector((state: any) => state.common);
-  const navigation = common.navigation['messenger'];
+  const navigation = common.navigation;
   const scanQR = common.scanQR;
 
   const dispatch = useDispatch();

@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, View, StyleSheet, ImageBackground, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
-import { Text, HeaderBar, PaddingView, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
+import { Text, HeaderBar, PaddingView } from '../../components';
 import { colors, defaultUuid } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -41,7 +41,7 @@ const Profile: React.FC<Props> = (props) => {
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <HeaderBar navigation={navigation} title="Trang cá nhân" isBack />
+      <HeaderBar parent="Menu" title="Trang cá nhân" isBack />
       <View style={{ paddingHorizontal: 16, alignItems: 'center', paddingBottom: 10 }}>
         <View style={{ alignItems: 'center', width: '100%' }}>
           <ImageBackground

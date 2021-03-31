@@ -28,7 +28,7 @@ const LOGGED = 2;
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
-  const [init, setInit] = useState(false);
+  const [init, setInit] = useState(true);
   const [connectState, setConnectState] = useState(CONNECTING);
 
   const auth = useSelector((state: any) => state.auth);
@@ -72,7 +72,7 @@ const App = () => {
     return <AppLoading onError={() => {}} startAsync={fetchFonts} onFinish={() => setFontLoaded(true)} />;
   }
 
-  // if (!auth.access_token) return <Auth />;
+  if (!auth.access_token) return <Auth />;
 
   if (connectState === CONNECTED) {
     sio.emit('auth', auth.access_token);

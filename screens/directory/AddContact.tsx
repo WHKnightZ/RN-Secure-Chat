@@ -11,13 +11,11 @@ interface Props {
 }
 
 const AddContact: React.FC<Props> = (props) => {
-  const { navigation } = props;
-
   const auth = useSelector((state: any) => state.auth);
 
   return (
     <ScrollView>
-      <HeaderBar navigation={navigation} title="Thêm bạn" isBack />
+      <HeaderBar parent="Directory" title="Thêm bạn" isBack />
       <View>
         <MenuContainer>
           <MenuItem icon="search" title="Tìm theo tên" onPress={() => {}} />
@@ -48,7 +46,7 @@ const AddContact: React.FC<Props> = (props) => {
               <Text style={styles.textCopy}>Sao chép</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.center}>
+          <View style={[styles.center, { marginBottom: 20 }]}>
             <QRCode value={auth.user_id} size={200} />
           </View>
         </View>

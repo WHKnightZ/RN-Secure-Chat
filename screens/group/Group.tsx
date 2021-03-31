@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, PaddingView, HeaderBar } from '../../components';
-import { useDispatch } from 'react-redux';
-import { saveNavigation } from '../../store/common/actions';
+import { PaddingView, HeaderBar } from '../../components';
 
 const Stack = createStackNavigator();
 
@@ -14,12 +11,6 @@ interface Props {
 
 const Group: React.FC<Props> = (props) => {
   const { navigation } = props;
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(saveNavigation({ group: navigation }));
-  }, []);
 
   return (
     <ScrollView>
