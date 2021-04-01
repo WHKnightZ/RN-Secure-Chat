@@ -8,6 +8,7 @@ import {
   Alert,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Text, ModalLoading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
@@ -84,11 +85,11 @@ const Auth: React.FC = () => {
   const btnText = state === LOGIN ? 'ĐĂNG NHẬP' : 'TẠO KHÓA';
 
   return (
-    <ImageBackground source={require('./background.png')} style={styles.container}>
+    <ImageBackground source={require('./background.png')} style={styles.container} imageStyle={{ resizeMode: 'cover' }}>
       <ModalLoading loading={loading} />
-      <Text style={{ color: colors.white, fontSize: 52, marginTop: 180, marginRight: 30 }}>Secure</Text>
-      <Text style={{ color: colors.white, fontSize: 48, marginBottom: 80, marginLeft: 30 }}>Chat</Text>
-      <KeyboardAvoidingView style={styles.center} behavior="height">
+      <KeyboardAvoidingView style={styles.center} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Text style={{ color: colors.white, fontSize: 52, position: 'absolute', top: '15%' }}>Secure</Text>
+        <Text style={{ color: colors.white, fontSize: 48, position: 'absolute', top: '24%' }}>Chat</Text>
         <View style={styles.buttons}>
           <View style={{ marginRight: '10%', alignItems: 'center' }}>
             <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
@@ -172,7 +173,7 @@ const Auth: React.FC = () => {
             <Text style={{ color: '#FFF' }}>{btnText}</Text>
           </TouchableOpacity>
         </View>
-        <Text style={{ marginTop: 20, color: '#3f46ab' }}>Quên mật khẩu?</Text>
+        <Text style={{ marginVertical: 10, color: '#3f66cb' }}>Quên mật khẩu?</Text>
       </KeyboardAvoidingView>
     </ImageBackground>
   );
@@ -181,15 +182,15 @@ const Auth: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    resizeMode: 'cover',
     alignItems: 'center',
     backgroundColor: '#e0e5ee',
   },
   center: {
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
+    paddingBottom: '10%',
   },
   buttons: {
     flexDirection: 'row',
@@ -201,8 +202,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 20,
     borderRadius: 10,
-    // position: 'absolute',
-    // bottom: '20%',
   },
   formInput: {
     borderBottomColor: '#ddd',

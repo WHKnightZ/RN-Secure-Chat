@@ -16,6 +16,7 @@ const MyTextInput: React.FC<Props> = (props) => {
       style={[styles.text, style]}
       placeholder={placeholder}
       secureTextEntry={secureTextEntry}
+      keyboardType="visible-password"
     />
   );
 };

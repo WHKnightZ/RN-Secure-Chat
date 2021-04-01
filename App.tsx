@@ -72,7 +72,7 @@ const App = () => {
     return <AppLoading onError={() => {}} startAsync={fetchFonts} onFinish={() => setFontLoaded(true)} />;
   }
 
-  if (!auth.access_token) return <Auth />;
+  return <Auth />;
 
   if (connectState === CONNECTED) {
     sio.emit('auth', auth.access_token);
