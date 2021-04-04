@@ -68,10 +68,15 @@ const Conversation: React.FC<Props> = (props) => {
     refConversation.current.scrollToOffset({ animated: true, offset: 0 });
     refInput.current.focus();
     setLoadingInput(true);
+
+    const message: any = {};
+    message[userId] = text;
+    message[conversationId] = text;
+
     const response: any = await callApi({
       method: 'post',
       api: rest.createMessage(conversationId),
-      body: { message: text },
+      body: { message },
     });
     setLoadingInput(false);
     const { status, data } = response;
