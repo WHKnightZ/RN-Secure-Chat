@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import { Text, PaddingView, HeaderBar, TouchableOpacity, Loading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
@@ -7,7 +7,7 @@ import { colors } from '../../constants';
 import { callApi } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { FlatList } from 'react-native-gesture-handler';
+// import { FlatList } from 'react-native-gesture-handler';
 import { createMessage, getMessages } from '../../store';
 import { seenConversation } from '../../store/conversations/actions';
 
