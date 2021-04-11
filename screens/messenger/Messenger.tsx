@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Text, PaddingView, HeaderBar } from '../../components';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -45,6 +45,7 @@ const Messenger: React.FC<Props> = (props) => {
     if (!sio) return;
 
     sio.on?.('new_private_msg', (data: any) => {
+      console.log(data);
       createMessage(dispatch, {
         conversationsInfo: convInfo,
         conversationId: data.sender_id,

@@ -21,7 +21,7 @@ const Menu: React.FC<Props> = (props) => {
 
   const auth = useSelector((state: any) => state.auth);
   const sio = useSelector((state: any) => state.sio);
-  const avatar = auth.avatar_path || require('../default-avatar.png');
+  const avatar = auth.avatar_path ? { uri: auth.avatar_path } : require('../default-avatar.png');
 
   const dispatch = useDispatch();
 

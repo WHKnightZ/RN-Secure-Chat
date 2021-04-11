@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { PaddingView, HeaderBar } from '../../components';
 import AddContact from './AddContact';
+import SearchContact from './SearchContact';
 
 const Stack = createStackNavigator();
 
@@ -27,11 +28,13 @@ const Directory: React.FC<Props> = (props) => {
 const DirectoryStack: React.FC = () => {
   return (
     <Stack.Navigator
+      // initialRouteName="SearchContact"
       screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen name="Directory" component={Directory} />
       <Stack.Screen name="AddContact" component={AddContact} />
+      <Stack.Screen name="SearchContact" component={SearchContact} />
     </Stack.Navigator>
   );
 };

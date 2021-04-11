@@ -14,8 +14,8 @@ const Profile: React.FC<Props> = (props) => {
   const { navigation } = props;
 
   const auth = useSelector((state: any) => state.auth);
-  const cover = auth.cover || require('./default-cover.jpg');
-  const avatar = auth.avatar_path || require('../default-avatar.png');
+  const cover = auth.cover ? { uri: auth.cover } : require('./default-cover.jpg');
+  const avatar = auth.avatar_path ? { uri: auth.avatar_path } : require('../default-avatar.png');
 
   const RenderItem = ({ icon, title, border }: any) => {
     return (
@@ -42,14 +42,13 @@ const Profile: React.FC<Props> = (props) => {
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
       <HeaderBar parent="Menu" title="Trang cá nhân" isBack />
-      <View style={{ paddingHorizontal: 16, alignItems: 'center', paddingBottom: 10 }}>
+      <View style={{ paddingHorizontal: 24, alignItems: 'center', paddingBottom: 10 }}>
         <View style={{ alignItems: 'center', width: '100%' }}>
           <ImageBackground
             source={cover}
             style={{
               width: '100%',
               height: 200,
-              aspectRatio: 1,
               borderRadius: 8,
               overflow: 'hidden',
             }}

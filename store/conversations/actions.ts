@@ -1,5 +1,5 @@
 import { rest } from '../../config';
-import { callApi } from '../../utils';
+import { callApi, rsa } from '../../utils';
 
 export type ConversationInfoType = {
   id: string;

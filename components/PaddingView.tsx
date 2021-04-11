@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 
-interface Props {}
+interface Props {
+  style?: ViewStyle;
+}
 
 const PaddingView: React.FC<Props> = (props) => {
-  const { children } = props;
+  const { style, children } = props;
 
-  return <View style={styles.container}>{children}</View>;
+  return <View style={[styles.container, style]}>{children}</View>;
 };
 
 export default PaddingView;

@@ -40,7 +40,7 @@ const HeaderBar: React.FC<Props> = (props) => {
   const mappingNavigate = {
     showqr: () => {},
     scanqr: () => dispatch(showScanQR()),
-    search: () => {},
+    search: () => navigation.navigate('DirectoryTab', { screen: 'SearchContact' }),
   };
 
   return (

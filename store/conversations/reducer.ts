@@ -34,6 +34,7 @@ export const conversationsInfoReducer = (state = [], action: { type: string; pay
       const convId = action.payload;
       conversations = [...state];
       const idx = conversations.findIndex((item: ConversationInfoType) => item.id === convId);
+      if (idx === -1) return state;
       conversations[idx].unseen = 0;
       return conversations;
 

@@ -19,6 +19,7 @@ const BottomNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        // initialRouteName="DirectoryTab"
         activeColor={colors.primary}
         inactiveColor={colors.secondary}
         shifting

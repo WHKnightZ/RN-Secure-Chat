@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Image, TextInput, ScrollView, FlatList } from 'react-native';
-import { Text, PaddingView, HeaderBar, TouchableOpacity, Loading } from '../../components';
+import { View, StyleSheet, Image, TextInput, FlatList } from 'react-native';
+import { Text, HeaderBar, TouchableOpacity, Loading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
 import { colors } from '../../constants';
-import { callApi } from '../../utils';
+import { callApi, rsa } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
-// import { FlatList } from 'react-native-gesture-handler';
 import { createMessage, getMessages } from '../../store';
 import { seenConversation } from '../../store/conversations/actions';
 
@@ -37,7 +36,7 @@ const Conversation: React.FC<Props> = (props) => {
   const conversation = convContent[index];
   const dispatch = useDispatch();
 
-  const avatar = conversation.avatar ? { uri: conversation.avatar } : require('../default-avatar.png');
+  const avatar = conversation?.avatar ? { uri: conversation?.avatar } : require('../default-avatar.png');
 
   const loadMoreMessages = async () => {
     setLoading(true);
@@ -69,17 +68,20 @@ const Conversation: React.FC<Props> = (props) => {
     refInput.current.focus();
     setLoadingInput(true);
 
-    const message: any = {};
-    message[userId] = text;
-    message[conversationId] = text;
+    const messages: any = {};
+    // message[userId] = rsa.encrypt(text);
+    // message[conversationId] = rsa.encrypt(text);
+    messages[userId] = text;
+    messages[conversationId] = text;
 
     const response: any = await callApi({
       method: 'post',
       api: rest.createMessage(conversationId),
-      body: { message },
+      body: { messages },
     });
     setLoadingInput(false);
     const { status, data } = response;
+    // console.log(data, status, message)
     if (status) {
       createMessage(dispatch, { conversationsInfo: convInfo, conversationId, message: { ...data, seen: true } });
     }
