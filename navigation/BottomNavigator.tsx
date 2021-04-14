@@ -5,8 +5,11 @@ import { colors } from '../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Messenger, Group, Directory, Menu } from '../screens';
 import { useSelector } from 'react-redux';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from '../components';
 
-const Tab = createMaterialBottomTabNavigator();
+// const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
   // const convContent = useSelector((state: any) => state.convContent);
@@ -20,18 +23,33 @@ const BottomNavigator = () => {
     <NavigationContainer>
       <Tab.Navigator
         // initialRouteName="DirectoryTab"
-        activeColor={colors.primary}
-        inactiveColor={colors.secondary}
-        shifting
-        sceneAnimationEnabled
-        barStyle={{ backgroundColor: colors.white }}>
+        tabBarOptions={{
+          activeTintColor: colors.primary,
+          inactiveTintColor: colors.secondary,
+          tabStyle: {
+            shadowColor: 'transparent',
+          },
+          showLabel: false,
+        }}
+        // activeColor={colors.primary}
+        // inactiveColor={colors.secondary}
+        // shifting
+        // sceneAnimationEnabled
+        // barStyle={{ backgroundColor: colors.white }}
+        // sceneContainerStyle={{ borderColor: 'transparent' }}
+        lazy={false}>
         <Tab.Screen
           name="MessengerTab"
           component={Messenger}
           options={{
             tabBarLabel: 'Tin nhắn',
             tabBarBadge: unseen || null,
-            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="comment-text-multiple" color={color} size={24} />,
+            tabBarIcon: ({ color, focused }) => (
+              <>
+                <MaterialCommunityIcons name="comment-text-multiple" color={color} size={24} />
+                <Text>sdad</Text>
+              </>
+            ),
           }}
         />
         <Tab.Screen

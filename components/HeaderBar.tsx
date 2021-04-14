@@ -14,6 +14,7 @@ interface Props {
   title?: string;
   isBack?: boolean;
   items?: ItemType[];
+  navigation?: any;
 }
 
 const mappingIcon = {
@@ -23,14 +24,14 @@ const mappingIcon = {
 };
 
 const HeaderBar: React.FC<Props> = (props) => {
-  const { parent, title, isBack, items, children } = props;
+  const { parent, title, isBack, items, children, navigation } = props;
   const dispatch = useDispatch();
-  const navigation = useSelector((state: any) => state.common.navigation);
+  // const navigation = useSelector((state: any) => state.common.navigation);
 
   if (isBack)
     return (
       <View style={styles.containerIsBack}>
-        <TouchableOpacity style={styles.iconBack} onPress={() => navigation.replace(parent)}>
+        <TouchableOpacity style={styles.iconBack} onPress={() => navigation.goBack()}>
           <FontAwesome5 name="angle-left" size={28} color="black" />
         </TouchableOpacity>
         {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}

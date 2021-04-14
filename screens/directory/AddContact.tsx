@@ -15,7 +15,7 @@ const AddContact: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar parent="Directory" title="Thêm bạn" isBack />
+      <HeaderBar navigation={props.navigation} parent="Directory" title="Thêm bạn" isBack />
       <View>
         <MenuContainer>
           <MenuItem icon="search" title="Tìm theo tên" onPress={() => {}} />
