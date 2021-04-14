@@ -44,7 +44,7 @@ const SearchContact: React.FC<Props> = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeaderBar parent="Directory" title="Tìm kiếm" isBack />
+      <HeaderBar navigation={navigation} title="Tìm kiếm" isBack />
       <PaddingView>
         <View style={styles.inputWrapper}>
           <FontAwesome5 name="search" size={14} color={colors.secondary} />
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#ebeced",
+    backgroundColor: '#ebeced',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,

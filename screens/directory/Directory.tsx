@@ -17,7 +17,7 @@ const Directory: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Danh bạ" items={['scanqr', 'search']} />
+      <HeaderBar navigation={navigation} title="Danh bạ" items={['scanqr', 'search']} />
       <PaddingView>
         <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>

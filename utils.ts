@@ -59,7 +59,7 @@ export const callApi = async (payload: {
   return result;
 };
 
-const RSAKey = require('react-native-rsa');
+export const RSAKey = require('react-native-rsa');
 
 export const rsa = new RSAKey();
 

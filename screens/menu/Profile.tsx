@@ -41,7 +41,7 @@ const Profile: React.FC<Props> = (props) => {
 
   return (
     <ScrollView style={{ backgroundColor: colors.white }}>
-      <HeaderBar parent="Menu" title="Trang cá nhân" isBack />
+      <HeaderBar navigation={navigation} title="Trang cá nhân" isBack />
       <View style={{ paddingHorizontal: 24, alignItems: 'center', paddingBottom: 10 }}>
         <View style={{ alignItems: 'center', width: '100%' }}>
           <ImageBackground

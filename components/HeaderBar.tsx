@@ -14,7 +14,7 @@ interface Props {
   title?: string;
   isBack?: boolean;
   items?: ItemType[];
-  navigation?: any;
+  navigation: any;
 }
 
 const mappingIcon = {
@@ -24,9 +24,8 @@ const mappingIcon = {
 };
 
 const HeaderBar: React.FC<Props> = (props) => {
-  const { parent, title, isBack, items, children, navigation } = props;
+  const { title, isBack, items, children, navigation } = props;
   const dispatch = useDispatch();
-  // const navigation = useSelector((state: any) => state.common.navigation);
 
   if (isBack)
     return (

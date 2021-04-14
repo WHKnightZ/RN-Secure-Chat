@@ -11,11 +11,12 @@ interface Props {
 }
 
 const AddContact: React.FC<Props> = (props) => {
+  const { navigation } = props;
   const auth = useSelector((state: any) => state.auth);
 
   return (
     <ScrollView>
-      <HeaderBar navigation={props.navigation} parent="Directory" title="Thêm bạn" isBack />
+      <HeaderBar navigation={navigation} title="Thêm bạn" isBack />
       <View>
         <MenuContainer>
           <MenuItem icon="search" title="Tìm theo tên" onPress={() => {}} />

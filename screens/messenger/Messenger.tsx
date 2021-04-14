@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
-import { Text, PaddingView, HeaderBar } from '../../components';
+import { Text, PaddingView, HeaderBar, TouchableOpacity } from '../../components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../../constants';
 import MessengerItem from './MessengerItem';
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConversations } from '../../store';
 import { ConversationInfoType, createConversationContent, createMessage } from '../../store/conversations/actions';
 import { saveNavigation } from '../../store/common/actions';
+import { rsa, RSAKey } from '../../utils';
 
 const Stack = createStackNavigator();
 
@@ -87,7 +88,7 @@ const Messenger: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <HeaderBar title="Tin nhắn" items={['scanqr', 'search']} />
+      <HeaderBar navigation={navigation} title="Tin nhắn" items={['scanqr', 'search']} />
       <PaddingView>
         {loading && <ActivityIndicator animating={loading} size={30} color={colors.white} />}
         <FlatList
@@ -97,6 +98,20 @@ const Messenger: React.FC<Props> = (props) => {
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.2}
         />
+        <TouchableOpacity
+          onPress={() => {
+            const rsa = new RSAKey();
+            rsa.setPublicString(
+              JSON.stringify({
+                n:
+                  '88dd19aa485403721653ad037aff74ec47e7f48f6ba8508fa2c3774b5196cfbfd0dbd2fa50b27dbc9752a004762a2844e10b153cae237c4eb06e8155774c2a54cf957057b6c456c1286618711992e193513c2b4f78c40a84980ef170a050d5d325344a29dc40ecbefb9adb652343f6c7e816bb687ac80cffcba61cf7ea6a3a55',
+                e: '10001',
+              })
+            );
+            console.log(rsa.encrypt('ssd'));
+          }}>
+          <Text>SS</Text>
+        </TouchableOpacity>
         <Text style={styles.note}>
           Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
         </Text>

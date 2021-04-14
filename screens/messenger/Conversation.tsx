@@ -89,7 +89,7 @@ const Conversation: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <HeaderBar parent="Messenger" isBack>
+      <HeaderBar navigation={navigation} isBack>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <Image style={styles.avatar} source={avatar} />

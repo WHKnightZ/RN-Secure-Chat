@@ -27,7 +27,7 @@ const Menu: React.FC<Props> = (props) => {
 
   return (
     <ScrollView>
-      <HeaderBar title="Cá nhân" items={['showqr', 'search']} />
+      <HeaderBar navigation={navigation} title="Cá nhân" items={['showqr', 'search']} />
       <View>
         <TouchableOpacity style={styles.profile} onPress={() => navigation.push('Profile')}>
           <View style={styles.info}>
