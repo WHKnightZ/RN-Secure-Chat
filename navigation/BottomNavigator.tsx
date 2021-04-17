@@ -83,17 +83,13 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
 };
 
 const BottomNavigator = () => {
-  // const convContent = useSelector((state: any) => state.convContent);
-  // const unseen = convContent
-  //   .map((i: any) => i.messages.filter((j: any) => j.seen === false).length)
-  //   .reduce((a: any, b: any) => a + b, 0);
-  const convInfo = useSelector((state: any) => state.convInfo);
-  const unseen = convInfo.reduce((a: any, b: any) => a + b.unseen || 0, 0);
+  const unseenPrivate = useSelector((state: any) => state.common.unseenPrivate).length;
+  const unseenGroup = useSelector((state: any) => state.common.unseenGroup).length;
 
   return (
     <NavigationContainer>
       <Tab.Navigator
-        // initialRouteName="DirectoryTab"
+        // initialRouteName="GroupTab"
         tabBar={TabBar}
         lazy={false}>
         <Tab.Screen
@@ -101,7 +97,7 @@ const BottomNavigator = () => {
           component={Messenger}
           options={{
             tabBarLabel: 'Tin nhắn',
-            tabBarBadge: unseen || null,
+            tabBarBadge: unseenPrivate,
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="comment-text-multiple" color={color} size={24} />,
           }}
         />
@@ -110,6 +106,7 @@ const BottomNavigator = () => {
           component={Group}
           options={{
             tabBarLabel: 'Nhóm',
+            tabBarBadge: unseenGroup,
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-group" color={color} size={24} />,
           }}
         />

@@ -4,11 +4,10 @@ import { Text, HeaderBar, TouchableOpacity, Loading, ModalLoading } from '../../
 import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
 import { colors } from '../../constants';
-import { callApi, rsa } from '../../utils';
+import { callApi, RSAKey } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { createMessage, getMessages } from '../../store';
-import { createConversationContent, seenConversation } from '../../store/conversations/actions';
+import { addPublicKey, createMessage, getMessages, createConversationContent, seenConversation } from '../../store';
 
 interface Props {
   route: any;
@@ -23,18 +22,18 @@ const Conversation: React.FC<Props> = (props) => {
   const auth = useSelector((state: any) => state.auth);
   const convInfo = useSelector((state: any) => state.convInfo);
   const convContent = useSelector((state: any) => state.convContent);
+  const publicKeys = useSelector((state: any) => state.publicKeys);
 
   const userId = auth.user_id;
   const page = useRef<number>(1);
   const [loading, setLoading] = useState(false);
-  const [loadingInput, setLoadingInput] = useState(false);
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
 
   const index = convContent.findIndex((item: any) => item.id === conversationId);
   const conversation = convContent[index];
-  
+
   const loadMoreMessages = async () => {
     setLoading(true);
     await getMessages(dispatch, { conversationId, page: page.current });
@@ -59,12 +58,19 @@ const Conversation: React.FC<Props> = (props) => {
             publicKeys: data.public_keys,
             messages: [],
           });
+          for (const [key, value] of Object.entries(data.public_keys)) {
+            if (!(key in publicKeys)) {
+              const r = new RSAKey();
+              r.setPublicString(value);
+              dispatch(addPublicKey({ userId: key, publicKey: r }));
+            }
+          }
         }
       };
       getConversationInfo();
       return;
     }
-    dispatch(seenConversation(conversationId));
+    dispatch(seenConversation({ seenPrivate: conversationId }));
     if (conversation.messages.length === 0) loadMoreMessages();
   }, [conversation]);
 
@@ -88,26 +94,34 @@ const Conversation: React.FC<Props> = (props) => {
     if (text) setText('');
     refConversation.current.scrollToOffset({ animated: true, offset: 0 });
     refInput.current.focus();
-    setLoadingInput(true);
 
     const messages: any = {};
-    // message[userId] = rsa.encrypt(text);
-    // message[conversationId] = rsa.encrypt(text);
-    messages[userId] = text;
-    messages[conversationId] = text;
+    messages[userId] = publicKeys[userId].encrypt(text);
+    messages[conversationId] = publicKeys[conversationId].encrypt(text);
 
     const response: any = await callApi({
       method: 'post',
       api: rest.createMessage(conversationId),
       body: { messages },
     });
-    setLoadingInput(false);
     const { status, data } = response;
-    // console.log(data, status, message)
     if (status) {
-      createMessage(dispatch, { conversationsInfo: convInfo, conversationId, message: { ...data, seen: true } });
+      createMessage(dispatch, {
+        conversationsInfo: convInfo,
+        conversationId,
+        message: { ...data, message: messages[userId] },
+        seen: true,
+      });
     }
   };
+
+  let canInput = true;
+  for (const key in conversation.publicKeys) {
+    if (!(key in publicKeys)) {
+      canInput = false;
+      break;
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -134,7 +148,7 @@ const Conversation: React.FC<Props> = (props) => {
       />
 
       <View style={styles.footer}>
-        {loadingInput ? (
+        {!canInput ? (
           <Loading />
         ) : (
           <>

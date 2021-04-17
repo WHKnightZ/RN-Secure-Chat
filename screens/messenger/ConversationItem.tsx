@@ -55,7 +55,7 @@ const ConversationItem: React.FC<Props> = (props) => {
       {isMe && (
         <FontAwesome
           style={styles.iconSeen}
-          name={seen ? 'eye' : 'check-circle'}
+          name={seen ? 'check-circle' : 'check-circle-o'}
           size={15}
           color={colors.gray}
         />

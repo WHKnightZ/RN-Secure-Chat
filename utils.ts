@@ -34,13 +34,7 @@ const mapApi = {
   delete: deleteApi,
 };
 
-export const callApi = async (payload: {
-  method: 'get' | 'post' | 'put' | 'delete';
-  api: string;
-  body?: object;
-  loading?: boolean;
-  msg?: 'string';
-}) => {
+export const callApi = async (payload: { method: 'get' | 'post' | 'put' | 'delete'; api: string; body?: object }) => {
   let result = {
     code: 500,
     status: false,
@@ -79,7 +73,8 @@ export const includes = (arr: any[], item: any) => {
 };
 
 export const stringToBlocks = (str: string) => {
-  const strs = str.split(' ');
+  if (!str) return { blocks: [], noText: true };
+  const strs = str.trim().split(' ');
   let type = 0;
   let noText = true;
   let blocks: { type: 0 | 1; value: string }[] = [];

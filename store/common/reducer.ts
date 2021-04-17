@@ -1,8 +1,11 @@
-import { SAVE_NAVIGATION, SHOW_SCAN_QR, HIDE_SCAN_QR, LOADING_REQUEST, LOADING_SUCCESS } from './actions';
+import { CREATE_MESSAGE } from '../conversations/actions';
+import { SAVE_NAVIGATION, SHOW_SCAN_QR, HIDE_SCAN_QR, FETCH_CONVERSATIONS_UNSEEN, SEEN_CONVERSATION } from './actions';
 
-const initialState = { navigation: null, scanQR: false, loading: false };
+const initialState = { navigation: null, scanQR: false, loading: false, unseenPrivate: [], unseenGroup: [] };
 
 export const commonReducer = (state = initialState, action: { type: string; payload: any }) => {
+  const { payload } = action;
+
   switch (action.type) {
     case SAVE_NAVIGATION:
       return { ...state, navigation: action.payload };
@@ -10,10 +13,22 @@ export const commonReducer = (state = initialState, action: { type: string; payl
       return { ...state, scanQR: true };
     case HIDE_SCAN_QR:
       return { ...state, scanQR: false };
-    case LOADING_REQUEST:
-      return { ...state, loading: true };
-    case LOADING_SUCCESS:
-      return { ...state, loading: false };
+    case FETCH_CONVERSATIONS_UNSEEN:
+      return { ...state, ...payload };
+    case SEEN_CONVERSATION:
+      if (payload.seenPrivate) {
+        return { ...state, unseenPrivate: state.unseenPrivate.filter((item) => item !== payload.seenPrivate) };
+      } else {
+        return { ...state, unseenGroup: state.unseenGroup.filter((item) => item !== payload.seenGroup) };
+      }
+    case CREATE_MESSAGE:
+      const { conversationId, seen } = payload;
+      if (!seen) {
+        let newUnseen: string[] = [...state.unseenPrivate];
+        if (newUnseen.findIndex((item) => item === conversationId) === -1) newUnseen.push(conversationId);
+        return { ...state, unseenPrivate: newUnseen };
+      }
+      return state;
 
     default:
       return state;

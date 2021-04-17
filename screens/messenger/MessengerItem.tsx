@@ -7,7 +7,6 @@ import { timestampToDate } from '../../utils';
 
 interface Props {
   id: string;
-  group_name: string;
   name: string;
   avatar?: string;
   created_date: number;

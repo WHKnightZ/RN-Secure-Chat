@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import Icon from './icon/Icon';
 import Text from './Text';
 
@@ -14,9 +13,15 @@ const TextIcon: React.FC<Props> = (props) => {
 
   return (
     // <View style={{ flexDirection: 'row', paddingVertical: 6, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-    <Text style={{ marginHorizontal: 4, paddingVertical: 6, color }}>
+    <Text style={{ marginHorizontal: 4, paddingVertical: 6, color, overflow: 'visible' }}>
       {blocks.map((item: any, index: number) => {
-        if (item.type === 0) return <Icon key={index} style={{ marginHorizontal: 4 }} name={item.value} size={size} />;
+        if (item.type === 0)
+          return (
+            <Text key={index}>
+              {' '}
+              <Icon name={item.value} size={size} />{' '}
+            </Text>
+          );
         return item.value;
       })}
     </Text>

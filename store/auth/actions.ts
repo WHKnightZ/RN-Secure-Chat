@@ -20,6 +20,17 @@ export const loginAction = async (dispatch: any, payload: any) => {
   });
   const { status, data } = response;
   if (status) {
+    const privateKey = await AsyncStorage.getItem(`${username}-private`);
+    if (!privateKey) {
+      Alert.alert('Không thể xác thực Khóa riêng tư');
+      return;
+    }
+    rsa.setPrivateString(privateKey);
+    if (!rsa.decrypt(data.test_message)) {
+      Alert.alert('Không thể xác thực Khóa riêng tư');
+      return;
+    }
+
     const socketio: any = io.connect(BASE_URL, {
       transports: ['websocket'],
       jsonp: false,
@@ -27,10 +38,6 @@ export const loginAction = async (dispatch: any, payload: any) => {
     });
     dispatch(initSocketio(socketio));
 
-    const privateKey = await AsyncStorage.getItem(`${username}-private`);
-    if (!privateKey) return;
-    rsa.setPrivateString(privateKey);
-    if (!rsa.decrypt(data.test_message)) return;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.access_token;
     await AsyncStorage.setItem('user', JSON.stringify(payload));
     const response2: any = await callApi({

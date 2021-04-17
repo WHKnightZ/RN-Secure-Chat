@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
 interface Props {
+  innerRef?: any;
   style?: any;
   value?: string;
   onChangeText?: (value: string) => void;
@@ -10,9 +11,10 @@ interface Props {
 }
 
 const MyTextInput: React.FC<Props> = (props) => {
-  const { style, value, onChangeText, placeholder, secureTextEntry } = props;
+  const { innerRef, style, value, onChangeText, placeholder, secureTextEntry } = props;
 
   const params: any = {
+    ref: innerRef,
     value,
     onChangeText,
     style: [styles.text, style],

@@ -11,7 +11,6 @@ import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
-import { ModalLoading } from './components';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -34,7 +33,6 @@ const App = () => {
 
   const auth = useSelector((state: any) => state.auth);
   const sio = useSelector((state: any) => state.sio);
-  const loading = useSelector((state: any) => state.common.loading);
 
   const dispatch = useDispatch();
 
@@ -85,7 +83,6 @@ const App = () => {
     <View style={{ flex: 1 }}>
       <BottomNavigator />
       <ScanQR />
-      <ModalLoading loading={loading} />
     </View>
   );
 };

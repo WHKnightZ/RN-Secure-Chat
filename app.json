@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "rsa-chat",
+    "name": "Secure Chat",
     "slug": "rsa-chat",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.securechat.securechat",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

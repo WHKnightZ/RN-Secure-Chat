@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, StyleSheet, Image } from 'react-native';
 import { Text, HeaderBar, PaddingView, TouchableOpacity, TextInput } from '../../components';
 import { colors } from '../../constants';
@@ -15,6 +15,7 @@ const SearchContact: React.FC<Props> = (props) => {
 
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState<any>([]);
+  const refInput = useRef<any>(null);
 
   useEffect(() => {
     if (!search) return;
@@ -23,12 +24,16 @@ const SearchContact: React.FC<Props> = (props) => {
       const response = await callApi({ method: 'get', api: rest.searchFriends(search) });
       const { status, data } = response;
       if (status) {
-        if (Array.isArray(data)) setUsers(data);
-        else setUsers([data]);
+        setUsers(data);
       }
-    }, 1000);
+    }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
+
+  useEffect(() => {
+    if (!refInput.current) return;
+    refInput.current.focus();
+  }, [refInput.current]);
 
   const handleSelect = async (userId: string) => {
     // navigation.navigate('MessengerTab', { screen: 'Conversation', params: { conversationId: userId } });
@@ -41,7 +46,13 @@ const SearchContact: React.FC<Props> = (props) => {
       <PaddingView>
         <View style={styles.inputWrapper}>
           <FontAwesome5 name="search" size={14} color={colors.secondary} />
-          <TextInput value={search} onChangeText={(value) => setSearch(value)} style={styles.input} />
+          <TextInput
+            innerRef={refInput}
+            placeholder="Nhập từ khóa ..."
+            value={search}
+            onChangeText={(value) => setSearch(value)}
+            style={styles.input}
+          />
           {search !== '' && (
             <TouchableOpacity onPress={() => setSearch('')}>
               <FontAwesome name="times-circle" size={20} color={colors.secondary} />
@@ -71,7 +82,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#ebeced',
+    backgroundColor: '#f3f4f5',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,

@@ -14,7 +14,7 @@ const ModalLoading: React.FC<Props> = (props) => {
   return (
     <Modal transparent={true} animationType="fade" visible={loading}>
       <View style={styles.modalBackground}>
-        <ActivityIndicator animating={true} size={60} color={colors.white} />
+        <ActivityIndicator animating={true} size={60} color={colors.lightGray} />
       </View>
     </Modal>
   );
@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    backgroundColor: '#00000040',
+    backgroundColor: '#ffffff40',
   },
 });

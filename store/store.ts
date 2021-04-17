@@ -3,6 +3,7 @@ import ReduxThunk from 'redux-thunk';
 import { authReducer } from './auth/reducer';
 import { socketioReducer } from './sio/reducer';
 import { conversationsInfoReducer, conversationsContentReducer } from './conversations/reducer';
+import { groupsInfoReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { publicKeysReducer } from './publicKeys/reducer';
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   sio: socketioReducer,
   convInfo: conversationsInfoReducer,
   convContent: conversationsContentReducer,
+  groupsInfo: groupsInfoReducer,
   common: commonReducer,
   publicKeys: publicKeysReducer,
 });

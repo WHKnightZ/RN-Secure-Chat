@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Text from './Text';
 import { colors } from '../constants';
 import TouchableOpacity from './TouchableOpacity';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { showScanQR } from '../store';
 
 type ItemType = 'showqr' | 'scanqr' | 'search';
@@ -15,6 +15,7 @@ interface Props {
   isBack?: boolean;
   items?: ItemType[];
   navigation: any;
+  submit?: { text: string; callback: any };
 }
 
 const mappingIcon = {
@@ -24,16 +25,21 @@ const mappingIcon = {
 };
 
 const HeaderBar: React.FC<Props> = (props) => {
-  const { title, isBack, items, children, navigation } = props;
+  const { title, isBack, items, children, navigation, submit } = props;
   const dispatch = useDispatch();
 
   if (isBack)
     return (
       <View style={styles.containerIsBack}>
-        <TouchableOpacity style={styles.iconBack} onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="angle-left" size={28} color="black" />
+        <View style={styles.items}>
+          <TouchableOpacity style={styles.iconBack} onPress={() => navigation.goBack()}>
+            <FontAwesome5 name="angle-left" size={28} color="black" />
+          </TouchableOpacity>
+          {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}
+        </View>
+        <TouchableOpacity onPress={submit?.callback}>
+          <Text style={{ fontSize: 15, color: colors.gray, marginRight: 10 }}>{submit?.text}</Text>
         </TouchableOpacity>
-        {title ? <Text style={styles.title}>{title}</Text> : <View>{children}</View>}
       </View>
     );
 
@@ -75,6 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     padding: 8,
+    justifyContent: 'space-between',
   },
   iconBack: {
     paddingHorizontal: 10,
@@ -89,6 +96,7 @@ const styles = StyleSheet.create({
   },
   items: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonItem: {
     width: 30,

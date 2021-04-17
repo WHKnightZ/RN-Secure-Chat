@@ -1,12 +1,12 @@
 import { rest } from '../../config';
 import { callApi, rsa } from '../../utils';
+import { fetchConversationsUnseen } from '../common/actions';
 
 export type ConversationInfoType = {
   id: string;
   name: string;
   avatar: string | null;
   online: boolean;
-  unseen: number;
   latest_message: {
     created_date: number;
     id: string;
@@ -30,7 +30,6 @@ export type ConversationContentType = {
   name: string;
   avatar: string | null;
   online: boolean;
-  publicKeys: any[];
   messages: MessageType[];
   full: boolean;
   publicKeys: any;
@@ -42,7 +41,6 @@ export const GET_MESSAGES = 'GET_MESSAGES';
 export const CREATE_CONVERSATION_INFO = 'CREATE_CONVERSATION_INFO';
 export const CREATE_CONVERSATION_CONTENT = 'CREATE_CONVERSATION_CONTENT';
 export const CREATE_MESSAGE = 'CREATE_MESSAGE';
-export const SEEN_CONVERSATION = 'SEEN_CONVERSATION';
 
 export const reloadMessenger = () => {
   return { type: RELOAD_MESSENGER };
@@ -56,19 +54,23 @@ export const getConversations = async (dispatch: any, payload: any) => {
   });
   const { status, data } = response;
   if (status) {
+    let unseen: any[] = [];
     dispatch({
       type: GET_CONVERSATIONS,
       payload: data.map((item: any) => {
+        if (item.unseen) unseen.push(item.id);
         return {
           id: item.id,
           name: item.display_name || item.username,
           avatar: item.avatar_path,
           online: item.online,
-          unseen: item.unseen || 0,
-          latest_message: item.latest_message,
+          latest_message: item.latest_message
+            ? { ...item.latest_message, message: rsa.decrypt(item.latest_message.message) }
+            : null,
         };
       }),
     });
+    dispatch(fetchConversationsUnseen({ unseenPrivate: unseen }));
     return data.length;
   }
   return -1;
@@ -82,7 +84,15 @@ export const getMessages = async (dispatch: any, payload: any) => {
   });
   const { status, data } = response;
   if (status) {
-    dispatch({ type: GET_MESSAGES, payload: { conversationId, messages: data } });
+    dispatch({
+      type: GET_MESSAGES,
+      payload: {
+        conversationId,
+        messages: data.map((item: MessageType) => {
+          return { ...item, message: rsa.decrypt(item.message) };
+        }),
+      },
+    });
     return data.length;
   }
   return -1;
@@ -97,9 +107,9 @@ export const createConversationContent = (dispatch: any, payload: any) => {
 
 export const createMessage = async (
   dispatch: any,
-  payload: { conversationsInfo: any; conversationId: string; message: MessageType }
+  payload: { conversationsInfo: any; conversationId: string; message: MessageType; seen: boolean }
 ) => {
-  const { conversationsInfo, conversationId, message } = payload;
+  const { conversationsInfo, conversationId, message, seen } = payload;
   const index = conversationsInfo.findIndex((item: ConversationInfoType) => item.id === conversationId);
   if (index === -1) {
     const response: any = await callApi({
@@ -115,19 +125,20 @@ export const createMessage = async (
           name: data.display_name || data.username,
           avatar: data.avatar_path,
           online: data.online,
-          unseen: data.unseen,
           latest_message: null,
         },
       });
-      dispatch({ type: CREATE_MESSAGE, payload: { conversationId, message } });
+      dispatch({
+        type: CREATE_MESSAGE,
+        payload: { conversationId, message: { ...message, message: rsa.decrypt(message.message) }, seen },
+      });
       return true;
     }
     return false;
   }
-  dispatch({ type: CREATE_MESSAGE, payload: { conversationId, message } });
+  dispatch({
+    type: CREATE_MESSAGE,
+    payload: { conversationId, message: { ...message, message: rsa.decrypt(message.message) }, seen },
+  });
   return true;
-};
-
-export const seenConversation = (conversationId: string) => {
-  return { type: SEEN_CONVERSATION, payload: conversationId };
 };

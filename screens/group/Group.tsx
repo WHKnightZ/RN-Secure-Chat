@@ -1,7 +1,13 @@
-import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { PaddingView, HeaderBar } from '../../components';
+import { Text, PaddingView, HeaderBar } from '../../components';
+import { Button } from 'react-native-paper';
+import { colors } from '../../constants';
+import CreateGroup from './CreateGroup';
+import MessengerItem from '../messenger/MessengerItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { getGroups } from '../../store';
 
 const Stack = createStackNavigator();
 
@@ -12,11 +18,50 @@ interface Props {
 const Group: React.FC<Props> = (props) => {
   const { navigation } = props;
 
+  const page = useRef<number>(1);
+
+  const [loading, setLoading] = useState(false);
+  const [full, setFull] = useState(false);
+  const sio = useSelector((state: any) => state.sio);
+  const groupsInfo = useSelector((state: any) => state.groupsInfo);
+  const dispatch = useDispatch();
+
+  const loadMoreGroups = async () => {
+    setLoading(true);
+    const size: number = await getGroups(dispatch, { page: page.current });
+    if (size < 10) setFull(true);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadMoreGroups();
+  }, []);
+  
+  const handleEndReached = () => {
+    console.log('Reached');
+  };
+
+  const renderItem = ({ item }: any) => {
+    return <MessengerItem key={item.id} onPress={() => {}} {...item} />;
+  };
+
   return (
-    <ScrollView>
-      <HeaderBar title="Nhóm" items={['scanqr', 'search']} />
-      <PaddingView></PaddingView>
-    </ScrollView>
+    <View style={styles.container}>
+      <HeaderBar navigation={navigation} title="Nhóm" items={['scanqr', 'search']} />
+      <PaddingView>
+        <FlatList
+          style={styles.container}
+          data={groupsInfo}
+          renderItem={renderItem}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.2}
+        />
+        <Text style={styles.note}>
+          Trò chuyện nhóm với giao thức bảo mật hoàn toàn mới. Chỉ những người trong nhóm mới có thể đọc được tin nhắn.
+        </Text>
+        <Button onPress={() => navigation.push('CreateGroup')}>Tạo Nhóm Mới</Button>
+      </PaddingView>
+    </View>
   );
 };
 
@@ -27,6 +72,7 @@ const GroupStack: React.FC = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="Group" component={Group} />
+      <Stack.Screen name="CreateGroup" component={CreateGroup} />
     </Stack.Navigator>
   );
 };
@@ -36,5 +82,9 @@ export default GroupStack;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  note: {
+    marginVertical: 10,
+    color: colors.gray,
   },
 });
