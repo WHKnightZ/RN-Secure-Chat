@@ -30,6 +30,7 @@ export type ConversationContentType = {
   name: string;
   avatar: string | null;
   online: boolean;
+  publicKeys: any[];
   messages: MessageType[];
   full: boolean;
   publicKeys: any;
