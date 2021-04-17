@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, Image } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { Text, HeaderBar, PaddingView, TouchableOpacity, TextInput } from '../../components';
 import { colors } from '../../constants';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { callApi } from '../../utils';
 import { UserType, rest } from '../../config';
-import { loadingRequest, loadingSuccess } from '../../store/common/actions';
-import { createConversation } from '../../store';
 
 interface Props {
   navigation: { push: any; navigate: any; goBack: any };
@@ -15,7 +12,6 @@ interface Props {
 
 const SearchContact: React.FC<Props> = (props) => {
   const { navigation } = props;
-  const dispatch = useDispatch();
 
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState<any>([]);
@@ -35,9 +31,6 @@ const SearchContact: React.FC<Props> = (props) => {
   }, [search]);
 
   const handleSelect = async (userId: string) => {
-    dispatch(loadingRequest());
-    await createConversation(dispatch, { userId });
-    dispatch(loadingSuccess());
     // navigation.navigate('MessengerTab', { screen: 'Conversation', params: { conversationId: userId } });
     navigation.navigate('Conversation', { conversationId: userId });
   };

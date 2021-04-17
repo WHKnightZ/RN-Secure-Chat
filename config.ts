@@ -15,6 +15,7 @@ export const rest = {
   addContact: (userId: string) => `/api/v1/users/friends/${userId}`,
   createMessage: (conversationId: string) => `/api/v1/chats/${conversationId}`,
   getConversations: (page: number) => `/api/v1/users/chats?page=${page}&page_size=10`,
+  getConversationInfo: (id: string) => `/api/v1/chats/${id}/info`,
   getMessages: (conversationId: string, page: number) => `/api/v1/chats/${conversationId}?page=${page}&page_size=20`,
   searchFriends: (keyword: string) => `/api/v1/users/search?text_search=${keyword}`,
 };

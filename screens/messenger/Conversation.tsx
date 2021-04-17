@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Image, TextInput, FlatList } from 'react-native';
-import { Text, HeaderBar, TouchableOpacity, Loading } from '../../components';
+import { Text, HeaderBar, TouchableOpacity, Loading, ModalLoading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { rest } from '../../config';
 import { colors } from '../../constants';
@@ -8,7 +8,7 @@ import { callApi, rsa } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMessage, getMessages } from '../../store';
-import { seenConversation } from '../../store/conversations/actions';
+import { createConversationContent, seenConversation } from '../../store/conversations/actions';
 
 interface Props {
   route: any;
@@ -19,6 +19,7 @@ const Conversation: React.FC<Props> = (props) => {
   const { route, navigation } = props;
   const conversationId = route.params.conversationId;
 
+  const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
   const convInfo = useSelector((state: any) => state.convInfo);
   const convContent = useSelector((state: any) => state.convContent);
@@ -27,28 +28,49 @@ const Conversation: React.FC<Props> = (props) => {
   const page = useRef<number>(1);
   const [loading, setLoading] = useState(false);
   const [loadingInput, setLoadingInput] = useState(false);
-  const [full, setFull] = useState(false);
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
 
   const index = convContent.findIndex((item: any) => item.id === conversationId);
   const conversation = convContent[index];
-  const dispatch = useDispatch();
-
-  const avatar = conversation?.avatar ? { uri: conversation?.avatar } : require('../default-avatar.png');
-
+  
   const loadMoreMessages = async () => {
     setLoading(true);
-    const size: number = await getMessages(dispatch, { conversationId, page: page.current });
-    if (size < 20) setFull(true);
+    await getMessages(dispatch, { conversationId, page: page.current });
     setLoading(false);
   };
 
   useEffect(() => {
+    if (index === -1) {
+      const getConversationInfo = async () => {
+        const response: any = await callApi({
+          api: rest.getConversationInfo(conversationId),
+          method: 'get',
+        });
+        const { status, data } = response;
+        if (status) {
+          createConversationContent(dispatch, {
+            id: data.conversation_id,
+            name: data.conversation_name,
+            avatar: data.conversation_avatar,
+            online: data.online,
+            full: false,
+            publicKeys: data.public_keys,
+            messages: [],
+          });
+        }
+      };
+      getConversationInfo();
+      return;
+    }
     dispatch(seenConversation(conversationId));
     if (conversation.messages.length === 0) loadMoreMessages();
-  }, []);
+  }, [conversation]);
+
+  if (!conversation) return <ModalLoading loading={true} />;
+
+  const avatar = conversation.avatar ? { uri: conversation.avatar } : require('../default-avatar.png');
 
   const renderItem = ({ item, index }: any) => {
     const isLast = index === 0 || conversation.messages[index].sender_id !== conversation.messages[index - 1].sender_id;
@@ -56,7 +78,7 @@ const Conversation: React.FC<Props> = (props) => {
   };
 
   const handleEndReached = async () => {
-    if (loading || full) return;
+    if (loading || conversation.full) return;
     console.log('Reached');
     page.current += 1;
     loadMoreMessages();

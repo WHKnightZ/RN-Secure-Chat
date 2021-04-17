@@ -31,6 +31,8 @@ export type ConversationContentType = {
   avatar: string | null;
   online: boolean;
   messages: MessageType[];
+  full: boolean;
+  publicKeys: any;
 };
 
 export const RELOAD_MESSENGER = 'RELOAD_MESSENGER';
@@ -90,26 +92,6 @@ export const createConversationContent = (dispatch: any, payload: any) => {
     type: CREATE_CONVERSATION_CONTENT,
     payload: payload,
   });
-};
-
-export const createConversation = async (dispatch: any, payload: { userId: string }) => {
-  const { userId } = payload;
-  const response: any = await callApi({
-    api: rest.getUserById(userId),
-    method: 'get',
-  });
-  const { status, data } = response;
-  if (status) {
-    createConversationContent(dispatch, {
-      id: data.id,
-      name: data.display_name || data.username,
-      avatar: data.avatar_path,
-      online: data.online,
-      messages: [],
-    });
-    return true;
-  }
-  return false;
 };
 
 export const createMessage = async (

@@ -3,10 +3,8 @@ import { StyleSheet, Modal, View, Platform, Image, Dimensions, TouchableOpacity,
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideScanQR } from '../../store';
-import { createConversation } from '../../store/conversations/actions';
 import { Text } from '../../components';
 import { colors } from '../../constants';
-import { loadingRequest, loadingSuccess } from '../../store/common/actions';
 
 interface Props {}
 
@@ -47,9 +45,6 @@ const ScanQR: React.FC<Props> = () => {
       Alert.alert('Mã không đúng!');
       return;
     }
-    dispatch(loadingRequest());
-    await createConversation(dispatch, { userId: data });
-    dispatch(loadingSuccess());
     navigation.navigate('Conversation', { conversationId: data });
   };
 

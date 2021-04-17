@@ -59,6 +59,7 @@ export const conversationsContentReducer = (state = [], action: { type: string; 
       const newMessages = conversations[index].messages;
       const filteredMessages = messages.filter((message) => !includes(newMessages, message));
       conversations[index].messages = [...conversations[index].messages, ...filteredMessages];
+      conversations[index].full = messages.length < 20;
       return conversations;
     case CREATE_CONVERSATION_CONTENT:
       return [...state, action.payload];

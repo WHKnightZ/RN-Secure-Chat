@@ -8,7 +8,7 @@ import MessengerItem from './MessengerItem';
 import Conversation from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getConversations } from '../../store';
-import { ConversationInfoType, createConversationContent, createMessage } from '../../store/conversations/actions';
+import { ConversationInfoType, createMessage } from '../../store/conversations/actions';
 import { saveNavigation } from '../../store/common/actions';
 import { rsa, RSAKey } from '../../utils';
 
@@ -72,13 +72,6 @@ const Messenger: React.FC<Props> = (props) => {
   };
 
   const handlePress = (item: ConversationInfoType) => {
-    createConversationContent(dispatch, {
-      id: item.id,
-      name: item.name,
-      avatar: item.avatar,
-      online: item.online,
-      messages: [],
-    });
     navigation.navigate('Conversation', { conversationId: item.id });
   };
 
