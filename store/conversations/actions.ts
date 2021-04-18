@@ -1,6 +1,5 @@
 import { rest } from '../../config';
 import { callApi, rsa } from '../../utils';
-import { fetchConversationsUnseen } from '../common/actions';
 
 export type ConversationInfoType = {
   id: string;
@@ -54,11 +53,9 @@ export const getConversations = async (dispatch: any, payload: any) => {
   });
   const { status, data } = response;
   if (status) {
-    let unseen: any[] = [];
     dispatch({
       type: GET_CONVERSATIONS,
       payload: data.map((item: any) => {
-        if (item.unseen) unseen.push(item.id);
         return {
           id: item.id,
           name: item.display_name || item.username,
@@ -70,7 +67,6 @@ export const getConversations = async (dispatch: any, payload: any) => {
         };
       }),
     });
-    dispatch(fetchConversationsUnseen({ unseenPrivate: unseen }));
     return data.length;
   }
   return -1;

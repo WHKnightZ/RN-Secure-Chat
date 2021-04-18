@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
-import { BASE_URL } from './config';
+import { BASE_URL, rest } from './config';
 import axios from 'axios';
 import { store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,8 @@ import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
 import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
+import { callApi } from './utils';
+import { fetchConversationsUnseen } from './store/common/actions';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -75,6 +77,13 @@ const App = () => {
   if (!auth.access_token) return <Auth />;
 
   if (connectState === CONNECTED) {
+    const getUnseenConversations = async () => {
+      const { status, data }: any = await callApi({ method: 'get', api: rest.getUnseenConversations() });
+      if (status) {
+        dispatch(fetchConversationsUnseen({ unseenPrivate: data.unseen_private, unseenGroup: data.unseen_group }));
+      }
+    };
+    getUnseenConversations();
     sio.emit('auth', auth.access_token);
     setConnectState(LOGGED);
   }

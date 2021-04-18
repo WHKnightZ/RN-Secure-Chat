@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ImageBackground,
+  Image,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
+  Keyboard,
 } from 'react-native';
 import { Text, ModalLoading, TextInput } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
@@ -27,6 +29,24 @@ const Auth: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
+
+  const [offsetImage, setOffsetImage] = useState(0);
+  const height = Dimensions.get('window').height;
+
+  useEffect(() => {
+    const keyboardDidShow = (e: any) => {
+      setOffsetImage(-e.endCoordinates.height);
+    };
+    const keyboardDidHide = (e: any) => {
+      setOffsetImage(0);
+    };
+    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', keyboardDidShow);
+      Keyboard.removeListener('keyboardDidHide', keyboardDidHide);
+    };
+  }, []);
 
   const dispatch = useDispatch();
 
@@ -85,11 +105,13 @@ const Auth: React.FC = () => {
   const btnText = state === LOGIN ? 'ĐĂNG NHẬP' : 'TẠO KHÓA';
 
   return (
-    <ImageBackground source={require('./background.png')} style={styles.container} imageStyle={{ resizeMode: 'cover' }}>
+    <View style={styles.container}>
+      <Image
+        source={require('../../assets/splash.png')}
+        style={{ position: 'absolute', width: '100%', height, top: offsetImage }}
+      />
       <ModalLoading loading={loading} />
       <KeyboardAvoidingView style={styles.center} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Text style={{ color: colors.white, fontSize: 52, position: 'absolute', top: '15%' }}>Secure</Text>
-        <Text style={{ color: colors.white, fontSize: 48, position: 'absolute', top: '24%' }}>Chat</Text>
         <View style={styles.buttons}>
           <View style={{ marginRight: '10%', alignItems: 'center' }}>
             <TouchableOpacity style={{ marginBottom: 30 }} onPress={() => setState(LOGIN)}>
@@ -175,7 +197,7 @@ const Auth: React.FC = () => {
         </View>
         <Text style={{ marginVertical: 10, color: '#3f66cb' }}>Quên mật khẩu?</Text>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </View>
   );
 };
 

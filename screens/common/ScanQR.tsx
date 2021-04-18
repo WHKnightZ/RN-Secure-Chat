@@ -17,6 +17,11 @@ const ScanQR: React.FC<Props> = () => {
   //   return true;
   // };
 
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //   return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+  // }, []);
+
   const common = useSelector((state: any) => state.common);
   const navigation = common.navigation;
   const scanQR = common.scanQR;
@@ -33,11 +38,6 @@ const ScanQR: React.FC<Props> = () => {
   }, [scanQR]);
 
   if (Platform.OS === 'web') return <View />;
-
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-  //   return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-  // }, []);
 
   const handleBarCodeScanned = async ({ type, data }: any) => {
     dispatch(hideScanQR());
@@ -58,10 +58,12 @@ const ScanQR: React.FC<Props> = () => {
   return (
     <Modal transparent={true} animationType="slide" visible={scanQR} onRequestClose={() => dispatch(hideScanQR())}>
       <View style={styles.container}>
-        <BarCodeScanner
-          barCodeTypes={['qr']}
-          onBarCodeScanned={handleBarCodeScanned}
-          style={[StyleSheet.absoluteFillObject, styles.camera]}></BarCodeScanner>
+        {hasPermission && (
+          <BarCodeScanner
+            barCodeTypes={['qr']}
+            onBarCodeScanned={handleBarCodeScanned}
+            style={[StyleSheet.absoluteFillObject, styles.camera]}></BarCodeScanner>
+        )}
         <Image
           source={require('./BarcodeMask.png')}
           style={{

@@ -69,7 +69,7 @@ const CreateGroup: React.FC<Props> = (props) => {
       },
     });
     if (status) {
-      console.log(data.id);
+      navigation.navigate('GroupConversation', { groupId: data.id });
     }
   };
 

@@ -7,12 +7,14 @@ import { colors } from '../../constants';
 import CreateGroup from './CreateGroup';
 import MessengerItem from '../messenger/MessengerItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getGroups } from '../../store';
+import { createGroupMessage, getGroups } from '../../store';
+import { ConversationInfoType } from '../../store/conversations/actions';
+import GroupConversation from './GroupConversation';
 
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: any; navigate: any; goBack: any };
+  navigation: any;
 }
 
 const Group: React.FC<Props> = (props) => {
@@ -36,13 +38,39 @@ const Group: React.FC<Props> = (props) => {
   useEffect(() => {
     loadMoreGroups();
   }, []);
-  
+
+  useEffect(() => {
+    if (!sio) return;
+
+    sio.on?.('new_group_msg', (data: any) => {
+      createGroupMessage(dispatch, {
+        conversationsInfo: groupsInfo,
+        conversationId: data.group_id,
+        message: {
+          id: data.id,
+          avatar: null,
+          created_date: data.created_date,
+          message: data.message,
+          seen: data.seen,
+          sender_id: data.sender_id,
+        },
+        seen: false,
+      });
+    });
+
+    return () => sio.off?.('new_group_msg');
+  }, [sio, groupsInfo]);
+
   const handleEndReached = () => {
     console.log('Reached');
   };
 
+  const handlePress = (item: ConversationInfoType) => {
+    navigation.navigate('GroupConversation', { groupId: item.id });
+  };
+
   const renderItem = ({ item }: any) => {
-    return <MessengerItem key={item.id} onPress={() => {}} {...item} />;
+    return <MessengerItem key={item.id} onPress={() => handlePress(item)} {...item} />;
   };
 
   return (
@@ -72,6 +100,7 @@ const GroupStack: React.FC = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="Group" component={Group} />
+      <Stack.Screen name="GroupConversation" component={GroupConversation} />
       <Stack.Screen name="CreateGroup" component={CreateGroup} />
     </Stack.Navigator>
   );

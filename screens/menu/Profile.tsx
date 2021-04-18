@@ -14,7 +14,7 @@ const Profile: React.FC<Props> = (props) => {
   const { navigation } = props;
 
   const auth = useSelector((state: any) => state.auth);
-  const cover = auth.cover ? { uri: auth.cover } : require('./default-cover.jpg');
+  const cover = auth.cover ? { uri: auth.cover } : require('../default-cover.jpg');
   const avatar = auth.avatar_path ? { uri: auth.avatar_path } : require('../default-avatar.png');
 
   const RenderItem = ({ icon, title, border }: any) => {
