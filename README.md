@@ -2,7 +2,8 @@
 
 ## Frontend of Secure-Chat
 
-## Backend: https://github.com/mountain-chan/secure-chat-backend
+### Backend:
+- Link: https://github.com/mountain-chan/secure-chat-backend
 
 ### Run App:
 - Install NodeJS: https://nodejs.org/en/
