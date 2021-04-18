@@ -26,6 +26,7 @@ const Messenger: React.FC<Props> = (props) => {
   const [full, setFull] = useState(false);
   const sio = useSelector((state: any) => state.sio);
   const convInfo = useSelector((state: any) => state.convInfo);
+  const focus = useSelector((state: any) => state.common.focus);
   const dispatch = useDispatch();
 
   const loadMoreConversations = async () => {
@@ -56,12 +57,12 @@ const Messenger: React.FC<Props> = (props) => {
           seen: data.seen,
           sender_id: data.sender_id,
         },
-        seen: false,
+        seen: focus === data.sender_id,
       });
     });
 
     return () => sio.off?.('new_private_msg');
-  }, [sio, convInfo]);
+  }, [sio, convInfo, focus]);
 
   const handleEndReached = () => {
     if (loading || full) return;
@@ -103,7 +104,6 @@ const Messenger: React.FC<Props> = (props) => {
 const MessengerStack: React.FC = () => {
   return (
     <Stack.Navigator
-      // initialRouteName="Conversation"
       screenOptions={{
         headerShown: false,
       }}>

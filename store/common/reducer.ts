@@ -1,7 +1,21 @@
 import { CREATE_MESSAGE } from '../conversations/actions';
-import { SAVE_NAVIGATION, SHOW_SCAN_QR, HIDE_SCAN_QR, FETCH_CONVERSATIONS_UNSEEN, SEEN_CONVERSATION } from './actions';
+import {
+  SAVE_NAVIGATION,
+  SHOW_SCAN_QR,
+  HIDE_SCAN_QR,
+  FETCH_CONVERSATIONS_UNSEEN,
+  SEEN_CONVERSATION,
+  CHANGE_FOCUS,
+} from './actions';
 
-const initialState = { navigation: null, scanQR: false, loading: false, unseenPrivate: [], unseenGroup: [] };
+const initialState = {
+  navigation: null,
+  scanQR: false,
+  loading: false,
+  unseenPrivate: [],
+  unseenGroup: [],
+  focus: null,
+};
 
 export const commonReducer = (state = initialState, action: { type: string; payload: any }) => {
   const { payload } = action;
@@ -29,6 +43,8 @@ export const commonReducer = (state = initialState, action: { type: string; payl
         return { ...state, unseenPrivate: newUnseen };
       }
       return state;
+    case CHANGE_FOCUS:
+      return { ...state, focus: payload };
 
     default:
       return state;
