@@ -72,8 +72,7 @@ export const createGroupMessage = async (
   const index = conversationsInfo.findIndex((item: ConversationInfoType) => item.id === conversationId);
   if (index === -1) {
     const response: any = await callApi({
-      // getGroupById
-      api: rest.getUserById(conversationId),
+      api: rest.getGroupInfo(conversationId),
       method: 'get',
     });
     const { status, data } = response;
@@ -81,9 +80,9 @@ export const createGroupMessage = async (
       dispatch({
         type: CREATE_GROUP_INFO,
         payload: {
-          id: data.id,
-          name: data.display_name || data.username,
-          avatar: data.avatar_path,
+          id: data.conversation_id,
+          name: data.conversation_name,
+          avatar: data.conversation_avatar,
           online: data.online,
           latest_message: null,
         },

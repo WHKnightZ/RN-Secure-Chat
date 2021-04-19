@@ -23,6 +23,7 @@ export const rest = {
   createGroupMessage: (groupId: string) => `/api/v1/group_chats/${groupId}`,
   getGroupMessages: (groupId: string, page: number) => `/api/v1/group_chats/${groupId}?page=${page}&page_size=20`,
   getUnseenConversations: () => '/api/v1/users/unseen_conversations',
+  updateProfile: () => '/api/v1/users/profile',
 };
 
 export type UserType = {

@@ -26,6 +26,7 @@ const Group: React.FC<Props> = (props) => {
   const [full, setFull] = useState(false);
   const sio = useSelector((state: any) => state.sio);
   const groupsInfo = useSelector((state: any) => state.groupsInfo);
+  const focus = useSelector((state: any) => state.common.focus);
   const dispatch = useDispatch();
 
   const loadMoreGroups = async () => {
@@ -54,12 +55,12 @@ const Group: React.FC<Props> = (props) => {
           seen: data.seen,
           sender_id: data.sender_id,
         },
-        seen: false,
+        seen: focus === data.group_id,
       });
     });
 
     return () => sio.off?.('new_group_msg');
-  }, [sio, groupsInfo]);
+  }, [sio, groupsInfo, focus]);
 
   const handleEndReached = () => {
     console.log('Reached');

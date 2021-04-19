@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, ImageBackground, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
-import { Text, HeaderBar, PaddingView } from '../../components';
+import { Text, HeaderBar, PaddingView, TouchableOpacity } from '../../components';
 import { colors, defaultUuid } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -17,7 +17,14 @@ const Profile: React.FC<Props> = (props) => {
   const cover = auth.cover ? { uri: auth.cover } : require('../default-cover.jpg');
   const avatar = auth.avatar_path ? { uri: auth.avatar_path } : require('../default-avatar.png');
 
-  const RenderItem = ({ icon, title, border }: any) => {
+  const [profile, setProfile] = useState({
+    isUpdating: false,
+    name: auth.display_name || auth.username,
+    gender: auth.gender,
+    birthday: auth.birthday,
+  });
+
+  const RenderItem = ({ icon, title, updating }: any) => {
     return (
       <View
         style={{
@@ -34,9 +41,17 @@ const Profile: React.FC<Props> = (props) => {
         <View style={{ width: 30 }}>
           <FontAwesome5 name={icon} size={18} color={colors.primary} />
         </View>
-        <Text style={{ fontSize: 15 }}>{title}</Text>
+        {updating || <Text style={{ fontSize: 15 }}>{title}</Text>}
       </View>
     );
+  };
+
+  const handleUpdate = () => {
+    if (!profile.isUpdating) {
+      setProfile({ ...profile, isUpdating: true });
+    } else {
+      setProfile({ ...profile, isUpdating: false });
+    }
   };
 
   return (
@@ -71,11 +86,20 @@ const Profile: React.FC<Props> = (props) => {
             fontSize: 18,
             marginTop: 60,
           }}>
-          {auth.display_name || auth.username || 'None'}
+          {profile.name}
         </Text>
       </View>
       <PaddingView>
-        <RenderItem icon="transgender" title={`Giới tính ${auth.gender ? 'Nam' : 'Nữ'}`} />
+        <View style={{ alignItems: 'flex-end', margin: 8 }}>
+          <TouchableOpacity onPress={handleUpdate}>
+            <FontAwesome5
+              name={profile.isUpdating ? 'user-check' : 'pencil-alt'}
+              size={18}
+              color={profile.isUpdating ? colors.primary : colors.gray}
+            />
+          </TouchableOpacity>
+        </View>
+        <RenderItem icon="transgender" title={`Giới tính ${profile.gender ? 'Nam' : 'Nữ'}`} />
         <RenderItem icon="birthday-cake" title="Ngày sinh 24/08/1997" />
         <RenderItem icon="phone-alt" title="Điện thoại 0366918587" />
         <RenderItem icon="lock" title="Khóa định danh" />

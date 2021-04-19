@@ -1,4 +1,5 @@
 import { CREATE_MESSAGE } from '../conversations/actions';
+import { CREATE_GROUP_MESSAGE } from '../groups/actions';
 import {
   SAVE_NAVIGATION,
   SHOW_SCAN_QR,
@@ -35,7 +36,7 @@ export const commonReducer = (state = initialState, action: { type: string; payl
       } else {
         return { ...state, unseenGroup: state.unseenGroup.filter((item) => item !== payload.seenGroup) };
       }
-    case CREATE_MESSAGE:
+    case CREATE_MESSAGE: {
       const { conversationId, seen } = payload;
       if (!seen) {
         let newUnseen: string[] = [...state.unseenPrivate];
@@ -43,6 +44,17 @@ export const commonReducer = (state = initialState, action: { type: string; payl
         return { ...state, unseenPrivate: newUnseen };
       }
       return state;
+    }
+    case CREATE_GROUP_MESSAGE: {
+      const { conversationId, seen } = payload;
+      if (!seen) {
+        let newUnseen: string[] = [...state.unseenGroup];
+        if (newUnseen.findIndex((item) => item === conversationId) === -1) newUnseen.push(conversationId);
+        return { ...state, unseenGroup: newUnseen };
+      }
+      return state;
+    }
+
     case CHANGE_FOCUS:
       return { ...state, focus: payload };
 
