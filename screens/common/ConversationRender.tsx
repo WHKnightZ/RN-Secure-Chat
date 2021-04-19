@@ -6,7 +6,8 @@ import { colors } from '../../constants';
 import { callApi, RSAKey } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPublicKey, seenConversation } from '../../store';
+import { addPublicKey, changeFocus, seenConversation } from '../../store';
+import { useIsFocused } from '@react-navigation/native';
 
 interface Props {
   navigation: any;
@@ -52,6 +53,18 @@ const Conversation: React.FC<Props> = (props) => {
     setLoading(false);
   };
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) return;
+
+    dispatch(changeFocus(conversationId));
+    dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
+    return () => {
+      dispatch(changeFocus(null));
+    };
+  }, [isFocused]);
+
   useEffect(() => {
     if (!conversation) {
       const getConversationInfo = async () => {
@@ -82,8 +95,6 @@ const Conversation: React.FC<Props> = (props) => {
       getConversationInfo();
       return;
     }
-    const seen = isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId };
-    dispatch(seenConversation(seen));
     if (conversation.messages.length === 0) loadMoreMessages();
   }, [conversation]);
 

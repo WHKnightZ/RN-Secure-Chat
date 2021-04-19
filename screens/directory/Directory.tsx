@@ -28,7 +28,6 @@ const Directory: React.FC<Props> = (props) => {
 const DirectoryStack: React.FC = () => {
   return (
     <Stack.Navigator
-      // initialRouteName="SearchContact"
       screenOptions={{
         headerShown: false,
       }}>
