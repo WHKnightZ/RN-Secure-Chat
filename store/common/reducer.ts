@@ -11,7 +11,7 @@ import {
 
 const initialState = {
   navigation: null,
-  scanQR: false,
+  scanQR: { show: false, callback: null },
   loading: false,
   unseenPrivate: [],
   unseenGroup: [],
@@ -25,9 +25,9 @@ export const commonReducer = (state = initialState, action: { type: string; payl
     case SAVE_NAVIGATION:
       return { ...state, navigation: action.payload };
     case SHOW_SCAN_QR:
-      return { ...state, scanQR: true };
+      return { ...state, scanQR: { show: true, callback: payload } };
     case HIDE_SCAN_QR:
-      return { ...state, scanQR: false };
+      return { ...state, scanQR: { ...state.scanQR, show: false } };
     case FETCH_CONVERSATIONS_UNSEEN:
       return { ...state, ...payload };
     case SEEN_CONVERSATION:

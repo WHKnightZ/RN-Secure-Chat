@@ -4,6 +4,7 @@ import { TouchableOpacity } from '../../components';
 import Text from '../../components/Text';
 import { colors } from '../../constants';
 import { timestampToDate } from '../../utils';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Props {
   id: string;
@@ -19,11 +20,13 @@ interface Props {
     sender_id: string;
   } | null;
   onPress: () => void;
+  unseens: any[];
 }
 
 const MessengerItem: React.FC<Props> = (props) => {
-  const { id, name, avatar, latest_message, onPress } = props;
+  const { id, name, avatar, latest_message, onPress, unseens } = props;
 
+  const unseen = unseens?.includes(id);
   const avatarImage = avatar ? { uri: avatar } : require('../default-avatar.png');
 
   return (
@@ -33,13 +36,25 @@ const MessengerItem: React.FC<Props> = (props) => {
       </View>
       <View style={styles.messageContainer}>
         <View style={styles.messageTop}>
-          <Text>{name}</Text>
-          <Text style={styles.time}>{latest_message ? timestampToDate(latest_message.created_date) : ''}</Text>
-        </View>
-        <View style={styles.message}>
-          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.textMessage}>
-            {latest_message ? latest_message.message : ''}
+          <Text style={{ color: unseen ? colors.lightBlack : colors.darkGray }}>{name}</Text>
+          <Text style={{ color: unseen ? colors.primary : colors.gray, fontSize: 12 }}>
+            {latest_message ? timestampToDate(latest_message.created_date) : ''}
           </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={styles.message}>
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              style={{ fontSize: 13, color: unseen ? colors.lightBlack : colors.darkGray }}>
+              {latest_message ? latest_message.message : ''}
+            </Text>
+          </View>
+          {unseen && (
+            <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
+              <FontAwesome name="circle" size={14} color={colors.accent} />
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>

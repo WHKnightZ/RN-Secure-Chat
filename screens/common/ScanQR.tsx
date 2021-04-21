@@ -6,9 +6,7 @@ import { hideScanQR } from '../../store';
 import { Text } from '../../components';
 import { colors } from '../../constants';
 
-interface Props {}
-
-const ScanQR: React.FC<Props> = () => {
+const ScanQR: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
   // const handleBackButton = () => {
@@ -23,19 +21,18 @@ const ScanQR: React.FC<Props> = () => {
   // }, []);
 
   const common = useSelector((state: any) => state.common);
-  const navigation = common.navigation;
-  const scanQR = common.scanQR;
+  const { show, callback } = common.scanQR;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!scanQR || hasPermission || Platform.OS === 'web') return;
+    if (!show || hasPermission || Platform.OS === 'web') return;
 
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
-  }, [scanQR]);
+  }, [show]);
 
   if (Platform.OS === 'web') return <View />;
 
@@ -45,7 +42,7 @@ const ScanQR: React.FC<Props> = () => {
       Alert.alert('Mã không đúng!');
       return;
     }
-    navigation.navigate('Conversation', { conversationId: data });
+    callback?.(data);
   };
 
   // if (hasPermission === null) {
@@ -56,7 +53,7 @@ const ScanQR: React.FC<Props> = () => {
   // }
 
   return (
-    <Modal transparent={true} animationType="slide" visible={scanQR} onRequestClose={() => dispatch(hideScanQR())}>
+    <Modal transparent={true} animationType="slide" visible={show} onRequestClose={() => dispatch(hideScanQR())}>
       <View style={styles.container}>
         {hasPermission && (
           <BarCodeScanner

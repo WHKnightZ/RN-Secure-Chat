@@ -1,96 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Text, PaddingView, HeaderBar } from '../../components';
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../../constants';
-import MessengerItem from './MessengerItem';
 import Conversation from './Conversation';
-import { useDispatch, useSelector } from 'react-redux';
-import { getConversations } from '../../store';
-import { ConversationInfoType, createMessage } from '../../store/conversations/actions';
-import { saveNavigation } from '../../store/common/actions';
+import MessengerRender from '../common/MessengerRender';
 
 const Stack = createStackNavigator();
 
 interface Props {
-  navigation: { push: any; navigate: any; goBack: any };
+  navigation: any;
 }
 
 const Messenger: React.FC<Props> = (props) => {
   const { navigation } = props;
 
-  const page = useRef<number>(1);
-
-  const [loading, setLoading] = useState(false);
-  const [full, setFull] = useState(false);
-  const sio = useSelector((state: any) => state.sio);
-  const convInfo = useSelector((state: any) => state.convInfo);
-  const focus = useSelector((state: any) => state.common.focus);
-  const dispatch = useDispatch();
-
-  const loadMoreConversations = async () => {
-    setLoading(true);
-    const size: number = await getConversations(dispatch, { page: page.current });
-    if (size < 10) setFull(true);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    dispatch(saveNavigation(navigation));
-    console.log('Init Messenger');
-    loadMoreConversations();
-  }, []);
-
-  useEffect(() => {
-    if (!sio) return;
-
-    sio.on?.('new_private_msg', (data: any) => {
-      createMessage(dispatch, {
-        conversationsInfo: convInfo,
-        conversationId: data.sender_id,
-        message: {
-          id: data.id,
-          avatar: null,
-          created_date: data.created_date,
-          message: data.message,
-          seen: data.seen,
-          sender_id: data.sender_id,
-        },
-        seen: focus === data.sender_id,
-      });
-    });
-
-    return () => sio.off?.('new_private_msg');
-  }, [sio, convInfo, focus]);
-
-  const handleEndReached = () => {
-    if (loading || full) return;
-    console.log('Reached');
-    page.current += 1;
-    loadMoreConversations();
-  };
-
-  const handlePress = (item: ConversationInfoType) => {
-    navigation.navigate('Conversation', { conversationId: item.id });
-  };
-
-  const renderItem = ({ item }: any) => {
-    return <MessengerItem key={item.id} onPress={() => handlePress(item)} {...item} />;
-  };
-
   return (
     <View style={styles.container}>
       <HeaderBar navigation={navigation} title="Tin nhắn" items={['scanqr', 'search']} />
       <PaddingView>
-        {loading && <ActivityIndicator animating={loading} size={30} color={colors.gray} style={{ margin: 6 }} />}
-        <FlatList
-          style={styles.container}
-          data={convInfo}
-          renderItem={renderItem}
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.2}
-        />
+        <MessengerRender navigation={navigation} isPrivate={true} />
         <Text style={styles.note}>
           Bạn có thể trò chuyện với những người đã cài đặt Secure Chat trên điện thoại của họ.
         </Text>

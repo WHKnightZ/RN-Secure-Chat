@@ -2,6 +2,7 @@ export const colors = {
   primary: '#353c94',
   secondary: '#909090',
   black: '#000000',
+  lightBlack: '#333333',
   white: '#ffffff',
   darkGray: '#555555',
   gray: '#777777',
@@ -9,6 +10,7 @@ export const colors = {
   light: '#dddddd',
   light2: '#e7e7e7',
   loading: '#1976d2',
+  accent: '#0099ff',
 };
 
 export const iconCodes = [

@@ -9,8 +9,8 @@ export const saveNavigation = (payload: any) => {
   return { type: SAVE_NAVIGATION, payload };
 };
 
-export const showScanQR = () => {
-  return { type: SHOW_SCAN_QR };
+export const showScanQR = (callback: any) => {
+  return { type: SHOW_SCAN_QR, payload: callback };
 };
 
 export const hideScanQR = () => {
