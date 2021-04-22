@@ -6,39 +6,38 @@ import { colors } from '../../constants';
 import { callApi, RSAKey } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPublicKey, changeFocus, seenConversation } from '../../store';
+import {
+  addPublicKey,
+  changeFocus,
+  createConversationContent,
+  createGroupContent,
+  createGroupMessage,
+  createMessage,
+  getGroupMessages,
+  getMessages,
+  seenConversation,
+} from '../../store';
 import { useIsFocused } from '@react-navigation/native';
+import { rest } from '../../config';
 
 interface Props {
   navigation: any;
   conversationId: string;
-  convInfo?: any;
-  conversation: any;
-  apiGetConversationInfo: (id: string) => string;
-  createConversationContent: any;
-  getMessages: any;
-  apiCreateMessage: (id: string) => string;
-  createMessage: any;
   isPrivate: boolean;
 }
 
 const Conversation: React.FC<Props> = (props) => {
-  const {
-    navigation,
-    conversationId,
-    convInfo,
-    conversation,
-    apiGetConversationInfo,
-    createConversationContent,
-    getMessages,
-    apiCreateMessage,
-    createMessage,
-    isPrivate,
-  } = props;
+  const { navigation, conversationId, isPrivate } = props;
 
   const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
   const publicKeys = useSelector((state: any) => state.publicKeys);
+
+  const convInfo = useSelector((state: any) => (isPrivate ? state.convInfo : state.groupsInfo));
+  const convContent = useSelector((state: any) => (isPrivate ? state.convContent : state.groupsContent));
+
+  const index = convContent.findIndex((item: any) => item.id === conversationId);
+  const conversation = index > -1 ? convContent[index] : null;
 
   const userId = auth.user_id;
   const page = useRef<number>(1);
@@ -46,6 +45,26 @@ const Conversation: React.FC<Props> = (props) => {
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
+
+  let getMsgs: any;
+  let apiGetConvInfo: any;
+  let createConvContent: any;
+  let apiCreateMsg: any;
+  let createMsg: any;
+
+  if (isPrivate) {
+    getMsgs = getMessages;
+    apiGetConvInfo = rest.getConversationInfo;
+    createConvContent = createConversationContent;
+    apiCreateMsg = rest.createMessage;
+    createMsg = createMessage;
+  } else {
+    getMsgs = getGroupMessages;
+    apiGetConvInfo = rest.getGroupInfo;
+    createConvContent = createGroupContent;
+    apiCreateMsg = rest.getGroupMessages;
+    createMsg = createGroupMessage;
+  }
 
   const loadMoreMessages = async () => {
     setLoading(true);
@@ -69,7 +88,7 @@ const Conversation: React.FC<Props> = (props) => {
     if (!conversation) {
       const getConversationInfo = async () => {
         const response: any = await callApi({
-          api: apiGetConversationInfo(conversationId),
+          api: apiGetConvInfo(conversationId),
           method: 'get',
         });
         const { status, data } = response;
