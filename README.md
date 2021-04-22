@@ -16,7 +16,7 @@
 - [X] Private chat RSA encrypt
 - [X] Group chat RSA encrypt
 - [X] Realtime receive message
-- [ ] Change color of unseen messages
+- [X] Change color of unseen messages
 - [ ] Insert friend, Leave, notification: friend have been join, leave this chat
 - [ ] Update profile, avatar, password
 - [ ] Forgot password
@@ -30,4 +30,4 @@
 - [ ] Send image, file
 - [ ] Send icon, icon keyboard
 - [ ] Sound when receive message
-- [ ] Advanced: speed to text, ...
+- [ ] Advanced: speech to text, ...

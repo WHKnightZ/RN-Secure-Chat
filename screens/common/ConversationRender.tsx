@@ -26,7 +26,7 @@ interface Props {
   isPrivate: boolean;
 }
 
-const Conversation: React.FC<Props> = (props) => {
+const ConversationRender: React.FC<Props> = (props) => {
   const { navigation, conversationId, isPrivate } = props;
 
   const dispatch = useDispatch();
@@ -62,13 +62,13 @@ const Conversation: React.FC<Props> = (props) => {
     getMsgs = getGroupMessages;
     apiGetConvInfo = rest.getGroupInfo;
     createConvContent = createGroupContent;
-    apiCreateMsg = rest.getGroupMessages;
+    apiCreateMsg = rest.createGroupMessage;
     createMsg = createGroupMessage;
   }
 
   const loadMoreMessages = async () => {
     setLoading(true);
-    await getMessages(dispatch, { conversationId, page: page.current });
+    await getMsgs(dispatch, { conversationId, page: page.current });
     setLoading(false);
   };
 
@@ -79,7 +79,9 @@ const Conversation: React.FC<Props> = (props) => {
 
     dispatch(changeFocus(conversationId));
     dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
+    console.log('focus');
     return () => {
+      console.log('un');
       dispatch(changeFocus(null));
     };
   }, [isFocused]);
@@ -93,7 +95,7 @@ const Conversation: React.FC<Props> = (props) => {
         });
         const { status, data } = response;
         if (status) {
-          createConversationContent(dispatch, {
+          createConvContent(dispatch, {
             id: data.conversation_id,
             name: data.conversation_name,
             avatar: data.conversation_avatar,
@@ -146,12 +148,12 @@ const Conversation: React.FC<Props> = (props) => {
 
     const response: any = await callApi({
       method: 'post',
-      api: apiCreateMessage(conversationId),
+      api: apiCreateMsg(conversationId),
       body: { messages },
     });
     const { status, data } = response;
     if (status) {
-      createMessage(dispatch, {
+      createMsg(dispatch, {
         conversationsInfo: convInfo,
         conversationId,
         message: { ...data, message: messages[userId] },
@@ -217,7 +219,7 @@ const Conversation: React.FC<Props> = (props) => {
   );
 };
 
-export default Conversation;
+export default ConversationRender;
 
 const styles = StyleSheet.create({
   container: {
