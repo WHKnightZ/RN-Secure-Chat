@@ -5,7 +5,7 @@ import { socketioReducer } from './sio/reducer';
 import { conversationsInfoReducer, conversationsContentReducer } from './conversations/reducer';
 import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
-import { publicKeysReducer } from './publicKeys/reducer';
+import { usersReducer } from './users/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   groupsInfo: groupsInfoReducer,
   groupsContent: groupsContentReducer,
   common: commonReducer,
-  publicKeys: publicKeysReducer,
+  users: usersReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

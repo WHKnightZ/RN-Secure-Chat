@@ -31,7 +31,7 @@ export type ConversationContentType = {
   online: boolean;
   messages: MessageType[];
   full: boolean;
-  publicKeys: any;
+  users: string[];
 };
 
 export const RELOAD_MESSENGER = 'RELOAD_MESSENGER';

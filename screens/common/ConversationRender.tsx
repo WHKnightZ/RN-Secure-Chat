@@ -7,7 +7,7 @@ import { callApi, RSAKey } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  addPublicKey,
+  addUser,
   changeFocus,
   createConversationContent,
   createGroupContent,
@@ -31,7 +31,7 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
-  const publicKeys = useSelector((state: any) => state.publicKeys);
+  const users = useSelector((state: any) => state.users);
 
   const convInfo = useSelector((state: any) => (isPrivate ? state.convInfo : state.groupsInfo));
   const convContent = useSelector((state: any) => (isPrivate ? state.convContent : state.groupsContent));
@@ -77,11 +77,12 @@ const ConversationRender: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!isFocused) return;
 
-    dispatch(changeFocus(conversationId));
-    dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
-    console.log('focus');
+    setTimeout(() => {
+      dispatch(changeFocus(conversationId));
+      dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
+    }, 1);
+
     return () => {
-      console.log('un');
       dispatch(changeFocus(null));
     };
   }, [isFocused]);
@@ -101,14 +102,14 @@ const ConversationRender: React.FC<Props> = (props) => {
             avatar: data.conversation_avatar,
             online: data.online,
             full: false,
-            publicKeys: data.public_keys,
+            users: Object.keys(data.users),
             messages: [],
           });
-          for (const [key, value] of Object.entries(data.public_keys)) {
-            if (!(key in publicKeys)) {
+          for (const [key, value] of Object.entries(data.users)) {
+            if (!(key in users)) {
               const r = new RSAKey();
-              r.setPublicString(value);
-              dispatch(addPublicKey({ userId: key, publicKey: r }));
+              r.setPublicString(value.public_key);
+              dispatch(addUser({ userId: key, avatar: data.user.avatar, publicKey: r }));
             }
           }
         }
