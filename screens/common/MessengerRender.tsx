@@ -20,9 +20,9 @@ const MessengerRender: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [full, setFull] = useState(false);
   const sio = useSelector((state: any) => state.sio);
-  const focus = useSelector((state: any) => state.common.focus);
+  const focusedScreen = useSelector((state: any) => state.common.focusedScreen);
 
-  const convInfo = useSelector((state: any) => (isPrivate ? state.convInfo : state.groupsInfo));
+  const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
   const unseens = useSelector((state: any) => (isPrivate ? state.common.unseenPrivate : state.common.unseenGroup));
 
   let event: any;
@@ -63,7 +63,7 @@ const MessengerRender: React.FC<Props> = (props) => {
     sio.on?.(event, (data: any) => {
       const convId = isPrivate ? data.sender_id : data.group_id;
       createMsg(dispatch, {
-        conversationsInfo: convInfo,
+        conversationsInfo: convsInfo,
         conversationId: convId,
         message: {
           id: data.id,
@@ -73,12 +73,12 @@ const MessengerRender: React.FC<Props> = (props) => {
           seen: data.seen,
           sender_id: data.sender_id,
         },
-        seen: focus === convId,
+        seen: focusedScreen === convId,
       });
     });
 
     return () => sio.off?.(event);
-  }, [sio, convInfo, focus]);
+  }, [sio, convsInfo, focusedScreen]);
 
   const handleEndReached = () => {
     if (loading || full) return;
@@ -96,7 +96,7 @@ const MessengerRender: React.FC<Props> = (props) => {
       {loading && <ActivityIndicator animating={loading} size={30} color={colors.gray} style={{ margin: 6 }} />}
       <FlatList
         style={styles.container}
-        data={convInfo}
+        data={convsInfo}
         renderItem={renderItem}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.2}

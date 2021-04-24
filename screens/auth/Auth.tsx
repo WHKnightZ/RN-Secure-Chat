@@ -107,7 +107,7 @@ const Auth: React.FC = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/splash.png')}
+        source={require('./background.png')}
         style={{ position: 'absolute', width: '100%', height, top: offsetImage }}
       />
       <ModalLoading loading={loading} />

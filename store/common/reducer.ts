@@ -6,7 +6,8 @@ import {
   HIDE_SCAN_QR,
   FETCH_CONVERSATIONS_UNSEEN,
   SEEN_CONVERSATION,
-  CHANGE_FOCUS,
+  FOCUS_SCREEN,
+  UNFOCUS_SCREEN,
 } from './actions';
 
 const initialState = {
@@ -15,7 +16,7 @@ const initialState = {
   loading: false,
   unseenPrivate: [],
   unseenGroup: [],
-  focus: null,
+  focusedScreen: null,
 };
 
 export const commonReducer = (state = initialState, action: { type: string; payload: any }) => {
@@ -55,8 +56,12 @@ export const commonReducer = (state = initialState, action: { type: string; payl
       return state;
     }
 
-    case CHANGE_FOCUS:
-      return { ...state, focus: payload };
+    case FOCUS_SCREEN:
+      return { ...state, focusedScreen: payload };
+    case UNFOCUS_SCREEN:
+      console.log(state.focusedScreen, payload);
+      if (state.focusedScreen === payload) return { ...state, focusedScreen: null };
+      return state;
 
     default:
       return state;

@@ -8,7 +8,8 @@ import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addUser,
-  changeFocus,
+  focusScreen,
+  unFocusScreen,
   createConversationContent,
   createGroupContent,
   createGroupMessage,
@@ -33,11 +34,11 @@ const ConversationRender: React.FC<Props> = (props) => {
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
 
-  const convInfo = useSelector((state: any) => (isPrivate ? state.convInfo : state.groupsInfo));
-  const convContent = useSelector((state: any) => (isPrivate ? state.convContent : state.groupsContent));
+  const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
+  const convsContent = useSelector((state: any) => (isPrivate ? state.convsContent : state.groupsContent));
 
-  const index = convContent.findIndex((item: any) => item.id === conversationId);
-  const conversation = index > -1 ? convContent[index] : null;
+  const index = convsContent.findIndex((item: any) => item.id === conversationId);
+  const conversation = index > -1 ? convsContent[index] : null;
 
   const userId = auth.user_id;
   const page = useRef<number>(1);
@@ -77,13 +78,13 @@ const ConversationRender: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!isFocused) return;
 
-    setTimeout(() => {
-      dispatch(changeFocus(conversationId));
-      dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
-    }, 1);
+    // setTimeout(() => {
+    dispatch(focusScreen(conversationId));
+    dispatch(seenConversation(isPrivate ? { seenPrivate: conversationId } : { seenGroup: conversationId }));
+    // }, 1);
 
     return () => {
-      dispatch(changeFocus(null));
+      dispatch(unFocusScreen(conversationId));
     };
   }, [isFocused]);
 
@@ -105,11 +106,11 @@ const ConversationRender: React.FC<Props> = (props) => {
             users: Object.keys(data.users),
             messages: [],
           });
-          for (const [key, value] of Object.entries(data.users)) {
+          for (const [key, value] of Object.entries(data.users) as any) {
             if (!(key in users)) {
               const r = new RSAKey();
               r.setPublicString(value.public_key);
-              dispatch(addUser({ userId: key, avatar: data.user.avatar, publicKey: r }));
+              dispatch(addUser({ userId: key, avatar: value.avatar_path, publicKey: r }));
             }
           }
         }
@@ -122,11 +123,9 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   if (!conversation) return <ModalLoading loading={true} />;
 
-  const avatar = conversation.avatar ? { uri: conversation.avatar } : require('../default-avatar.png');
-
   const renderItem = ({ item, index }: any) => {
     const isLast = index === 0 || conversation.messages[index].sender_id !== conversation.messages[index - 1].sender_id;
-    return <ConversationItem key={item.id} {...item} userId={userId} isLast={isLast} />;
+    return <ConversationItem key={item.id} {...item} users={users} userId={userId} isLast={isLast} />;
   };
 
   const handleEndReached = async () => {
@@ -142,10 +141,10 @@ const ConversationRender: React.FC<Props> = (props) => {
     refInput.current.focus();
 
     const messages: any = {};
-    for (const [key, value] of Object.entries(publicKeys)) {
-      const valueAny: any = value;
-      messages[key] = valueAny?.encrypt(text);
-    }
+    conversation.users.map((userId: string) => {
+      const valueAny: any = users[userId].publicKey;
+      messages[userId] = valueAny?.encrypt(text);
+    });
 
     const response: any = await callApi({
       method: 'post',
@@ -155,7 +154,7 @@ const ConversationRender: React.FC<Props> = (props) => {
     const { status, data } = response;
     if (status) {
       createMsg(dispatch, {
-        conversationsInfo: convInfo,
+        conversationsInfo: convsInfo,
         conversationId,
         message: { ...data, message: messages[userId] },
         seen: true,
@@ -164,8 +163,8 @@ const ConversationRender: React.FC<Props> = (props) => {
   };
 
   let canInput = true;
-  for (const key in conversation.publicKeys) {
-    if (!(key in publicKeys)) {
+  for (const userId of conversation.users) {
+    if (!(userId in users)) {
       canInput = false;
       break;
     }
@@ -176,7 +175,7 @@ const ConversationRender: React.FC<Props> = (props) => {
       <HeaderBar navigation={navigation} isBack>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
-            <Image style={styles.avatar} source={avatar} />
+            <Image style={styles.avatar} source={{ uri: conversation.avatar }} />
           </View>
           <View style={styles.title}>
             <Text style={styles.name}>{conversation.name}</Text>

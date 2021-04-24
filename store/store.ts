@@ -10,8 +10,8 @@ import { usersReducer } from './users/reducer';
 const rootReducer = combineReducers({
   auth: authReducer,
   sio: socketioReducer,
-  convInfo: conversationsInfoReducer,
-  convContent: conversationsContentReducer,
+  convsInfo: conversationsInfoReducer,
+  convsContent: conversationsContentReducer,
   groupsInfo: groupsInfoReducer,
   groupsContent: groupsContentReducer,
   common: commonReducer,

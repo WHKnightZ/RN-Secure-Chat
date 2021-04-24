@@ -13,11 +13,11 @@ interface Props {
   seen: boolean;
   userId: string;
   isLast: boolean;
+  users: any;
 }
 
 const ConversationItem: React.FC<Props> = (props) => {
-  const { id, sender_id, message, seen, userId, isLast } = props;
-  const avatar = require('../default-avatar.png');
+  const { id, sender_id, message, seen, userId, isLast, users } = props;
   const isMe = userId === sender_id;
   const { blocks, noText } = stringToBlocks(message);
 
@@ -31,7 +31,11 @@ const ConversationItem: React.FC<Props> = (props) => {
         paddingHorizontal: 6,
         alignItems: 'flex-end',
       }}>
-      {!isMe && <View style={styles.avatarContainer}>{isLast && <Image source={avatar} style={styles.avatar} />}</View>}
+      {!isMe && (
+        <View style={styles.avatarContainer}>
+          {isLast && <Image source={{ uri: users[sender_id].avatar }} style={styles.avatar} />}
+        </View>
+      )}
 
       <View
         style={{

@@ -13,7 +13,7 @@ const TextIcon: React.FC<Props> = (props) => {
 
   return (
     // <View style={{ flexDirection: 'row', paddingVertical: 6, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-    <Text style={{ marginHorizontal: 4, paddingVertical: 6, color, overflow: 'visible' }}>
+    <Text style={{ marginHorizontal: 4, paddingVertical: 2, color, overflow: 'visible' }}>
       {blocks.map((item: any, index: number) => {
         if (item.type === 0)
           return (

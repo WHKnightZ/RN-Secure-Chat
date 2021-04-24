@@ -3,7 +3,8 @@ export const SHOW_SCAN_QR = 'SHOW_SCAN_QR';
 export const HIDE_SCAN_QR = 'HIDE_SCAN_QR';
 export const FETCH_CONVERSATIONS_UNSEEN = 'FETCH_CONVERSATIONS_UNSEEN';
 export const SEEN_CONVERSATION = 'SEEN_CONVERSATION';
-export const CHANGE_FOCUS = 'CHANGE_FOCUS';
+export const FOCUS_SCREEN = 'FOCUS_SCREEN';
+export const UNFOCUS_SCREEN = 'UNFOCUS_SCREEN';
 
 export const saveNavigation = (payload: any) => {
   return { type: SAVE_NAVIGATION, payload };
@@ -25,6 +26,10 @@ export const seenConversation = (payload: { seenPrivate?: string; seenGroup?: st
   return { type: SEEN_CONVERSATION, payload };
 };
 
-export const changeFocus = (payload: string | null) => {
-  return { type: CHANGE_FOCUS, payload };
+export const focusScreen = (screenId: string) => {
+  return { type: FOCUS_SCREEN, payload: screenId };
+};
+
+export const unFocusScreen = (screenId: string) => {
+  return { type: UNFOCUS_SCREEN, payload: screenId };
 };
