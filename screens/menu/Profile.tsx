@@ -56,6 +56,7 @@ const Profile: React.FC<Props> = (props) => {
       setProfile({ ...profile, isUpdating: true });
     } else {
       setProfile({ ...profile, isUpdating: false });
+      dispatch(updateAuth({ display_name: profile.name, gender: profile.gender }));
       const response: any = await callApi({
         api: rest.updateProfile(),
         method: 'put',

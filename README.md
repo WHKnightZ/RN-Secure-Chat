@@ -17,8 +17,9 @@
 - [X] Group chat RSA encrypt
 - [X] Realtime receive message
 - [X] Change color of unseen messages
+- [ ] Conversation setting: change emoji, change name, view info
 - [ ] Insert friend, Leave, notification: friend have been join, leave this chat
-- [ ] Update profile, avatar, password
+- [X] Update profile, avatar, password
 - [ ] Forgot password
 - [ ] Find friend by distance < X km
 - [X] Find friend by name, id, QRCode
