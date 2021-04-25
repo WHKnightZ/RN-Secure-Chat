@@ -9,7 +9,7 @@ interface Props {
 const MyTouchableOpacity: React.FC<Props> = (props) => {
   const { style, onPress, children } = props;
   return (
-    <TouchableOpacity style={style} onPress={onPress} activeOpacity={0.5}>
+    <TouchableOpacity style={style} onPress={onPress} activeOpacity={0.7}>
       {children}
     </TouchableOpacity>
   );

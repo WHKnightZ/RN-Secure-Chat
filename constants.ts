@@ -11,6 +11,7 @@ export const colors = {
   light2: '#e7e7e7',
   loading: '#1976d2',
   accent: '#0099ff',
+  cyan: '#58dbc5',
 };
 
 export const iconCodes = [

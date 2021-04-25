@@ -11,3 +11,4 @@ export { default as MenuItem } from './MenuItem';
 export { default as TouchableOpacity } from './TouchableOpacity';
 export { default as Icon } from './icon/Icon';
 export { default as TextIcon } from './TextIcon';
+export { default as RadioButton } from './RadioButton';

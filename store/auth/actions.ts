@@ -7,6 +7,7 @@ import { callApi, rsa, getKey } from '../../utils';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const UPDATE_AUTH = 'UPDATE_AUTH';
 
 const io = require('socket.io-client');
 
@@ -85,4 +86,8 @@ export const logoutAction = async (dispatch: any) => {
   });
   await AsyncStorage.setItem('user', '');
   dispatch({ type: LOGOUT });
+};
+
+export const updateAuth = (payload: { avatar_path?: string; display_name?: string; gender?: boolean }) => {
+  return { type: UPDATE_AUTH, payload };
 };

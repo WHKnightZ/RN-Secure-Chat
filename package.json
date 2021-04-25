@@ -17,6 +17,7 @@
     "expo": "~40.0.0",
     "expo-app-loading": "^1.0.1",
     "expo-barcode-scanner": "~10.1.2",
+    "expo-image-picker": "^10.1.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",

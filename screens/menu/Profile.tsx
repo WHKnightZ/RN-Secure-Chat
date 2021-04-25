@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, Image } from 'react-native';
-import { useSelector } from 'react-redux';
+import { ScrollView, View, StyleSheet, ImageBackground, Image, Platform, Alert } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
-import { Text, HeaderBar, PaddingView, TouchableOpacity } from '../../components';
+import { Text, HeaderBar, PaddingView, TouchableOpacity, TextInput, RadioButton } from '../../components';
 import { colors, defaultUuid } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { updateAuth } from '../../store';
+import { BASE_URL, rest } from '../../config';
+import { callApi } from '../../utils';
 
 interface Props {
   navigation: { push: any; navigate: any; goBack: any };
@@ -13,6 +17,7 @@ interface Props {
 const Profile: React.FC<Props> = (props) => {
   const { navigation } = props;
 
+  const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
   const cover = auth.cover ? { uri: auth.cover } : require('../default-cover.jpg');
   const avatar = auth.avatar_path ? { uri: auth.avatar_path } : require('../default-avatar.png');
@@ -46,11 +51,66 @@ const Profile: React.FC<Props> = (props) => {
     );
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!profile.isUpdating) {
       setProfile({ ...profile, isUpdating: true });
     } else {
       setProfile({ ...profile, isUpdating: false });
+      const response: any = await callApi({
+        api: rest.updateProfile(),
+        method: 'put',
+        body: {
+          display_name: profile.name,
+          gender: profile.gender ? 1 : 0,
+        },
+      });
+      console.log(response);
+    }
+  };
+
+  const handlePickImage = async () => {
+    if (Platform.OS === 'web') return;
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Bạn cần cấp phép quyền truy cập thư mục!');
+      return;
+    }
+    const result: any = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const { uri } = result;
+      const formData = new FormData();
+      const myHeaders = new Headers();
+      myHeaders.append('Authorization', `Bearer ${auth.access_token}`);
+      const uriParts = uri.split('.');
+      const fileType = uriParts[uriParts.length - 1];
+      const blob: any = {
+        uri,
+        name: `avatar.${fileType}`,
+        type: `image/${fileType}`,
+      };
+      formData.append('image', blob);
+
+      const requestOptions: any = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: formData,
+        redirect: 'follow',
+      };
+
+      fetch(BASE_URL + rest.changeAvatar(), requestOptions)
+        .then((response) => response.text())
+        .then((result: any) => {
+          if (JSON.parse(result).status) {
+            dispatch(updateAuth({ avatar_path: uri }));
+          }
+        })
+        .catch((error) => console.log('error', error));
     }
   };
 
@@ -68,26 +128,34 @@ const Profile: React.FC<Props> = (props) => {
               overflow: 'hidden',
             }}
           />
-          <Image
-            source={avatar}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              bottom: -50,
-              position: 'absolute',
-              borderColor: colors.white,
-              borderWidth: 3,
-            }}
-          />
+          <View style={styles.avatarWrapper}>
+            <TouchableOpacity
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              onPress={handlePickImage}>
+              <Image
+                source={avatar}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text
-          style={{
-            fontSize: 18,
-            marginTop: 60,
-          }}>
-          {profile.name}
-        </Text>
+        <View style={{ marginTop: 60, height: 40, justifyContent: 'flex-end', alignItems: 'center' }}>
+          {profile.isUpdating ? (
+            <TextInput
+              value={profile.name}
+              onChangeText={(value) => setProfile({ ...profile, name: value })}
+              style={{ fontSize: 18, borderBottom: 'solid 1px black', width: '60%' }}
+            />
+          ) : (
+            <Text style={{ fontSize: 18 }}>{profile.name}</Text>
+          )}
+        </View>
       </View>
       <PaddingView>
         <View style={{ alignItems: 'flex-end', margin: 8 }}>
@@ -99,7 +167,27 @@ const Profile: React.FC<Props> = (props) => {
             />
           </TouchableOpacity>
         </View>
-        <RenderItem icon="transgender" title={`Giới tính ${profile.gender ? 'Nam' : 'Nữ'}`} />
+        <RenderItem
+          icon="transgender"
+          title={`Giới tính ${profile.gender ? 'Nam' : 'Nữ'}`}
+          updating={
+            profile.isUpdating && (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ fontSize: 15 }}>Giới tính:</Text>
+                <RadioButton
+                  label="Nam"
+                  checked={profile.gender}
+                  onPress={() => setProfile({ ...profile, gender: true })}
+                />
+                <RadioButton
+                  label="Nữ"
+                  checked={!profile.gender}
+                  onPress={() => setProfile({ ...profile, gender: false })}
+                />
+              </View>
+            )
+          }
+        />
         <RenderItem icon="birthday-cake" title="Ngày sinh 24/08/1997" />
         <RenderItem icon="phone-alt" title="Điện thoại 0366918587" />
         <RenderItem icon="lock" title="Khóa định danh" />
@@ -170,5 +258,17 @@ const styles = StyleSheet.create({
   textCopy: {
     color: colors.primary,
     marginLeft: 8,
+  },
+  avatarWrapper: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    bottom: -50,
+    position: 'absolute',
+    borderColor: colors.white,
+    borderWidth: 3,
+    overflow: 'hidden',
+    padding: 0,
+    backgroundColor: colors.white,
   },
 });

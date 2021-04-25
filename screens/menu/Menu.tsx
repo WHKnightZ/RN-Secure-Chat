@@ -3,11 +3,9 @@ import { ScrollView, View, StyleSheet, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, HeaderBar, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutAction } from '../../store/auth/actions';
 import { colors } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { closeSocketio } from '../../store';
-import { reloadMessenger } from '../../store/conversations/actions';
+import { closeSocketio, logoutAction, reloadMessenger } from '../../store';
 import Profile from './Profile';
 
 const Stack = createStackNavigator();
