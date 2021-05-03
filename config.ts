@@ -25,6 +25,7 @@ export const rest = {
   getUnseenConversations: () => '/api/v1/users/unseen_conversations',
   updateProfile: () => '/api/v1/users/profile',
   changeAvatar: () => '/api/v1/users/avatar',
+  changePassword: () => '/api/v1/users/change_password',
 };
 
 export type UserType = {

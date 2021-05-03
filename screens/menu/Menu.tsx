@@ -7,6 +7,7 @@ import { colors } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { closeSocketio, logoutAction, reloadMessenger } from '../../store';
 import Profile from './Profile';
+import ChangePassword from './ChangePassword';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,7 @@ const Menu: React.FC<Props> = (props) => {
         <MenuItem icon="wallet" title="Ví điện tử" onPress={() => {}} />
         <MenuItem icon="user-lock" title="Tiện ích quản lý mật khẩu" onPress={() => {}} />
         <MenuItem icon="clipboard-list" title="Tiện ích quản lý ghi chú" onPress={() => {}} />
-        <MenuItem icon="lock" title="Đổi mật khẩu" onPress={() => {}} />
+        <MenuItem icon="lock" title="Đổi mật khẩu" onPress={() => navigation.push('ChangePassword')} />
       </MenuContainer>
       <MenuContainer>
         <MenuItem icon="cog" title="Cài đặt" onPress={() => {}} />
@@ -73,6 +74,7 @@ const MenuStack: React.FC = () => {
       }}>
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
     </Stack.Navigator>
   );
 };

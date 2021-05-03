@@ -12,7 +12,7 @@
 - Start app: `npm start`
 - Scan QRCode by Expo Go App in your phone or run in Web view
 
-### Expectations:
+### Expectation:
 - [X] Private chat RSA encrypt
 - [X] Group chat RSA encrypt
 - [X] Realtime receive message
@@ -32,3 +32,7 @@
 - [ ] Send icon, icon keyboard
 - [ ] Sound when receive message
 - [ ] Advanced: speech to text, ...
+
+### New requirement:
+- [ ] Diffie–Hellman key exchange
+- [ ] Session key
