@@ -88,10 +88,7 @@ const BottomNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        // initialRouteName="GroupTab"
-        tabBar={TabBar}
-        lazy={false}>
+      <Tab.Navigator tabBar={TabBar} lazy={false}>
         <Tab.Screen
           name="MessengerTab"
           component={Messenger}

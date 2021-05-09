@@ -21,7 +21,7 @@
 - [ ] Insert friend, Leave, notification: friend have been join, leave this chat
 - [X] Update profile, avatar, password
 - [ ] Forgot password
-- [ ] Find friend by distance < X km
+- [ ] Find friend by distance less than X km
 - [X] Find friend by name, id, QRCode
 - [ ] Tool for manage notes
 - [ ] Tool for manage passwords

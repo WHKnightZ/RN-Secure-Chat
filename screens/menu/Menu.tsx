@@ -69,6 +69,7 @@ const Menu: React.FC<Props> = (props) => {
 const MenuStack: React.FC = () => {
   return (
     <Stack.Navigator
+      // initialRouteName="ChangePassword"
       screenOptions={{
         headerShown: false,
       }}>
