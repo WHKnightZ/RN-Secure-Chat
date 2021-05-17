@@ -60,6 +60,12 @@ export const loginAction = async (dispatch: any, payload: any) => {
 
 export const registerAction = async (dispatch: any, payload: any) => {
   const { username, password } = payload;
+
+  const bits = 1024;
+  // 65537 is commonly used as a public exponent in the RSA cryptosystem.
+  // Because it is the Fermat number Fn = 2^(2^n) + 1 with n = 4
+  const exponent = '10001'; // 0x10001 => 65537
+  rsa.generate(bits, exponent);
   const { publicKey, privateKey } = getKey();
   const testMessage = rsa.encrypt('SC');
 

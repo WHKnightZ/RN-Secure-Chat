@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://sv3.vn.boot.ai:5010';
-export const BASE_URL = 'http://13.212.239.89:5010';
+export const BASE_URL = 'http://54.255.176.27:5010';
 
 export const app = {
   secretKey: 'secure-chat',

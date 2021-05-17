@@ -8,6 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { closeSocketio, logoutAction, reloadMessenger } from '../../store';
 import Profile from './Profile';
 import ChangePassword from './ChangePassword';
+import DemoRSA from './DemoRSA';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ const Menu: React.FC<Props> = (props) => {
         </TouchableOpacity>
       </View>
       <MenuContainer>
+        <MenuItem icon="key" title="Demo RSA" onPress={() => navigation.push('DemoRSA')} />
         <MenuItem icon="map-marked-alt" title="Tìm quanh đây" onPress={() => {}} />
         <MenuItem icon="wallet" title="Ví điện tử" onPress={() => {}} />
         <MenuItem icon="user-lock" title="Tiện ích quản lý mật khẩu" onPress={() => {}} />
@@ -76,6 +78,7 @@ const MenuStack: React.FC = () => {
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="DemoRSA" component={DemoRSA} />
     </Stack.Navigator>
   );
 };
