@@ -6,6 +6,7 @@ import { conversationsInfoReducer, conversationsContentReducer } from './convers
 import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { usersReducer } from './users/reducer';
+import { onlineUsersReducer } from './onlineUsers/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   groupsContent: groupsContentReducer,
   common: commonReducer,
   users: usersReducer,
+  onlineUsers: onlineUsersReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

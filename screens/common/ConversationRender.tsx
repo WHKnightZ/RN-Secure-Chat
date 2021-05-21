@@ -20,6 +20,7 @@ import {
 } from '../../store';
 import { useIsFocused } from '@react-navigation/native';
 import { rest } from '../../config';
+import { ConversationContentType } from '../../store/conversations/actions';
 
 interface Props {
   navigation: any;
@@ -33,12 +34,13 @@ const ConversationRender: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
+  const onlineUsers = useSelector((state: any) => state.onlineUsers);
 
   const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
   const convsContent = useSelector((state: any) => (isPrivate ? state.convsContent : state.groupsContent));
 
   const index = convsContent.findIndex((item: any) => item.id === conversationId);
-  const conversation = index > -1 ? convsContent[index] : null;
+  const conversation: ConversationContentType = index > -1 ? convsContent[index] : null;
 
   const userId = auth.user_id;
   const page = useRef<number>(1);
@@ -46,6 +48,7 @@ const ConversationRender: React.FC<Props> = (props) => {
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
+  const membersId = useRef<string[]>([]);
 
   let getMsgs: any;
   let apiGetConvInfo: any;
@@ -118,6 +121,11 @@ const ConversationRender: React.FC<Props> = (props) => {
       getConversationInfo();
       return;
     }
+    if (conversation !== null) {
+      membersId.current = isPrivate
+        ? [conversation.id]
+        : conversation.users.filter((user_id: string) => user_id !== userId);
+    }
     if (conversation.messages.length === 0) loadMoreMessages();
   }, [conversation]);
 
@@ -175,11 +183,13 @@ const ConversationRender: React.FC<Props> = (props) => {
       <HeaderBar navigation={navigation} isBack>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
-            <Image style={styles.avatar} source={{ uri: conversation.avatar }} />
+            <Image style={styles.avatar} source={{ uri: conversation.avatar || '' }} />
           </View>
           <View style={styles.title}>
             <Text style={styles.name}>{conversation.name}</Text>
-            <Text style={styles.online}>{conversation.online ? 'Đang hoạt động' : 'Không hoạt động'}</Text>
+            <Text style={styles.online}>
+              {membersId.current.some((r) => onlineUsers.includes(r)) ? 'Đang hoạt động' : 'Không hoạt động'}
+            </Text>
           </View>
         </View>
       </HeaderBar>
@@ -207,7 +217,7 @@ const ConversationRender: React.FC<Props> = (props) => {
               onSubmitEditing={() => {
                 if (text) send(text);
               }}
-              placeholder="Nhập nội dung..."
+              placeholder='Nhập nội dung...'
             />
             <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('(y)'))}>
               <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />

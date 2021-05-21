@@ -13,6 +13,7 @@ import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
 import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
+import { addOnlineUser, fetchOnlineUsers, removeOnlineUser } from './store/onlineUsers/actions';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -65,8 +66,14 @@ const App = () => {
       console.log('disconnected');
     });
 
-    sio.on?.('message', (data: any) => {
-      console.log(data);
+    sio.on?.('online', (data: string) => {
+      console.log('online: ', data);
+      dispatch(addOnlineUser(data));
+    });
+
+    sio.on?.('offline', (data: string) => {
+      console.log('offline: ', data);
+      dispatch(removeOnlineUser(data));
     });
   }, [sio]);
 
@@ -83,7 +90,14 @@ const App = () => {
         dispatch(fetchConversationsUnseen({ unseenPrivate: data.unseen_private, unseenGroup: data.unseen_group }));
       }
     };
+    const getOnlineUsers = async () => {
+      const { status, data }: any = await callApi({ method: 'get', api: rest.getOnlineUsers() });
+      if (status) {
+        dispatch(fetchOnlineUsers(data));
+      }
+    };
     getUnseenConversations();
+    getOnlineUsers();
     sio.emit('auth', auth.access_token);
     setConnectState(LOGGED);
   }
@@ -99,7 +113,7 @@ const App = () => {
 export default function Index() {
   return (
     <Provider store={store}>
-      <StatusBar backgroundColor="#111" barStyle="light-content" />
+      <StatusBar backgroundColor='#111' barStyle='light-content' />
       <App />
     </Provider>
   );

@@ -23,6 +23,7 @@ export const rest = {
   createGroupMessage: (groupId: string) => `/api/v1/group_chats/${groupId}`,
   getGroupMessages: (groupId: string, page: number) => `/api/v1/group_chats/${groupId}?page=${page}&page_size=20`,
   getUnseenConversations: () => '/api/v1/users/unseen_conversations',
+  getOnlineUsers: () => '/api/v1/users/online_users',
   updateProfile: () => '/api/v1/users/profile',
   changeAvatar: () => '/api/v1/users/avatar',
   changePassword: () => '/api/v1/users/change_password',
