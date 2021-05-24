@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Image, TextInput, FlatList } from 'react-native';
 import { Text, HeaderBar, TouchableOpacity, Loading, ModalLoading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
@@ -21,6 +21,8 @@ import {
 import { useIsFocused } from '@react-navigation/native';
 import { rest } from '../../config';
 import { ConversationContentType } from '../../store/conversations/actions';
+import { DotTypingAnimation } from 'react-native-dot-typing';
+import { TypingConversationType } from '../../store/typingConversations/actions';
 
 interface Props {
   navigation: any;
@@ -35,6 +37,8 @@ const ConversationRender: React.FC<Props> = (props) => {
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
   const onlineUsers = useSelector((state: any) => state.onlineUsers);
+  const typingConversations: TypingConversationType[] = useSelector((state: any) => state.typingConversations);
+  const sio = useSelector((state: any) => state.sio);
 
   const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
   const convsContent = useSelector((state: any) => (isPrivate ? state.convsContent : state.groupsContent));
@@ -48,7 +52,7 @@ const ConversationRender: React.FC<Props> = (props) => {
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
-  const membersId = useRef<string[]>([]);
+  const isTyping = useRef<boolean>(false);
 
   let getMsgs: any;
   let apiGetConvInfo: any;
@@ -77,6 +81,14 @@ const ConversationRender: React.FC<Props> = (props) => {
   };
 
   const isFocused = useIsFocused();
+
+  const typingConversation = useMemo(() => {
+    return typingConversations.find((item: TypingConversationType) => item.conversationId === conversation?.id);
+  }, [typingConversations]);
+
+  const membersId: string[] = useMemo(() => {
+    return isPrivate ? [conversation?.id] : conversation?.users.filter((user_id: string) => user_id !== userId);
+  }, [conversation]);
 
   useEffect(() => {
     if (!isFocused) return;
@@ -121,11 +133,6 @@ const ConversationRender: React.FC<Props> = (props) => {
       getConversationInfo();
       return;
     }
-    if (conversation !== null) {
-      membersId.current = isPrivate
-        ? [conversation.id]
-        : conversation.users.filter((user_id: string) => user_id !== userId);
-    }
     if (conversation.messages.length === 0) loadMoreMessages();
   }, [conversation]);
 
@@ -145,6 +152,15 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   const send = async (text: string) => {
     if (text) setText('');
+    if (isTyping.current) {
+      const payload: TypingConversationType = {
+        conversationId: conversation.id,
+        isTyping: false,
+      };
+      sio.emit('typing', payload);
+      isTyping.current = false;
+    }
+
     refConversation.current.scrollToOffset({ animated: true, offset: 0 });
     refInput.current.focus();
 
@@ -178,6 +194,26 @@ const ConversationRender: React.FC<Props> = (props) => {
     }
   }
 
+  const onChangeTextHandler = (text: string) => {
+    setText(text);
+    if (!isTyping.current) {
+      const payload: TypingConversationType = {
+        conversationId: conversation.id,
+        isTyping: true,
+      };
+      sio.emit('typing', payload);
+      isTyping.current = true;
+    }
+    if (text.length === 0 && isTyping.current) {
+      const payload: TypingConversationType = {
+        conversationId: conversation.id,
+        isTyping: false,
+      };
+      sio.emit('typing', payload);
+      isTyping.current = false;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <HeaderBar navigation={navigation} isBack>
@@ -188,7 +224,7 @@ const ConversationRender: React.FC<Props> = (props) => {
           <View style={styles.title}>
             <Text style={styles.name}>{conversation.name}</Text>
             <Text style={styles.online}>
-              {membersId.current.some((r) => onlineUsers.includes(r)) ? 'Đang hoạt động' : 'Không hoạt động'}
+              {membersId.some((r) => onlineUsers.includes(r)) ? 'Đang hoạt động' : 'Không hoạt động'}
             </Text>
           </View>
         </View>
@@ -205,6 +241,9 @@ const ConversationRender: React.FC<Props> = (props) => {
       />
 
       <View style={styles.footer}>
+        {typingConversation?.isTyping && (
+          <DotTypingAnimation dotRadius={4} dotColor={'#777'} dotAmplitude={3} dotMargin={15} dotX={40} dotY={-30} />
+        )}
         {!canInput ? (
           <Loading />
         ) : (
@@ -213,7 +252,7 @@ const ConversationRender: React.FC<Props> = (props) => {
               ref={refInput}
               style={styles.input}
               value={text}
-              onChangeText={(v) => setText(v)}
+              onChangeText={(v) => onChangeTextHandler(v)}
               onSubmitEditing={() => {
                 if (text) send(text);
               }}

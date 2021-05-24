@@ -7,6 +7,7 @@ import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { usersReducer } from './users/reducer';
 import { onlineUsersReducer } from './onlineUsers/reducer';
+import { typingConversationsReducer } from './typingConversations/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   common: commonReducer,
   users: usersReducer,
   onlineUsers: onlineUsersReducer,
+  typingConversations: typingConversationsReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

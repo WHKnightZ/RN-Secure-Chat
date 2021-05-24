@@ -14,6 +14,7 @@ import { Auth, ScanQR } from './screens';
 import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
 import { addOnlineUser, fetchOnlineUsers, removeOnlineUser } from './store/onlineUsers/actions';
+import { TypingConversationType, updateTypingConversation } from './store/typingConversations/actions';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -74,6 +75,10 @@ const App = () => {
     sio.on?.('offline', (data: string) => {
       console.log('offline: ', data);
       dispatch(removeOnlineUser(data));
+    });
+
+    sio.on?.('typing', (data: TypingConversationType) => {
+      dispatch(updateTypingConversation(data));
     });
   }, [sio]);
 
