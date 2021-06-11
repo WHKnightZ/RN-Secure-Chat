@@ -3,7 +3,7 @@ import { View, StyleSheet, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { BASE_URL, rest } from './config';
 import axios from 'axios';
-import { store } from './store/store';
+import { persistor, store } from './store/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -13,6 +13,7 @@ import { loginAction } from './store';
 import { Auth, ScanQR } from './screens';
 import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -99,8 +100,10 @@ const App = () => {
 export default function Index() {
   return (
     <Provider store={store}>
-      <StatusBar backgroundColor="#111" barStyle="light-content" />
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <StatusBar backgroundColor="#111" barStyle="light-content" />
+        <App />
+      </PersistGate>
     </Provider>
   );
 }

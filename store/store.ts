@@ -6,6 +6,8 @@ import { conversationsInfoReducer, conversationsContentReducer } from './convers
 import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { usersReducer } from './users/reducer';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,4 +20,15 @@ const rootReducer = combineReducers({
   users: usersReducer,
 });
 
-export const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const persistConfig = {
+  key: 'root',
+  storage: storage,
+};
+
+const pReducer = persistReducer(persistConfig, rootReducer);
+
+const store: any = createStore(pReducer, applyMiddleware(ReduxThunk));
+
+const persistor = persistStore(store);
+
+export { persistor, store };
