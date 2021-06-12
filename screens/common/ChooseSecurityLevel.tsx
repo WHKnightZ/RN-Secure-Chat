@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Modal } from 'react-native-paper';
 import { Button, RadioButton, Text } from '../../components';
 import { colors } from '../../constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import { useSelector } from 'react-redux';
 
 const ChooseSecurityLevel: React.FC = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [level, setLevel] = useState(1);
+  
+  const auth = useSelector((state: any) => state.auth);
+  const username = auth.usename;
+
+  useEffect(() => {
+    if (!username) return;
+
+    const checkStore = async () => {
+      await AsyncStorage.getItem(`${username}-private`);
+    };
+  }, [username]);
 
   const hideModal = () => setVisible(false);
 
