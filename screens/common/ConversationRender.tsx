@@ -17,6 +17,7 @@ import {
   getGroupMessages,
   getMessages,
   seenConversation,
+  loadConversation,
 } from '../../store';
 import { useIsFocused } from '@react-navigation/native';
 import { rest } from '../../config';
@@ -33,6 +34,7 @@ const ConversationRender: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   const auth = useSelector((state: any) => state.auth);
   const users = useSelector((state: any) => state.users);
+  const loadedConversations = useSelector((state: any) => state.common.loadedConversations);
 
   const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
   const convsContent = useSelector((state: any) => (isPrivate ? state.convsContent : state.groupsContent));
@@ -89,7 +91,8 @@ const ConversationRender: React.FC<Props> = (props) => {
   }, [isFocused]);
 
   useEffect(() => {
-    if (!conversation) {
+    const notLoaded = !loadedConversations.includes(conversationId);
+    if (!conversation || notLoaded) {
       const getConversationInfo = async () => {
         const response: any = await callApi({
           api: apiGetConvInfo(conversationId),
@@ -97,6 +100,7 @@ const ConversationRender: React.FC<Props> = (props) => {
         });
         const { status, data } = response;
         if (status) {
+          dispatch(loadConversation(data.conversation_id));
           createConvContent(dispatch, {
             id: data.conversation_id,
             name: data.conversation_name,
@@ -113,6 +117,7 @@ const ConversationRender: React.FC<Props> = (props) => {
               dispatch(addUser({ userId: key, avatar: value.avatar_path, publicKey: r }));
             }
           }
+          loadMoreMessages();
         }
       };
       getConversationInfo();

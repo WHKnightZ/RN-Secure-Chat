@@ -7,7 +7,8 @@ import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { usersReducer } from './users/reducer';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+// import storage from 'redux-persist/lib/storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage: storage,
+  storage: AsyncStorage,
+  blacklist: ['sio', 'common', 'users'],
 };
 
 const pReducer = persistReducer(persistConfig, rootReducer);

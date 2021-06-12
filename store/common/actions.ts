@@ -5,6 +5,7 @@ export const FETCH_CONVERSATIONS_UNSEEN = 'FETCH_CONVERSATIONS_UNSEEN';
 export const SEEN_CONVERSATION = 'SEEN_CONVERSATION';
 export const FOCUS_SCREEN = 'FOCUS_SCREEN';
 export const UNFOCUS_SCREEN = 'UNFOCUS_SCREEN';
+export const LOAD_CONVERSATION = 'LOAD_CONVERSATION';
 
 export const saveNavigation = (payload: any) => {
   return { type: SAVE_NAVIGATION, payload };
@@ -33,3 +34,5 @@ export const focusScreen = (screenId: string) => {
 export const unFocusScreen = (screenId: string) => {
   return { type: UNFOCUS_SCREEN, payload: screenId };
 };
+
+export const loadConversation = (conversationId: string) => ({ type: LOAD_CONVERSATION, payload: conversationId });

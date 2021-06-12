@@ -75,7 +75,7 @@ export const getConversations = async (dispatch: any, payload: any) => {
 export const getMessages = async (dispatch: any, payload: any) => {
   const { conversationId, page } = payload;
   const response: any = await callApi({
-    api: rest.getMessages(conversationId, page),
+    api: rest.getMessages(conversationId, 1),
     method: 'get',
   });
   const { status, data } = response;

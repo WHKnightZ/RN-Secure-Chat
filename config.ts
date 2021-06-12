@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://sv3.vn.boot.ai:5010';
-export const BASE_URL = 'http://54.255.176.27:5010';
+export const BASE_URL = 'http://192.168.0.102:5010';
 
 export const app = {
   secretKey: 'secure-chat',
@@ -15,13 +15,13 @@ export const rest = {
   getConversations: (page: number) => `/api/v1/chats?page=${page}&page_size=10`,
   getConversationInfo: (id: string) => `/api/v1/chats/${id}/info`,
   createMessage: (conversationId: string) => `/api/v1/chats/${conversationId}`,
-  getMessages: (conversationId: string, page: number) => `/api/v1/chats/${conversationId}?page=${page}&page_size=20`,
+  getMessages: (conversationId: string, page: number) => `/api/v1/chats/${conversationId}?page=${page}&page_size=80`,
   searchFriends: (keyword: string) => `/api/v1/users/search?text_search=${keyword}`,
   createGroup: () => '/api/v1/groups',
   getGroups: (page: number) => `/api/v1/group_chats?page=${page}&page_size=10`,
   getGroupInfo: (id: string) => `/api/v1/group_chats/${id}/info`,
   createGroupMessage: (groupId: string) => `/api/v1/group_chats/${groupId}`,
-  getGroupMessages: (groupId: string, page: number) => `/api/v1/group_chats/${groupId}?page=${page}&page_size=20`,
+  getGroupMessages: (groupId: string, page: number) => `/api/v1/group_chats/${groupId}?page=${page}&page_size=80`,
   getUnseenConversations: () => '/api/v1/users/unseen_conversations',
   updateProfile: () => '/api/v1/users/profile',
   changeAvatar: () => '/api/v1/users/avatar',

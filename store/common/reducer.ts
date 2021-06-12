@@ -8,6 +8,7 @@ import {
   SEEN_CONVERSATION,
   FOCUS_SCREEN,
   UNFOCUS_SCREEN,
+  LOAD_CONVERSATION,
 } from './actions';
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
   unseenPrivate: [],
   unseenGroup: [],
   focusedScreen: null,
+  loadedConversations: [],
 };
 
 export const commonReducer = (state = initialState, action: { type: string; payload: any }) => {
@@ -62,7 +64,9 @@ export const commonReducer = (state = initialState, action: { type: string; payl
       console.log(state.focusedScreen, payload);
       if (state.focusedScreen === payload) return { ...state, focusedScreen: null };
       return state;
-
+    case LOAD_CONVERSATION:
+      return { ...state, loadedConversations: [...state.loadedConversations, payload] };
+      
     default:
       return state;
   }

@@ -47,7 +47,7 @@ const App = () => {
         return;
       }
       const user = JSON.parse(userString);
-      await loginAction(dispatch, { ...user, isAuto: true });
+      await loginAction(dispatch, { ...user, auth });
       setInit(false);
     };
 

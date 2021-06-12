@@ -12,14 +12,18 @@ export const UPDATE_AUTH = 'UPDATE_AUTH';
 const io = require('socket.io-client');
 
 export const loginAction = async (dispatch: any, payload: any) => {
-  const { username, password, isAuto } = payload;
-
-  const response: any = await callApi({
-    api: rest.login(),
-    method: 'post',
-    body: { username, password },
-  });
-  const { status, data } = response;
+  const { username, password, auth } = payload;
+  let status = true;
+  let data = auth;
+  if (!auth) {
+    const response: any = await callApi({
+      api: rest.login(),
+      method: 'post',
+      body: { username, password },
+    });
+    status = response.status;
+    data = response.data;
+  }
   if (status) {
     const privateKey = await AsyncStorage.getItem(`${username}-private`);
     if (!privateKey) {

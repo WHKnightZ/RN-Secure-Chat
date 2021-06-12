@@ -11,16 +11,34 @@ import {
   MessageType,
 } from './actions';
 
+/**
+ * Update list conversations, if new item is in list, update this item, otherwise, add item to list
+ * @param convsInfo
+ * @param newConvInfo
+ */
+const updateConvsInfo = (convsInfo: ConversationInfoType[], newConvInfo: ConversationInfoType) => {
+  const index = convsInfo.findIndex((item) => item.id === newConvInfo.id);
+  if (index === -1) {
+    convsInfo.unshift(newConvInfo);
+    return;
+  }
+  convsInfo[index].latest_message = newConvInfo.latest_message || convsInfo[index].latest_message;
+};
+
 export const conversationsInfoReducer = (state = [], action: { type: string; payload: any }) => {
   const { type, payload } = action;
   let conversations: ConversationInfoType[];
 
   switch (type) {
     case GET_CONVERSATIONS:
-      return [...state, ...payload.filter((item: any) => !includes(state, item))];
+      conversations = [...state];
+      payload.forEach((item: ConversationInfoType) => updateConvsInfo(conversations, item));
+      return conversations;
+
     case CREATE_CONVERSATION_INFO:
-      if (!includes(state, payload)) return [payload, ...state];
-      return state;
+      conversations = [...state];
+      updateConvsInfo(conversations, payload);
+      return conversations;
 
     case CREATE_MESSAGE:
       const { conversationId, message } = payload;
@@ -44,6 +62,7 @@ export const conversationsContentReducer = (state = [], action: { type: string; 
   const { payload } = action;
   let conversationId: string, messages: MessageType[], message: MessageType;
   let conversations: ConversationContentType[], index: number;
+
   switch (action.type) {
     case GET_MESSAGES:
       conversationId = payload.conversationId;
@@ -52,11 +71,21 @@ export const conversationsContentReducer = (state = [], action: { type: string; 
       index = conversations.findIndex((item: ConversationContentType) => item.id === conversationId);
       const newMessages = conversations[index].messages;
       const filteredMessages = messages.filter((message) => !includes(newMessages, message));
-      conversations[index].messages = [...conversations[index].messages, ...filteredMessages];
-      conversations[index].full = messages.length < 20;
+      conversations[index].messages = [...filteredMessages, ...conversations[index].messages];
+      conversations[index].full = messages.length < 80;
       return conversations;
+
     case CREATE_CONVERSATION_CONTENT:
-      return [...state, action.payload];
+      let newState: ConversationContentType[] = [...state];
+      index = newState.findIndex((item: ConversationContentType) => item.id === payload.id);
+      if (index !== -1) {
+        const msgs = newState[index].messages;
+        newState[index] = payload;
+        newState[index].messages = msgs;
+        return newState;
+      }
+      return [...newState, payload];
+
     case CREATE_MESSAGE:
       conversationId = payload.conversationId;
       message = payload.message;

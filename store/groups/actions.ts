@@ -38,7 +38,7 @@ export const getGroups = async (dispatch: any, payload: any) => {
 export const getGroupMessages = async (dispatch: any, payload: any) => {
   const { conversationId, page } = payload;
   const response: any = await callApi({
-    api: rest.getGroupMessages(conversationId, page),
+    api: rest.getGroupMessages(conversationId, 1),
     method: 'get',
   });
   const { status, data } = response;

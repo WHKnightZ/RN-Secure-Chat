@@ -8,7 +8,14 @@ export {
   reloadMessenger,
 } from './conversations/actions';
 export { getGroups, getGroupMessages, createGroupMessage, createGroupContent } from './groups/actions';
-export { showScanQR, hideScanQR, seenConversation, focusScreen, unFocusScreen } from './common/actions';
+export {
+  showScanQR,
+  hideScanQR,
+  seenConversation,
+  focusScreen,
+  unFocusScreen,
+  loadConversation,
+} from './common/actions';
 export { addUser } from './users/actions';
 
 export { store } from './store';

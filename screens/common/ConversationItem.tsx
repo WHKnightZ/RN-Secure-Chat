@@ -33,7 +33,7 @@ const ConversationItem: React.FC<Props> = (props) => {
       }}>
       {!isMe && (
         <View style={styles.avatarContainer}>
-          {isLast && <Image source={{ uri: users[sender_id].avatar }} style={styles.avatar} />}
+          {isLast && <Image source={{ uri: users?.[sender_id]?.avatar || '' }} style={styles.avatar} />}
         </View>
       )}
 
