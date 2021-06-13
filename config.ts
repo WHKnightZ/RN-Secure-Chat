@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://sv3.vn.boot.ai:5010';
-export const BASE_URL = 'http://192.168.0.102:5010';
+export const BASE_URL = 'http://192.168.0.101:5010';
 
 export const app = {
   secretKey: 'secure-chat',
@@ -39,3 +39,41 @@ export type UserType = {
   online: boolean;
   pub_key: string;
 };
+
+export const SL_NONE = 1;
+export const SL_LOW = 2;
+export const SL_MEDIUM = 3;
+export const SL_HIGH = 4;
+
+/**
+ * Get time in seconds from security level
+ * HIGH-4: 1 second
+ * MEDIUM-3: 1 day
+ * LOW-2: 1 week
+ * NONE-1: Never update
+ */
+export const mappingSLTime: any = {
+  4: 1,
+  3: 86400,
+  2: 604800,
+  1: 0,
+};
+
+export const slChoices = [
+  {
+    label: 'Cao (Cập nhật khóa mỗi lần vào app)',
+    value: SL_HIGH,
+  },
+  {
+    label: 'Vừa (Cập nhật khóa mỗi ngày)',
+    value: SL_MEDIUM,
+  },
+  {
+    label: 'Thấp (Cập nhật khóa mỗi tuần)',
+    value: SL_LOW,
+  },
+  {
+    label: 'Kém (Không cập nhật khóa)',
+    value: SL_NONE,
+  },
+];

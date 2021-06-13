@@ -151,7 +151,13 @@ const Profile: React.FC<Props> = (props) => {
             <TextInput
               value={profile.name}
               onChangeText={(value) => setProfile({ ...profile, name: value })}
-              style={{ fontSize: 18, borderBottom: 'solid 1px black', width: '60%' }}
+              style={{
+                fontSize: 18,
+                borderBottomWidth: 1,
+                borderBottomColor: colors.black,
+                borderBottomStyle: 'solid',
+                width: '60%',
+              }}
             />
           ) : (
             <Text style={{ fontSize: 18 }}>{profile.name}</Text>

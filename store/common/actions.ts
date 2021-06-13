@@ -6,6 +6,7 @@ export const SEEN_CONVERSATION = 'SEEN_CONVERSATION';
 export const FOCUS_SCREEN = 'FOCUS_SCREEN';
 export const UNFOCUS_SCREEN = 'UNFOCUS_SCREEN';
 export const LOAD_CONVERSATION = 'LOAD_CONVERSATION';
+export const CHANGE_SECURITY_LEVEL = 'CHANGE_SECURITY_LEVEL';
 
 export const saveNavigation = (payload: any) => {
   return { type: SAVE_NAVIGATION, payload };
@@ -36,3 +37,5 @@ export const unFocusScreen = (screenId: string) => {
 };
 
 export const loadConversation = (conversationId: string) => ({ type: LOAD_CONVERSATION, payload: conversationId });
+
+export const changeSecurityLevel = (securityLevel: number) => ({ type: CHANGE_SECURITY_LEVEL, payload: securityLevel });

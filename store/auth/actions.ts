@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import { initSocketio } from '../sio/actions';
 import { BASE_URL, rest } from '../../config';
-import { callApi, rsa, getKey } from '../../utils';
+import { callApi, rsa, generateKey } from '../../utils';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -57,7 +57,7 @@ export const loginAction = async (dispatch: any, payload: any) => {
     }
     return false;
   } else {
-    if (!isAuto) Alert.alert('Sai tài khoản hoặc mật khẩu');
+    if (!auth) Alert.alert('Sai tài khoản hoặc mật khẩu');
     return false;
   }
 };
@@ -65,13 +65,7 @@ export const loginAction = async (dispatch: any, payload: any) => {
 export const registerAction = async (dispatch: any, payload: any) => {
   const { username, password } = payload;
 
-  const bits = 1024;
-  // 65537 is commonly used as a public exponent in the RSA cryptosystem.
-  // Because it is the Fermat number Fn = 2^(2^n) + 1 with n = 4
-  const exponent = '10001'; // 0x10001 => 65537
-  rsa.generate(bits, exponent);
-  const { publicKey, privateKey } = getKey();
-  const testMessage = rsa.encrypt('SC');
+  const { publicKey, privateKey, testMessage } = generateKey();
 
   const response: any = await callApi({
     api: rest.register(),
@@ -98,6 +92,12 @@ export const logoutAction = async (dispatch: any) => {
   dispatch({ type: LOGOUT });
 };
 
-export const updateAuth = (payload: { avatar_path?: string; display_name?: string; gender?: boolean }) => {
+export const updateAuth = (payload: {
+  avatar_path?: string;
+  display_name?: string;
+  gender?: boolean;
+  pub_key?: string;
+  test_message?: string;
+}) => {
   return { type: UPDATE_AUTH, payload };
 };

@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     fontFamily: 'Bold',

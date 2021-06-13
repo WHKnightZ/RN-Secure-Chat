@@ -14,7 +14,7 @@ import { Auth, ScanQR } from './screens';
 import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import ChooseSecurityLevel from './screens/common/ChooseSecurityLevel';
+import SecurityLevel from './screens/common/SecurityLevel';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -94,6 +94,7 @@ const App = () => {
     <View style={{ flex: 1 }}>
       <BottomNavigator />
       <ScanQR />
+      <SecurityLevel />
     </View>
   );
 };
@@ -104,7 +105,6 @@ export default function Index() {
       <PersistGate loading={null} persistor={persistor}>
         <StatusBar backgroundColor="#111" barStyle="light-content" />
         <App />
-        <ChooseSecurityLevel />
       </PersistGate>
     </Provider>
   );

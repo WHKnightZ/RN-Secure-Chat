@@ -9,6 +9,8 @@ import { closeSocketio, logoutAction, reloadMessenger } from '../../store';
 import Profile from './Profile';
 import ChangePassword from './ChangePassword';
 import DemoRSA from './DemoRSA';
+import Settings from './Settings';
+import ChooseSecurityLevel from './ChooseSecurityLevel';
 
 const Stack = createStackNavigator();
 
@@ -49,15 +51,16 @@ const Menu: React.FC<Props> = (props) => {
         <MenuItem icon="lock" title="Đổi mật khẩu" onPress={() => navigation.push('ChangePassword')} />
       </MenuContainer>
       <MenuContainer>
-        <MenuItem icon="cog" title="Cài đặt" onPress={() => {}} />
+        <MenuItem icon="cog" title="Cài đặt" onPress={() => navigation.push('Settings')} />
         <MenuItem icon="question" title="Điều khoản" onPress={() => {}} />
+        <MenuItem icon="download" title="Tải xuống dữ liệu" onPress={() => {}} />
         <MenuItem icon="trash" title="Xóa dữ liệu" onPress={() => {}} />
         <MenuItem
           icon="sign-out-alt"
           title="Đăng xuất"
           onPress={() => {
             dispatch(reloadMessenger());
-            sio.close();
+            sio?.close();
             dispatch(closeSocketio());
             logoutAction(dispatch);
           }}
@@ -79,6 +82,8 @@ const MenuStack: React.FC = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="DemoRSA" component={DemoRSA} />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="ChooseSecurityLevel" component={ChooseSecurityLevel} />
     </Stack.Navigator>
   );
 };

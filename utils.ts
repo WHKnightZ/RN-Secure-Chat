@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { app } from './config';
 import { iconCodes } from './constants';
@@ -65,7 +66,6 @@ export const getKey = () => {
 
 export const includes = (arr: any[], item: any) => {
   return arr.findIndex((i: any) => i.id === item.id) !== -1;
-  // return arr.filter((i: any) => i.id === item.id).length > 0;
 };
 
 export const stringToBlocks = (str: string) => {
@@ -89,4 +89,28 @@ export const stringToBlocks = (str: string) => {
     }
   });
   return { blocks, noText };
+};
+
+/**
+ * Generate rsa public, private key and create a test message
+ */
+export const generateKey = () => {
+  const bits = 1024;
+  // 65537 is commonly used as a public exponent in the RSA cryptosystem.
+  // Because it is the Fermat number Fn = 2^(2^n) + 1 with n = 4
+  const exponent = '10001'; // 0x10001 => 65537
+  rsa.generate(bits, exponent);
+  const { publicKey, privateKey } = getKey();
+  const testMessage = rsa.encrypt('SC');
+  return { publicKey, privateKey, testMessage };
+};
+
+/**
+ * Save security level to local storage
+ */
+export const saveSecurityLevel = async (username: string, level: number) => {
+  await AsyncStorage.setItem(
+    `${username}-security-level`,
+    JSON.stringify({ level, lastTime: new Date().getTime() / 1000 })
+  );
 };
