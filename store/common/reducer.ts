@@ -1,4 +1,4 @@
-import { SL_MEDIUM } from '../../config';
+import { SECURITY_LEVELS } from '../../config';
 import { CREATE_MESSAGE } from '../conversations/actions';
 import { CREATE_GROUP_MESSAGE } from '../groups/actions';
 import {
@@ -21,7 +21,7 @@ const initialState = {
   unseenGroup: [],
   focusedScreen: null,
   loadedConversations: [],
-  securityLevel: SL_MEDIUM,
+  securityLevel: SECURITY_LEVELS.MEDIUM,
 };
 
 export const commonReducer = (state = initialState, action: { type: string; payload: any }) => {

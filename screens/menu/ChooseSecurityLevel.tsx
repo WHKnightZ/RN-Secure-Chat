@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, HeaderBar, PaddingView, RadioButton, Text } from '../../components';
-import { colors } from '../../constants';
-import AsyncStorage from '@react-native-community/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSecurityLevel } from '../../store/common/actions';
-import { SL_MEDIUM, slChoices } from '../../config';
+import { slChoices } from '../../config';
 import { saveSecurityLevel } from '../../utils';
 
 interface Props {

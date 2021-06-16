@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, TextInput } from 'react-native';
-import { Text, HeaderBar, PaddingView, Button, TouchableOpacity } from '../../components';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { View, StyleSheet, Alert, TextInput, ScrollView } from 'react-native';
+import { Text, HeaderBar, PaddingView } from '../../components';
 import { colors } from '../../constants';
 import { rsa, getKey } from '../../utils';
-import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
   navigation: { push: any; navigate: any; goBack: any };

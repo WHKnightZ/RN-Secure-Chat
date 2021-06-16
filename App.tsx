@@ -35,14 +35,14 @@ const App = () => {
   const [init, setInit] = useState(true);
   const [connectState, setConnectState] = useState(CONNECTING);
 
-  const auth = useSelector((state: any) => state.auth);
-  const sio = useSelector((state: any) => state.sio);
+  const auth = useSelector((state: { [key: string]: any }) => state.auth);
+  const sio = useSelector((state: { [key: string]: any }) => state.sio);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     const tryLogin = async () => {
-      const userString: any = await AsyncStorage.getItem('user');
+      const userString: string | null = await AsyncStorage.getItem('user');
       if (!userString) {
         setInit(false);
         return;

@@ -9,11 +9,11 @@ import { changeSecurityLevel } from '../../store/common/actions';
 import { ConversationInfoType, createConversationContent, getMessages } from '../../store/conversations/actions';
 import { createGroupContent, getGroupMessages, updateAuth } from '../../store';
 import { callApi, generateKey, saveSecurityLevel } from '../../utils';
-import { rest, SL_HIGH, SL_MEDIUM, SL_LOW, SL_NONE, mappingSLTime, slChoices } from '../../config';
+import { rest, SECURITY_LEVELS, mappingSLTime, slChoices } from '../../config';
 
 const SecurityLevel: React.FC = () => {
   const [modal, setModal] = useState({ visible: false, reset: false, loading: false });
-  const [level, setLevel] = useState(SL_MEDIUM);
+  const [level, setLevel] = useState(SECURITY_LEVELS.MEDIUM);
 
   const dispatch = useDispatch();
   const username = useSelector((state: any) => state.auth.username);

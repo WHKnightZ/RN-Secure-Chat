@@ -40,40 +40,42 @@ export type UserType = {
   pub_key: string;
 };
 
-export const SL_NONE = 1;
-export const SL_LOW = 2;
-export const SL_MEDIUM = 3;
-export const SL_HIGH = 4;
+export const SECURITY_LEVELS = {
+  NONE: 1,
+  LOW: 2,
+  MEDIUM: 3,
+  HIGH: 4,
+};
 
 /**
  * Get time in seconds from security level
- * HIGH-4: 1 second
- * MEDIUM-3: 1 day
- * LOW-2: 1 week
- * NONE-1: Never update
+ * HIGH: 1 second
+ * MEDIUM: 1 day
+ * LOW: 1 week
+ * NONE: Never update
  */
 export const mappingSLTime: any = {
-  4: 1,
-  3: 86400,
-  2: 604800,
-  1: 0,
+  [SECURITY_LEVELS.HIGH]: 1,
+  [SECURITY_LEVELS.MEDIUM]: 86400,
+  [SECURITY_LEVELS.LOW]: 604800,
+  [SECURITY_LEVELS.NONE]: 0,
 };
 
 export const slChoices = [
   {
     label: 'Cao (Cập nhật khóa mỗi lần vào app)',
-    value: SL_HIGH,
+    value: SECURITY_LEVELS.HIGH,
   },
   {
     label: 'Vừa (Cập nhật khóa mỗi ngày)',
-    value: SL_MEDIUM,
+    value: SECURITY_LEVELS.MEDIUM,
   },
   {
     label: 'Thấp (Cập nhật khóa mỗi tuần)',
-    value: SL_LOW,
+    value: SECURITY_LEVELS.LOW,
   },
   {
     label: 'Kém (Không cập nhật khóa)',
-    value: SL_NONE,
+    value: SECURITY_LEVELS.NONE,
   },
 ];
