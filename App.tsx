@@ -15,6 +15,8 @@ import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import SecurityLevel from './screens/common/SecurityLevel';
+import { addOnlineUser, fetchOnlineUsers, removeOnlineUser } from './store/onlineUsers/actions';
+import { TypingConversationType, updateTypingConversation } from './store/typingConversations/actions';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -67,8 +69,18 @@ const App = () => {
       console.log('disconnected');
     });
 
-    sio.on?.('message', (data: any) => {
-      console.log(data);
+    sio.on?.('online', (data: string) => {
+      console.log('online: ', data);
+      dispatch(addOnlineUser(data));
+    });
+
+    sio.on?.('offline', (data: string) => {
+      console.log('offline: ', data);
+      dispatch(removeOnlineUser(data));
+    });
+
+    sio.on?.('typing', (data: TypingConversationType) => {
+      dispatch(updateTypingConversation(data));
     });
   }, [sio]);
 
@@ -85,7 +97,14 @@ const App = () => {
         dispatch(fetchConversationsUnseen({ unseenPrivate: data.unseen_private, unseenGroup: data.unseen_group }));
       }
     };
+    const getOnlineUsers = async () => {
+      const { status, data }: any = await callApi({ method: 'get', api: rest.getOnlineUsers() });
+      if (status) {
+        dispatch(fetchOnlineUsers(data));
+      }
+    };
     getUnseenConversations();
+    getOnlineUsers();
     sio.emit('auth', auth.access_token);
     setConnectState(LOGGED);
   }

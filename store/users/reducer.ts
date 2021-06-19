@@ -12,6 +12,7 @@ export const usersReducer = (
       let newState: any = { ...state };
       newState[userId] = { avatar, publicKey };
       return newState;
+      
     default:
       return state;
   }

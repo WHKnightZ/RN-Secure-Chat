@@ -8,8 +8,10 @@ export const authReducer = (state = initialState, action: { type: string; payloa
   switch (type) {
     case LOGIN:
       return { ...payload };
+
     case LOGOUT:
       return {};
+      
     case UPDATE_AUTH:
       return { ...state, ...payload };
 

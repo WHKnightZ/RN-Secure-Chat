@@ -6,6 +6,7 @@ export const socketioReducer = (state = initialState, action: { type: string; pa
   switch (action.type) {
     case INIT_SOCKETIO:
       return action.payload;
+      
     case CLOSE_SOCKETIO:
       return {};
 

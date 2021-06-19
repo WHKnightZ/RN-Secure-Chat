@@ -7,8 +7,9 @@ import { groupsInfoReducer, groupsContentReducer } from './groups/reducer';
 import { commonReducer } from './common/reducer';
 import { usersReducer } from './users/reducer';
 import { persistStore, persistReducer } from 'redux-persist';
-// import storage from 'redux-persist/lib/storage';
 import AsyncStorage from '@react-native-community/async-storage';
+import { onlineUsersReducer } from './onlineUsers/reducer';
+import { typingConversationsReducer } from './typingConversations/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,12 +20,14 @@ const rootReducer = combineReducers({
   groupsContent: groupsContentReducer,
   common: commonReducer,
   users: usersReducer,
+  onlineUsers: onlineUsersReducer,
+  typingConversations: typingConversationsReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['sio', 'common', 'users'],
+  blacklist: ['sio', 'common', 'users', 'onlineUsers', 'typingConversations'],
 };
 
 const pReducer = persistReducer(persistConfig, rootReducer);
