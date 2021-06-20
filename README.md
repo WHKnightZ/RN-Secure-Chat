@@ -2,6 +2,9 @@
 
 ## Frontend of Secure-Chat
 
+### App:
+- Link: https://expo.io/artifacts/26573998-3f14-43b1-ad71-0ebe93525c04
+
 ### Backend:
 - Link: https://github.com/mountain-chan/secure-chat-backend
 
@@ -25,8 +28,8 @@
 - [X] Find friend by name, id, QRCode
 - [ ] Tool for manage notes
 - [ ] Tool for manage passwords
-- [ ] Directory, friends
-- [ ] Realtime check typing, online, seen
+- [X] Directory, friends
+- [X] Realtime check typing X, online X, seen
 - [ ] Send a sound record
 - [ ] Send image, file
 - [ ] Send icon, icon keyboard
@@ -35,4 +38,5 @@
 
 ### New requirement:
 - [ ] Diffie–Hellman key exchange
-- [ ] Session key
+- [X] Session key
+- [X] Local store message, group

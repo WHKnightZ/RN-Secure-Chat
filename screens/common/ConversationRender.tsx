@@ -147,6 +147,14 @@ const ConversationRender: React.FC<Props> = (props) => {
       return;
     }
     if (conversation.messages.length === 0) loadMoreMessages();
+
+    if (conversation && isPrivate && !includes(friends, { id: conversationId }))
+      addFriend(dispatch, {
+        id: conversationId,
+        username: conversation?.name,
+        display_name: conversation?.name,
+        avatar_path: conversation?.avatar || '',
+      });
   }, [conversation]);
 
   const emitTyping = (typing: boolean) => {
@@ -163,14 +171,6 @@ const ConversationRender: React.FC<Props> = (props) => {
    * Typing will stop when out this conversation
    */
   useEffect(() => {
-    if (isPrivate && !includes(friends, { id: conversationId }))
-      addFriend(dispatch, {
-        id: conversationId,
-        username: conversation?.name,
-        display_name: conversation?.name,
-        avatar_path: conversation?.avatar || '',
-      });
-
     return () => emitTyping(false);
   }, []);
 

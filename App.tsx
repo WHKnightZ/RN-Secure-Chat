@@ -79,7 +79,6 @@ const App = () => {
     });
 
     sio.on?.('typing', (data: TypingConversationType) => {
-      console.log(data);
       dispatch(updateTypingConversation(data));
     });
   }, [sio]);

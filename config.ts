@@ -1,5 +1,7 @@
 export const BASE_URL = 'http://sv2.vn.boot.ai:5010';
 
+export const DEFAULT_AVATAR = `${BASE_URL}/avatars/default_avatar.png`;
+
 export const app = {
   secretKey: 'secure-chat',
   timeout: 2000,

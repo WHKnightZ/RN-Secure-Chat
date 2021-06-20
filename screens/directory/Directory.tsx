@@ -6,6 +6,8 @@ import { PaddingView, HeaderBar, Text } from '../../components';
 import AddContact from './AddContact';
 import SearchContact from './SearchContact';
 import { useSelector } from 'react-redux';
+import { DEFAULT_AVATAR } from '../../config';
+import { colors } from '../../constants';
 
 const Stack = createStackNavigator();
 
@@ -21,7 +23,7 @@ const Directory: React.FC<Props> = (props) => {
     const { avatar_path, username, display_name } = item;
     return (
       <View style={styles.avatarContainer}>
-        <Image style={styles.avatar} source={avatar_path} />
+        <Image style={styles.avatar} source={{ uri: avatar_path || DEFAULT_AVATAR }} />
         <Text style={styles.displayName}>{display_name || username}</Text>
       </View>
     );
@@ -32,6 +34,9 @@ const Directory: React.FC<Props> = (props) => {
       <HeaderBar navigation={navigation} title="Danh bạ" items={['scanqr', 'search']} />
       <PaddingView>
         <FlatList style={styles.container} data={friends} renderItem={renderItem} />
+        <Text style={styles.note}>
+          Tại đây, bạn sẽ thấy toàn bộ những người mà bạn đã tương tác cùng, hãy thêm bạn bè để nói chuyện nhé.
+        </Text>
         <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>
     </View>
@@ -73,5 +78,9 @@ const styles = StyleSheet.create({
   displayName: {
     fontSize: 16,
     marginLeft: 18,
+  },
+  note: {
+    marginVertical: 10,
+    color: colors.gray,
   },
 });
