@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, TextInput, FlatList } from 'react-native';
 import { Text, HeaderBar, TouchableOpacity, Loading, ModalLoading } from '../../components';
 import { FontAwesome } from '@expo/vector-icons';
 import { colors } from '../../constants';
-import { callApi, RSAKey } from '../../utils';
+import { callApi, includes, RSAKey } from '../../utils';
 import ConversationItem from './ConversationItem';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -18,12 +18,13 @@ import {
   getMessages,
   seenConversation,
   loadConversation,
+  addFriend,
 } from '../../store';
 import { useIsFocused } from '@react-navigation/native';
 import { rest } from '../../config';
 import { ConversationContentType } from '../../store/conversations/actions';
-import { DotTypingAnimation } from 'react-native-dot-typing';
 import { TypingConversationType } from '../../store/typingConversations/actions';
+import ConversationTypingItem from './ConversationTypingItem';
 
 interface Props {
   navigation: any;
@@ -39,7 +40,7 @@ const ConversationRender: React.FC<Props> = (props) => {
   const users = useSelector((state: any) => state.users);
   const loadedConversations = useSelector((state: any) => state.common.loadedConversations);
   const onlineUsers = useSelector((state: any) => state.onlineUsers);
-  const typingConversations: TypingConversationType[] = useSelector((state: any) => state.typingConversations);
+  const typingConversations = useSelector((state: any) => state.typingConversations);
   const sio = useSelector((state: any) => state.sio);
 
   const convsInfo = useSelector((state: any) => (isPrivate ? state.convsInfo : state.groupsInfo));
@@ -48,13 +49,14 @@ const ConversationRender: React.FC<Props> = (props) => {
   const index = convsContent.findIndex((item: any) => item.id === conversationId);
   const conversation: ConversationContentType = index > -1 ? convsContent[index] : null;
 
+  const friends = useSelector((state: any) => state.friends);
+
   const userId = auth.user_id;
   const page = useRef<number>(1);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState('');
   const refConversation = useRef<any>(null);
   const refInput = useRef<any>(null);
-  const isTyping = useRef<boolean>(false);
 
   let getMsgs: any;
   let apiGetConvInfo: any;
@@ -84,8 +86,14 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   const isFocused = useIsFocused();
 
-  const typingConversation = useMemo(() => {
-    return typingConversations.find((item: TypingConversationType) => item.conversationId === conversation?.id);
+  const renderTypingUsers = useMemo(() => {
+    return (
+      <View style={{ backgroundColor: colors.white }}>
+        {(typingConversations[conversationId] || []).map((userId: string, index: number) => (
+          <ConversationTypingItem key={index} avatar={users?.[userId]?.avatar} />
+        ))}
+      </View>
+    );
   }, [typingConversations]);
 
   const membersId: string[] = useMemo(() => {
@@ -141,6 +149,31 @@ const ConversationRender: React.FC<Props> = (props) => {
     if (conversation.messages.length === 0) loadMoreMessages();
   }, [conversation]);
 
+  const emitTyping = (typing: boolean) => {
+    const payload: TypingConversationType = {
+      conversationId: conversation?.id,
+      userId,
+      typing,
+    };
+    sio?.emit?.('typing', payload);
+  };
+
+  /**
+   * When join this conversation, add user to friend list
+   * Typing will stop when out this conversation
+   */
+  useEffect(() => {
+    if (isPrivate && !includes(friends, { id: conversationId }))
+      addFriend(dispatch, {
+        id: conversationId,
+        username: conversation?.name,
+        display_name: conversation?.name,
+        avatar_path: conversation?.avatar || '',
+      });
+
+    return () => emitTyping(false);
+  }, []);
+
   if (!conversation) return <ModalLoading loading={true} />;
 
   const renderItem = ({ item, index }: any) => {
@@ -157,14 +190,9 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   const send = async (text: string) => {
     if (text) setText('');
-    if (isTyping.current) {
-      const payload: TypingConversationType = {
-        conversationId: conversation.id,
-        isTyping: false,
-      };
-      sio.emit('typing', payload);
-      isTyping.current = false;
-    }
+
+    // Typing will stop when press send
+    emitTyping(false);
 
     refConversation.current.scrollToOffset({ animated: true, offset: 0 });
     refInput.current.focus();
@@ -201,22 +229,10 @@ const ConversationRender: React.FC<Props> = (props) => {
 
   const onChangeTextHandler = (text: string) => {
     setText(text);
-    if (!isTyping.current) {
-      const payload: TypingConversationType = {
-        conversationId: conversation.id,
-        isTyping: true,
-      };
-      sio.emit('typing', payload);
-      isTyping.current = true;
-    }
-    if (text.length === 0 && isTyping.current) {
-      const payload: TypingConversationType = {
-        conversationId: conversation.id,
-        isTyping: false,
-      };
-      sio.emit('typing', payload);
-      isTyping.current = false;
-    }
+
+    // Typing start when input has text and vice versa
+    if (text.length === 1) emitTyping(true);
+    else if (text.length === 0) emitTyping(false);
   };
 
   return (
@@ -244,11 +260,8 @@ const ConversationRender: React.FC<Props> = (props) => {
         onEndReachedThreshold={0.2}
         ListFooterComponent={loading ? <Loading /> : null}
       />
-
+      {renderTypingUsers}
       <View style={styles.footer}>
-        {typingConversation?.isTyping && (
-          <DotTypingAnimation dotRadius={4} dotColor={'#777'} dotAmplitude={3} dotMargin={15} dotX={40} dotY={-30} />
-        )}
         {!canInput ? (
           <Loading />
         ) : (
@@ -261,7 +274,7 @@ const ConversationRender: React.FC<Props> = (props) => {
               onSubmitEditing={() => {
                 if (text) send(text);
               }}
-              placeholder='Nhập nội dung...'
+              placeholder="Nhập nội dung..."
             />
             <TouchableOpacity style={styles.buttonSend} onPress={() => (text ? send(text) : send('(y)'))}>
               <FontAwesome name={text ? 'send' : 'thumbs-up'} size={24} color={colors.primary} />
@@ -292,6 +305,12 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
+    backgroundColor: '#e0e0e0',
+  },
+  typingAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#e0e0e0',
   },
   title: {

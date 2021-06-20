@@ -9,14 +9,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import BottomNavigator from './navigation/BottomNavigator';
 import AppLoading from 'expo-app-loading';
-import { loginAction } from './store';
+import { loginAction, addOnlineUser, fetchOnlineUsers, removeOnlineUser, updateTypingConversation } from './store';
 import { Auth, ScanQR } from './screens';
 import { callApi } from './utils';
 import { fetchConversationsUnseen } from './store/common/actions';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import SecurityLevel from './screens/common/SecurityLevel';
-import { addOnlineUser, fetchOnlineUsers, removeOnlineUser } from './store/onlineUsers/actions';
-import { TypingConversationType, updateTypingConversation } from './store/typingConversations/actions';
+import { TypingConversationType } from './store/typingConversations/actions';
 
 axios.defaults.baseURL = BASE_URL;
 
@@ -80,6 +79,7 @@ const App = () => {
     });
 
     sio.on?.('typing', (data: TypingConversationType) => {
+      console.log(data);
       dispatch(updateTypingConversation(data));
     });
   }, [sio]);

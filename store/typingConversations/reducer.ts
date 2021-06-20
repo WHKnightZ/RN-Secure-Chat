@@ -1,26 +1,28 @@
 import { TypingConversationType, UPDATE_TYPING_CONVERSATION } from './actions';
 
-const initialState: TypingConversationType[] = [];
+const initialState: { [key: string]: string[] } = {};
 
 export const typingConversationsReducer = (
   state = initialState,
   action: { type: string; payload: TypingConversationType }
 ) => {
-  switch (action.type) {
+  const { type, payload } = action;
+
+  switch (type) {
     case UPDATE_TYPING_CONVERSATION:
-      if (action.payload) {
-        const newState = [...state];
-        const existedConversation = newState.find(
-          (item: TypingConversationType) => item.conversationId === action.payload.conversationId
-        );
-        if (existedConversation && existedConversation.isTyping !== action.payload.isTyping) {
-          existedConversation.isTyping = action.payload.isTyping;
-          return newState;
-        }
-        return [...newState, action.payload];
+      const { conversationId, userId, typing } = payload;
+      let newState = { ...state };
+      const conversation = newState[conversationId];
+      if (typing) {
+        if (conversation) {
+          if (conversation.findIndex((item) => item === userId) === -1)
+            newState[conversationId] = [...conversation, userId];
+        } else newState[conversationId] = [userId];
+      } else {
+        if (conversation) newState[conversationId] = conversation.filter((item) => item !== userId);
       }
-      return state;
-      
+      return newState;
+
     default:
       return state;
   }

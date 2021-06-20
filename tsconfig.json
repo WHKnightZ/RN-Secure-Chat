@@ -7,9 +7,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "strict": true,
-    "baseUrl": "."
+    "strict": true
   },
-  "extends": "expo/tsconfig.base",
-  "include": ["."]
+  "extends": "expo/tsconfig.base"
 }

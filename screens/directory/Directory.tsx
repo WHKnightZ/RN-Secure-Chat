@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
-import { PaddingView, HeaderBar } from '../../components';
+import { PaddingView, HeaderBar, Text } from '../../components';
 import AddContact from './AddContact';
 import SearchContact from './SearchContact';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
@@ -14,14 +15,26 @@ interface Props {
 
 const Directory: React.FC<Props> = (props) => {
   const { navigation } = props;
+  const friends = useSelector((state: any) => state.friends);
+
+  const renderItem = ({ item }: any) => {
+    const { avatar_path, username, display_name } = item;
+    return (
+      <View style={styles.avatarContainer}>
+        <Image style={styles.avatar} source={avatar_path} />
+        <Text style={styles.displayName}>{display_name || username}</Text>
+      </View>
+    );
+  };
 
   return (
-    <ScrollView>
+    <View style={styles.container}>
       <HeaderBar navigation={navigation} title="Danh bạ" items={['scanqr', 'search']} />
       <PaddingView>
+        <FlatList style={styles.container} data={friends} renderItem={renderItem} />
         <Button onPress={() => navigation.push('AddContact')}>Thêm liên lạc mới</Button>
       </PaddingView>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -43,5 +56,22 @@ export default DirectoryStack;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  avatarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    display: 'flex',
+    marginTop: 20,
+    paddingHorizontal: 3,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#e0e0e0',
+  },
+  displayName: {
+    fontSize: 16,
+    marginLeft: 18,
   },
 });

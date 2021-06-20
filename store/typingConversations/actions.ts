@@ -1,10 +1,13 @@
 export const UPDATE_TYPING_CONVERSATION = 'UPDATE_TYPING_CONVERSATION';
 
-export type TypingConversationType = {
+type TypingConversationType = {
   conversationId: string;
-  isTyping: boolean;
+  userId: string;
+  typing: boolean;
 };
 
 export const updateTypingConversation = (payload: TypingConversationType) => {
   return { type: UPDATE_TYPING_CONVERSATION, payload };
 };
+
+export { TypingConversationType };

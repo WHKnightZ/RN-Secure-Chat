@@ -10,6 +10,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import { onlineUsersReducer } from './onlineUsers/reducer';
 import { typingConversationsReducer } from './typingConversations/reducer';
+import { friendsReducer } from './friends/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   users: usersReducer,
   onlineUsers: onlineUsersReducer,
   typingConversations: typingConversationsReducer,
+  friends: friendsReducer,
 });
 
 const persistConfig = {

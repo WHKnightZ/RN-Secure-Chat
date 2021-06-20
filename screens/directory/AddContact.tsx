@@ -1,10 +1,11 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Clipboard } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
 import { Text, HeaderBar, PaddingView, MenuContainer, MenuItem, TouchableOpacity } from '../../components';
 import { colors, defaultUuid } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { showScanQR } from '../../store';
 
 interface Props {
   navigation: { push: any; navigate: any; goBack: any };
@@ -14,13 +15,21 @@ const AddContact: React.FC<Props> = (props) => {
   const { navigation } = props;
   const auth = useSelector((state: any) => state.auth);
 
+  const dispatch = useDispatch();
+
   return (
     <ScrollView>
       <HeaderBar navigation={navigation} title="Thêm bạn" isBack />
       <View>
         <MenuContainer>
-          <MenuItem icon="search" title="Tìm theo tên" onPress={() => {}} />
-          <MenuItem icon="qrcode" title="Tìm theo mã QR" onPress={() => {}} />
+          <MenuItem icon="search" title="Tìm theo tên" onPress={() => navigation.push('SearchContact')} />
+          <MenuItem
+            icon="qrcode"
+            title="Tìm theo mã QR"
+            onPress={() =>
+              dispatch(showScanQR((data: string) => navigation.navigate('Conversation', { conversationId: data })))
+            }
+          />
           <MenuItem icon="search-location" title="Tìm theo vị trí" onPress={() => {}} />
         </MenuContainer>
       </View>

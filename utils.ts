@@ -114,3 +114,17 @@ export const saveSecurityLevel = async (username: string, level: number) => {
     JSON.stringify({ level, lastTime: new Date().getTime() / 1000 })
   );
 };
+
+export const PI_DOUBLE = 6.283185;
+const mapSin = Array.from({ length: 314 }).map((_, index) => Math.sin(index / 50));
+
+/**
+ * Get sin value from array
+ * @param x input number want to get sin
+ */
+export const getSin = (x: number) => {
+  let y = Math.trunc(x / PI_DOUBLE);
+  if (x < 0.0) y -= 1;
+  x -= y * PI_DOUBLE;
+  return mapSin[Math.trunc(x * 50)];
+};

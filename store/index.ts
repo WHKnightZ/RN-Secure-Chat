@@ -17,7 +17,8 @@ export {
   loadConversation,
 } from './common/actions';
 export { addUser } from './users/actions';
-export { updateTypingConversation, TypingConversationType } from './typingConversations/actions';
+export { updateTypingConversation } from './typingConversations/actions';
 export { fetchOnlineUsers, addOnlineUser, removeOnlineUser } from './onlineUsers/actions';
+export { getFriends, addFriend } from './friends/actions';
 
 export { store } from './store';

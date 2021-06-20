@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { initSocketio } from '../sio/actions';
 import { BASE_URL, rest } from '../../config';
 import { callApi, rsa, generateKey } from '../../utils';
+import { getFriends } from '../friends/actions';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -53,6 +54,9 @@ export const loginAction = async (dispatch: any, payload: any) => {
     if (status2) {
       const data2 = response2.data;
       dispatch({ type: LOGIN, payload: { ...data2, ...data } });
+
+      // get all friends when login successfully
+      getFriends(dispatch);
       return true;
     }
     return false;

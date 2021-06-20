@@ -1,5 +1,4 @@
-// export const BASE_URL = 'http://sv3.vn.boot.ai:5010';
-export const BASE_URL = 'http://192.168.0.101:5010';
+export const BASE_URL = 'http://sv2.vn.boot.ai:5010';
 
 export const app = {
   secretKey: 'secure-chat',
@@ -27,6 +26,8 @@ export const rest = {
   updateProfile: () => '/api/v1/users/profile',
   changeAvatar: () => '/api/v1/users/avatar',
   changePassword: () => '/api/v1/users/change_password',
+  getFriends: () => '/api/v1/users/friends',
+  addFriends: (userId: string) => `/api/v1/users/friends/${userId}`,
 };
 
 export type UserType = {
